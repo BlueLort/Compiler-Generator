@@ -1,0 +1,12 @@
+#Dir
+.vs/
+bin/
+bin-int/
+X/res/
+
+#Files
+
+*.user
+out/
+settings/
+bin/
