@@ -8,5 +8,5 @@ X/res/
 
 *.user
 out/
-settings/
+.settings/
 bin/
