@@ -1,6 +1,6 @@
 # Lexical Analyzer Generator
 
-This phase of the project aims to practice techniquesfor building automatic
+This phase of the project aims to practice techniques for building automatic
 lexical analyzer generator tools.
 
 ## Objective
