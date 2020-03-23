@@ -24,11 +24,10 @@ public class LineProcessor {
         Rule lineRules = null;
         Pattern reg;
         for(int i = 0 ; i < REGEX_FORMATS.length ; i++){
-            Pair<String,Integer> regData = GetRegexFormat(i,line);
-            reg = Pattern.compile(regData.getKey());
+            reg = Pattern.compile(REGEX_FORMATS[i]);
             Matcher mat = reg.matcher(line);
             if (mat.find()){
-                switch (regData.getValue()){
+                switch (i){
                     case 0:
                         lineRules = new RegularDefinition(mat.group(1),mat.group(2));
                         break;
@@ -47,25 +46,6 @@ public class LineProcessor {
             }
         }
         lineRules.AddRule(container);
-    }
-    // conflicts keywords with operators so i do early checking to go and get certain regex
-    // alternative solution
-    // also i need to return index of the REGEX_FORMAT so i can construct classes safely
-    private Pair<String,Integer> GetRegexFormat(int idx, String line){
-        String regexFormat;
-        int startLoc = 0;
-        int formatID = idx;
-        while(line.charAt(startLoc) == ' ')startLoc++;
-        if(line.charAt(startLoc) == '['){
-            regexFormat = RegexFormats.OPERATOR;
-            formatID = 3;
-        }
-        else if(line.charAt(startLoc) == '{'){
-            regexFormat = RegexFormats.KEYWORD;
-            formatID = 2;
-        }
-        else regexFormat = REGEX_FORMATS[idx];
-        return new Pair(regexFormat,formatID);
     }
     private abstract class Rule {
 
@@ -99,11 +79,13 @@ public class LineProcessor {
         public String[] keywords;//Takes keywords separated by space
         public  Keywords(String keywords){
             this.keywords = keywords.split(" ");
+
         }
         @Override
         void AddRule(RulesContainer container){
             for(int i = 0 ; i <this.keywords.length; i++){
-                container.AddKeyword(this.keywords[i]);
+                if(!this.keywords[i].equals(""))
+                     container.AddKeyword(this.keywords[i]);
             }
         }
     }
@@ -115,7 +97,8 @@ public class LineProcessor {
         @Override
         void AddRule(RulesContainer container){
             for(int i = 0 ; i <this.operators.length; i++){
-                container.AddOperator(this.operators[i]);
+                if(!this.operators[i].equals(""))
+                    container.AddOperator(this.operators[i]);
             }
         }
     }
@@ -123,10 +106,10 @@ public class LineProcessor {
     /** non constructable class to define project input file rules */
     private class RegexFormats {
 
-        public static final String REGULAR_DEFINITION = "(\\w+) =(.+)";/** match RD */
-        public static final String REGULAR_EXPRESSION = "(\\w+):(.+)";/** match RE */
-        public static final String KEYWORD = "\\{(.+)\\}";/** match and split on space */
-        public static final String OPERATOR = "\\[(.+)\\]";/** Read After to end */
+        public static final String REGULAR_DEFINITION = "^(\\w+) =(.+)$";/** match RD */
+        public static final String REGULAR_EXPRESSION = "^(\\w+):(.+)$";/** match RE */
+        public static final String KEYWORD = "^\\{(.+)\\}$";/** match and split on space */
+        public static final String OPERATOR = "^\\[(.+)\\]$";/** Read After to end */
         private RegexFormats() { }
     }
 }
