@@ -13,6 +13,10 @@ public class RulesContainer {
     private ArrayList<String> operators;
     private ArrayList<String> keywords;
 
+    private boolean hasErrors;
+
+    public boolean IsValid(){return hasErrors;}
+
     /** no access to the private members but public wrapper functions around them is defined */
     public String GetRegularDefinition(String key){
         return regularDefinitions.get(key);
@@ -38,14 +42,17 @@ public class RulesContainer {
         operators = new ArrayList();
         keywords = new ArrayList();
         // regex search for each one of the elements and save them
-        ProcessRules(rulesFile);
+        hasErrors = ProcessRules(rulesFile);
     }
 
-    private  void ProcessRules(String rulesFile){
+    private  boolean ProcessRules(String rulesFile){
         String lines[] = rulesFile.split("\\r?\\n");
         for(int i = 0 ; i < lines.length ;i++){
-            LineProcessor.GetInstance().ProcessLine(lines[i],this);
+            if(LineProcessor.GetInstance().ProcessLine(lines[i],this ) == false){
+                return false;
+            }
         }
+        return true;
     }
 
     public ArrayList<String> getRegularDefinitionsKeys() {

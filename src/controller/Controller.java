@@ -13,11 +13,14 @@ public class Controller {
 
     public boolean ConstructRules(String file) {
         RulesContainer rulesCont = new RulesContainer(file);
-        //Finished Processing the rules
-        System.out.println(rulesCont);
-        //TODO pass rulesCont as a parameter to NFA/DFA class to get processed data easily
+        if(rulesCont.IsValid()){
+            //Finished Processing the rules
+            System.out.println(rulesCont);
+            //TODO pass rulesCont as a parameter to NFA/DFA class to get processed data easily
 
-        return true;
+            return true;
+        }
+        return false;
     }
 
     public boolean  RunCodeAnalysisOnAction(String file){

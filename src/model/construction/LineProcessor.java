@@ -20,7 +20,7 @@ public class LineProcessor {
     private LineProcessor(){
 
     }
-    public void ProcessLine(String line,RulesContainer container){
+    public boolean ProcessLine(String line,RulesContainer container){
         Rule lineRules = null;
         Pattern reg;
         for(int i = 0 ; i < REGEX_FORMATS.length ; i++){
@@ -45,7 +45,11 @@ public class LineProcessor {
 
             }
         }
+        if(lineRules == null){
+            return false;
+        }
         lineRules.AddRule(container);
+        return true;
     }
     private abstract class Rule {
 
