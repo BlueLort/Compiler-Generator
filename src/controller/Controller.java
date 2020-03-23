@@ -1,7 +1,7 @@
 package controller;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import model.construction.RulesContainer;
+
 
 
 public class Controller {
@@ -12,8 +12,12 @@ public class Controller {
     }
 
     public boolean ConstructRules(String file) {
+        RulesContainer rulesCont = new RulesContainer(file);
+        //Finished Processing the rules
+        System.out.println(rulesCont);
+        //TODO pass rulesCont as a parameter to NFA/DFA class to get processed data easily
 
-        return false;
+        return true;
     }
 
     public boolean  RunCodeAnalysisOnAction(String file){

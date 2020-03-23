@@ -28,7 +28,7 @@ public class LexicalAnalyzer {
 
     public TextArea textArea;
 
-    private Controller controller;
+    private Controller controller = new Controller();
 
     private String path;
 
@@ -36,19 +36,14 @@ public class LexicalAnalyzer {
 
         window = primaryStage;
         primaryStage.setTitle("Lexical Analyzer");
-
         try {
             Parent root = FXMLLoader.load(new File("src/view/scene.fxml").toURI().toURL());
             Scene scene = new Scene(root, 1000, 750);
             primaryStage.setScene(scene);
             primaryStage.show();
-            controller = new Controller();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
     /* PLT Needed Operations */
     public void ConstructRulesOnAction(){

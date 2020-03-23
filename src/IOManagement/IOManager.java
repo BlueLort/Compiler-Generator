@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /* single instance class to deal with files for writing or reading */
 public class IOManager {
-    static IOManager instance = null;
+    private static IOManager instance = null;
 
 
 
