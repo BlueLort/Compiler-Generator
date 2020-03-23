@@ -1,10 +1,18 @@
 package controller;
 
-public class Main {
+import javafx.application.Application;
+import javafx.stage.Stage;
+import view.LexicalAnalyzer;
+
+public class Main extends Application {
+
 
 	public static void main(String[] args) {
-		//Every project starts with hello world
-		System.out.println("Hello World");
-	}	
+		launch(args);
+	}
 
+	public void start(Stage primaryStage) {
+		LexicalAnalyzer assembler = new LexicalAnalyzer();
+		assembler.Initialize(primaryStage);
+	}
 }

@@ -1,1 +1,0 @@
-# lexical-analyzer-generator
