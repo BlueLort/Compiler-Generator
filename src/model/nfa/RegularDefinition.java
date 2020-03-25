@@ -152,11 +152,9 @@ public class RegularDefinition {
 		return expression.toString();
 	}
 
-	public void dfsGraphs() {
+	public void DFSGraphs() {
 		for (Entry<String, Graph> entry : definitionNfa.entrySet()) {
-			System.out.print(entry.getKey() + " ");
-			entry.getValue().dfs();
-			System.out.println();
+			entry.getValue().DFS();
 		}
 	}
 

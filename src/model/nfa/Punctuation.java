@@ -27,17 +27,14 @@ public class Punctuation {
 			String[] operatorCharacters = operator.replace("\\", "").split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(operatorCharacters);
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
-			// System.out.println(postFixExpression);
 			Graph nfa = createNfa(postFixExpression);
 			punctuationNfa.put(operator, nfa);
 		}
 	}
 
-	public void dfsGraphs() {
+	public void DFSGraphs() {
 		for (Entry<String, Graph> entry : punctuationNfa.entrySet()) {
-			System.out.print(entry.getKey() + " ");
-			entry.getValue().dfs();
-			System.out.println();
+			entry.getValue().DFS();
 		}
 	}
 

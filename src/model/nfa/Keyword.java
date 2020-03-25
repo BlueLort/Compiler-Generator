@@ -28,18 +28,15 @@ public class Keyword {
 			String[] keywordCharacters = keyword.split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(keywordCharacters);
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
-			// System.out.println(postFixExpression);
 			Graph nfa = createNfa(postFixExpression);
 			keywordNfa.put(keyword, nfa);
 
 		}
 	}
 
-	public void dfsGraphs() {
+	public void DFSGraphs() {
 		for (Entry<String, Graph> entry : keywordNfa.entrySet()) {
-			System.out.print(entry.getKey() + " ");
-			entry.getValue().dfs();
-			System.out.println();
+			entry.getValue().DFS();
 		}
 	}
 

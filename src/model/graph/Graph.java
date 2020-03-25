@@ -41,7 +41,6 @@ public class Graph implements Serializable {
 
 	private void DFSUtil(Node node, boolean visited[]) {
 		visited[node.getCurrentId()] = true;
-		System.out.print(node.getCurrentId() + " ");
 
 		for (Entry<String, ArrayList<Node>> entry : node.getMap().entrySet()) {
 			ArrayList<Node> current = entry.getValue();
@@ -52,7 +51,7 @@ public class Graph implements Serializable {
 		}
 	}
 
-	public void dfs() {
+	public void DFS() {
 		boolean visited[] = new boolean[1024];
 		DFSUtil(this.getInitialNode(), visited);
 	}
@@ -71,6 +70,28 @@ public class Graph implements Serializable {
  	     return null;
  	   }
 	 }
- 
+
+	 @Override
+	 public String toString(){
+		String out = "";
+		 boolean visited[] = new boolean[Node.id];
+		 out += DFSPrintTree(initialNode,visited);
+		return out;
+	 }
+	 private String DFSPrintTree(Node node,boolean visited[]){
+		 if(visited[node.getCurrentId()])return "";
+		 visited[node.getCurrentId()] = true;
+		 String out = Integer.toString(node.getCurrentId()) + "\n";
+		 for (Entry<String, ArrayList<Node>> entry : node.getMap().entrySet()) {
+			 ArrayList<Node> current = entry.getValue();
+			 for (int i = 0; i < current.size(); i++) {
+			 		String edge = entry.getKey();
+			 		if(edge.equals("\\L"))edge = "eps";
+			 		 out += Integer.toString(node.getCurrentId())+" "+Integer.toString(current.get(i).getCurrentId())+" "+edge+"\n";
+					 out += DFSPrintTree(current.get(i),visited);
+			 }
+		 }
+		 return out;
+	 }
 
 }

@@ -33,12 +33,9 @@ public class RegularExpression {
 			definitionValue = definitionValue.replace(" ", "");
 
 			ArrayList<String> words = separateRegularExpression(definitionValue);
-			// System.out.println(words);
 
 			words = addConcatSymbolToRegex(words);
-			// System.out.println(words);
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(words);
-			// System.out.println(postFixExpression);
 			Graph nfa = createNfa(postFixExpression);
 			regExpressionNfa.put(definitionKey, nfa);
 
@@ -75,8 +72,6 @@ public class RegularExpression {
 		output.add(word.get(0));
 
 		for (int i = 1; i < word.size(); i++) {
-
-			// System.out.println(output.get(output.size() - 1) + " " + word.get(i));
 
 			/* If current letter is ( and previous not equal | -> digit | (digits) */
 			if (output.get(output.size() - 1) != Constant.OR && word.get(i).equals("("))
@@ -133,11 +128,9 @@ public class RegularExpression {
 		return nfa.pop();
 	}
 
-	public void dfsGraphs() {
+	public void DFSGraphs() {
 		for (Entry<String, Graph> entry : regExpressionNfa.entrySet()) {
-			System.out.print(entry.getKey() + " ");
-			entry.getValue().dfs();
-			System.out.println();
+			entry.getValue().DFS();
 		}
 	}
 
