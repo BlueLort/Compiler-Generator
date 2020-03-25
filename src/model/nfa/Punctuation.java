@@ -3,6 +3,7 @@ package model.nfa;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 import model.construction.RulesContainer;
 import model.graph.Graph;
@@ -26,7 +27,7 @@ public class Punctuation {
 			String[] operatorCharacters = operator.replace("\\", "").split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(operatorCharacters);
 			String postFixExpression = NfaUtility.infixToPostFix(characters);
-			Graph nfa = NfaUtility.createNfa(postFixExpression);
+			Graph nfa = createNfa(postFixExpression);
 			punctuationNfa.put(operator, nfa);
 		}
 	}
@@ -38,5 +39,19 @@ public class Punctuation {
 			System.out.println();
 		}
 	}
+	
+	public static Graph createNfa(String expression) {
+		// create a stack
+		Stack<Graph> nfa = new Stack<Graph>();
+
+		// Scan all characters one by one
+		for (int i = 0; i < expression.length(); i++) {
+			char c = expression.charAt(i);
+			String nodeName = String.valueOf(c);
+			nfa.push(new Graph(nodeName));
+		}
+		return nfa.pop();
+	}
+
 
 }

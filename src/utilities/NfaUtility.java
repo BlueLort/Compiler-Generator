@@ -3,8 +3,6 @@ package utilities;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import model.graph.Graph;
-
 public class NfaUtility {
 
 	public static ArrayList<String> addConcatSymbolToWords(String[] word) {
@@ -64,38 +62,6 @@ public class NfaUtility {
 			result.append(stack.pop());
 
 		return result.toString();
-	}
-
-	public static Graph createNfa(String expression) {
-		// create a stack
-		Stack<Graph> nfa = new Stack<Graph>();
-
-		// Scan all characters one by one
-		for (int i = 0; i < expression.length(); i++) {
-			char c = expression.charAt(i);
-
-			if (isOperator(String.valueOf(c))) {
-				if (c == Constant.kleene.charAt(0)) {
-					Graph g = nfa.pop();
-					nfa.push(GraphUtilities.kleeneClosure(g));
-				} else if (c == Constant.plus.charAt(0)) {
-					Graph g = nfa.pop();
-					nfa.push(GraphUtilities.plusClosure(g));
-				} else if (c == Constant.or.charAt(0)) {
-					Graph a = nfa.pop();
-					Graph b = nfa.pop();
-					nfa.push(GraphUtilities.or(a, b));
-				} else if (c == Constant.concatenate.charAt(0)) {
-					Graph a = nfa.pop();
-					Graph b = nfa.pop();
-					nfa.push(GraphUtilities.concatenate(b, a));
-				}
-			} else {
-				String nodeName = String.valueOf(c);
-				nfa.push(new Graph(nodeName));
-			}
-		}
-		return nfa.pop();
 	}
 
 	public static boolean isOperator(String character) {

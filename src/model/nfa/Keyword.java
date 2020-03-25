@@ -2,10 +2,13 @@ package model.nfa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.Map.Entry;
 
 import model.construction.RulesContainer;
 import model.graph.Graph;
+import utilities.Constant;
+import utilities.GraphUtilities;
 import utilities.NfaUtility;
 
 public class Keyword {
@@ -25,7 +28,7 @@ public class Keyword {
 			String[] keywordCharacters = keyword.split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(keywordCharacters);
 			String postFixExpression = NfaUtility.infixToPostFix(characters);
-			Graph nfa = NfaUtility.createNfa(postFixExpression);
+			Graph nfa = createNfa(postFixExpression);
 			keywordNfa.put(keyword, nfa);
 
 		}
@@ -38,5 +41,28 @@ public class Keyword {
 			System.out.println();
 		}
 	}
+	
+	public static Graph createNfa(String expression) {
+		// create a stack
+		Stack<Graph> nfa = new Stack<Graph>();
+
+		// Scan all characters one by one
+		for (int i = 0; i < expression.length(); i++) {
+			char c = expression.charAt(i);
+
+			if (c == Constant.concatenate.charAt(0)) {
+				Graph a = nfa.pop();
+				Graph b = nfa.pop();
+				nfa.push(GraphUtilities.concatenate(b, a));
+			} else {
+				String nodeName = String.valueOf(c);
+				nfa.push(new Graph(nodeName));
+			}
+		}
+		return nfa.pop();
+	}
+
+	
+	
 
 }
