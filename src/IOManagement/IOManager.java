@@ -11,14 +11,14 @@ public class IOManager {
 
 	}
 
-	public static IOManager GetInstance() {
+	public static IOManager getInstance() {
 		if (instance == null) {
 			instance = new IOManager();
 		}
 		return instance;
 	}
 
-	public void WriteFile(String s, String filePath) {
+	public void writeFile(String s, String filePath) {
 		File file = new File(filePath);
 
 		try {
@@ -33,7 +33,7 @@ public class IOManager {
 	/**
 	 * Reading in binary format to make it easier to read line feeds and new lines
 	 */
-	public String ReadFile(String filePath) {
+	public String readFile(String filePath) {
 		File file = new File(filePath);
 		ArrayList<Byte> output = new ArrayList<>();
 		try {
@@ -47,10 +47,10 @@ public class IOManager {
 			e.printStackTrace();
 		}
 
-		return GetStringFromByteList(output);
+		return getStringFromByteList(output);
 	}
 
-	private String GetStringFromByteList(ArrayList<Byte> bytes) {
+	private String getStringFromByteList(ArrayList<Byte> bytes) {
 		byte[] arr = new byte[bytes.size()];
 		for (int i = 0; i < bytes.size(); i++) {
 			arr[i] = bytes.get(i);

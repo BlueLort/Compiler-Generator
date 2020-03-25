@@ -15,17 +15,17 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="loadFile" mnemonicParsing="false" onAction="#LoadFileOnAction" text="Load..." />
-                  <MenuItem fx:id="clearResult" mnemonicParsing="false" onAction="#ClearOnAction" text="Clear" />
+              <MenuItem fx:id="loadFile" mnemonicParsing="false" onAction="#loadFileOnAction" text="Load..." />
+                  <MenuItem fx:id="clearResult" mnemonicParsing="false" onAction="#clearOnAction" text="Clear" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#SaveOnAction" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#SaveAsOnAction" text="Save As..." />
+                  <MenuItem mnemonicParsing="false" onAction="#saveOnAction" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAsOnAction" text="Save As..." />
             </items>
           </Menu>
           <Menu fx:id="load" mnemonicParsing="false" text="Lexical Tool">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#ConstructRulesOnAction" text="Construct Rules" />
-                  <MenuItem mnemonicParsing="false" onAction="#RunCodeAnalysisOnAction" text="Run Code Analysis" />
+              <MenuItem mnemonicParsing="false" onAction="#constructRulesOnAction" text="Construct Rules" />
+                  <MenuItem mnemonicParsing="false" onAction="#runCodeAnalysisOnAction" text="Run Code Analysis" />
             </items>
           </Menu>
         </menus>

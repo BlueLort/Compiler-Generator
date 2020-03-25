@@ -24,7 +24,7 @@ public class Keyword {
 	public void keywordToNfa() {
 
 		for (int i = 0; i < rulesContainer.getKeywords().size(); i++) {
-			String keyword = rulesContainer.GetKeyword(i);
+			String keyword = rulesContainer.getKeyword(i);
 			String[] keywordCharacters = keyword.split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(keywordCharacters);
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);

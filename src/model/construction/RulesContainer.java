@@ -14,7 +14,7 @@ public class RulesContainer {
 
 	private boolean hasErrors;
 
-	public boolean IsValid() {
+	public boolean isValid() {
 		return hasErrors;
 	}
 
@@ -22,19 +22,19 @@ public class RulesContainer {
 	 * no access to the private members but public wrapper functions around them is
 	 * defined
 	 */
-	public String GetRegularDefinition(String key) {
+	public String getRegularDefinition(String key) {
 		return regularDefinitions.get(key);
 	}
 
-	public String GetRegularExpression(String key) {
+	public String getRegularExpression(String key) {
 		return regularExpressions.get(key);
 	}
 
-	public String GetKeyword(int idx) {
+	public String getKeyword(int idx) {
 		return keywords.get(idx);
 	}
 
-	public String GetOperator(int idx) {
+	public String getOperator(int idx) {
 		return operators.get(idx);
 	}
 
@@ -47,13 +47,13 @@ public class RulesContainer {
 		operators = new ArrayList<String>();
 		keywords = new ArrayList<String>();
 		// regex search for each one of the elements and save them
-		hasErrors = ProcessRules(rulesFile);
+		hasErrors = processRules(rulesFile);
 	}
 
-	private boolean ProcessRules(String rulesFile) {
+	private boolean processRules(String rulesFile) {
 		String lines[] = rulesFile.split("\\r?\\n");
 		for (int i = 0; i < lines.length; i++) {
-			if (LineProcessor.GetInstance().ProcessLine(lines[i], this) == false) {
+			if (LineProcessor.GetInstance().processLine(lines[i], this) == false) {
 				return false;
 			}
 		}
@@ -76,21 +76,21 @@ public class RulesContainer {
 	}
 
 	/** default functions for LineProcessor to use */
-	void PutRegularDefinition(String key, String val) {
+	void putRegularDefinition(String key, String val) {
 		regularDefinitions.put(key, val);
 		regularDefinitionsKeys.add(key);
 	}
 
-	void PutRegularExpression(String key, String val) {
+	void putRegularExpression(String key, String val) {
 		regularExpressions.put(key, val);
 		regularExpressionsKeys.add(key);
 	}
 
-	void AddKeyword(String key) {
+	void addKeyword(String key) {
 		keywords.add(key);
 	}
 
-	void AddOperator(String op) {
+	void addOperator(String op) {
 		operators.add(op);
 	}
 

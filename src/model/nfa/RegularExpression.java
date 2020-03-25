@@ -28,7 +28,7 @@ public class RegularExpression {
 
 		for (int i = 0; i < rulesContainer.getRegularExpressionsKeys().size(); i++) {
 			String definitionKey = rulesContainer.getRegularExpressionsKeys().get(i);
-			String definitionValue = rulesContainer.GetRegularExpression(definitionKey);
+			String definitionValue = rulesContainer.getRegularExpression(definitionKey);
 
 			definitionValue = definitionValue.replace(" ", "");
 

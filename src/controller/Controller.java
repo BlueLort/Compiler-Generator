@@ -16,17 +16,9 @@ public class Controller {
 
 	public boolean ConstructRules(String file) {
 		RulesContainer rulesCont = new RulesContainer(file);
-		if (rulesCont.IsValid()) {
-			// Finished Processing the rules
-			System.out.println(rulesCont);
-			// TODO pass rulesCont as a parameter to NFA/DFA class to get processed data
-			// easily
-			RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
-			Keyword keyword = new Keyword(rulesCont);
-			Punctuation punctuation = new Punctuation(rulesCont);
-			RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
-			NFA nfa = new NFA(regularDefinition, keyword, punctuation, regex);
-			nfa.combine();
+		if (rulesCont.isValid()) { // if No Errors found during rules processing
+			NFA NFACombined = getCombinedNFA(rulesCont);
+			//TODO Pass NFACombined to DFA Constructor
 			return true;
 		}
 		return false;
@@ -39,4 +31,14 @@ public class Controller {
 		return false;
 	}
 
+
+	private NFA getCombinedNFA(RulesContainer rulesCont){
+		RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
+		Keyword keyword = new Keyword(rulesCont);
+		Punctuation punctuation = new Punctuation(rulesCont);
+		RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
+		NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
+		NFACombined.combine();
+		return NFACombined;
+	}
 }

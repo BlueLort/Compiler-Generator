@@ -11,7 +11,7 @@ public class Main extends Application {
 	}
 
 	public void start(Stage primaryStage) {
-		LexicalAnalyzer assembler = new LexicalAnalyzer();
-		assembler.Initialize(primaryStage);
+		LexicalAnalyzer lexerTool = new LexicalAnalyzer();
+		lexerTool.initialize(primaryStage);
 	}
 }

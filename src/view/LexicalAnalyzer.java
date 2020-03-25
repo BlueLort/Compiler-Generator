@@ -33,7 +33,7 @@ public class LexicalAnalyzer {
 
 	private String path;
 
-	public void Initialize(Stage primaryStage) {
+	public void initialize(Stage primaryStage) {
 
 		window = primaryStage;
 		primaryStage.setTitle("Lexical Analyzer");
@@ -48,23 +48,23 @@ public class LexicalAnalyzer {
 	}
 
 	/* PLT Needed Operations */
-	public void ConstructRulesOnAction() {
+	public void constructRulesOnAction() {
 		if (textArea.getText().equalsIgnoreCase("")) {
-			HandleTextError("Empty text field !");
+			handleTextError("Empty text field !");
 			return;
 		}
 		if (controller.ConstructRules(textArea.getText()) == false) {
-			HandleTextError("Wrong file format !");
+			handleTextError("Wrong file format !");
 		}
 	}
 
-	public void RunCodeAnalysisOnAction() {
+	public void runCodeAnalysisOnAction() {
 		if (textArea.getText().equalsIgnoreCase("")) {
-			HandleTextError("Empty text field !");
+			handleTextError("Empty text field !");
 			return;
 		}
 		if (controller.RunCodeAnalysisOnAction(textArea.getText()) == false) {
-			HandleTextError("Failed to run code analysis!");
+			handleTextError("Failed to run code analysis!");
 		}
 	}
 
@@ -73,29 +73,29 @@ public class LexicalAnalyzer {
 	 * area
 	 */
 
-	public void LoadFileOnAction() {
+	public void loadFileOnAction() {
 
 		FileChooser fileChooser = new FileChooser();
-		SetFileChooserOptions(fileChooser);
+		setFileChooserOptions(fileChooser);
 
 		File file = fileChooser.showOpenDialog(window);
 		if (file != null) {
 			path = file.getAbsolutePath();
-			textArea.setText(IOManager.GetInstance().ReadFile(path));
+			textArea.setText(IOManager.getInstance().readFile(path));
 		}
 	}
 
-	public void SaveAsOnAction() {
+	public void saveAsOnAction() {
 		FileChooser fileChooser = new FileChooser();
-		SetFileChooserOptions(fileChooser);
+		setFileChooserOptions(fileChooser);
 		File file = fileChooser.showSaveDialog(window);
 		if (file != null) {
 			path = file.getAbsolutePath();
-			IOManager.GetInstance().WriteFile(textArea.getText(), path);
+			IOManager.getInstance().writeFile(textArea.getText(), path);
 		}
 	}
 
-	private void SetFileChooserOptions(FileChooser fileChooser) {
+	private void setFileChooserOptions(FileChooser fileChooser) {
 		FileChooser.ExtensionFilter extFilterAll = new FileChooser.ExtensionFilter("All", "*.*");
 		FileChooser.ExtensionFilter extFilterTxt = new FileChooser.ExtensionFilter("TXT (*.txt)", "*.txt");
 		FileChooser.ExtensionFilter extFilterJava = new FileChooser.ExtensionFilter("Java (*.java)", "*.java");
@@ -106,26 +106,26 @@ public class LexicalAnalyzer {
 		fileChooser.setInitialDirectory(new File(currentPath));
 	}
 
-	public void SaveOnAction() {
+	public void saveOnAction() {
 		if (path == null) {
-			HandleTextError("Path is undefined use `Save As` or `Load File` at least once !");
+			handleTextError("Path is undefined use `Save As` or `Load File` at least once !");
 		}
-		IOManager.GetInstance().WriteFile(textArea.getText(), path);
+		IOManager.getInstance().writeFile(textArea.getText(), path);
 	}
 
-	public void ClearOnAction() {
+	public void clearOnAction() {
 		textArea.setText("");
 	}
 
 	/* Helper functions */
-	public void SetRestrictedMsg() {
+	public void setRestrictedMsg() {
 
 		restrictedMsgLabel.setVisible(!restricted.isSelected());
 	}
 
 	/* error Handling Functions */
 
-	private void HandleTextError(String txt) {
+	private void handleTextError(String txt) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Error");
 		alert.setHeaderText(null);
@@ -135,7 +135,7 @@ public class LexicalAnalyzer {
 
 	/* Helper function to be used at the end of the program */
 
-	private void EndTask(boolean noErrors) {
+	private void endTask(boolean noErrors) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Note");

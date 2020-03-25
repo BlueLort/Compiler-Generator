@@ -23,7 +23,7 @@ public class Punctuation {
 	public void punctuationToNfa() {
 
 		for (int i = 0; i < rulesContainer.getOperators().size(); i++) {
-			String operator = rulesContainer.GetOperator(i);
+			String operator = rulesContainer.getOperator(i);
 			String[] operatorCharacters = operator.replace("\\", "").split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(operatorCharacters);
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);

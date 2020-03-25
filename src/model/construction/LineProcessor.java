@@ -20,7 +20,7 @@ public class LineProcessor {
 
 	}
 
-	public boolean ProcessLine(String line, RulesContainer container) {
+	public boolean processLine(String line, RulesContainer container) {
 		Rule lineRules = null;
 		Pattern reg;
 		for (int i = 0; i < REGEX_FORMATS.length; i++) {
@@ -48,13 +48,13 @@ public class LineProcessor {
 		if (lineRules == null) {
 			return false;
 		}
-		lineRules.AddRule(container);
+		lineRules.addRule(container);
 		return true;
 	}
 
 	private abstract class Rule {
 
-		abstract void AddRule(RulesContainer container);
+		abstract void addRule(RulesContainer container);
 	}
 
 	private class RegularDefinition extends Rule {
@@ -67,8 +67,8 @@ public class LineProcessor {
 		}
 
 		@Override
-		void AddRule(RulesContainer container) {
-			container.PutRegularDefinition(key, value);
+		void addRule(RulesContainer container) {
+			container.putRegularDefinition(key, value);
 		}
 	}
 
@@ -82,8 +82,8 @@ public class LineProcessor {
 		}
 
 		@Override
-		void AddRule(RulesContainer container) {
-			container.PutRegularExpression(key, value);
+		void addRule(RulesContainer container) {
+			container.putRegularExpression(key, value);
 		}
 	}
 
@@ -96,10 +96,10 @@ public class LineProcessor {
 		}
 
 		@Override
-		void AddRule(RulesContainer container) {
+		void addRule(RulesContainer container) {
 			for (int i = 0; i < this.keywords.length; i++) {
 				if (!this.keywords[i].equals(""))
-					container.AddKeyword(this.keywords[i]);
+					container.addKeyword(this.keywords[i]);
 			}
 		}
 	}
@@ -112,10 +112,10 @@ public class LineProcessor {
 		}
 
 		@Override
-		void AddRule(RulesContainer container) {
+		void addRule(RulesContainer container) {
 			for (int i = 0; i < this.operators.length; i++) {
 				if (!this.operators[i].equals(""))
-					container.AddOperator(this.operators[i]);
+					container.addOperator(this.operators[i]);
 			}
 		}
 	}

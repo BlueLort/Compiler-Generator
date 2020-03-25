@@ -25,7 +25,7 @@ public class RegularDefinition {
 
 		for (int i = 0; i < rulesContainer.getRegularDefinitionsKeys().size(); i++) {
 			String definitionKey = rulesContainer.getRegularDefinitionsKeys().get(i);
-			String definitionValue = rulesContainer.GetRegularDefinition(definitionKey);
+			String definitionValue = rulesContainer.getRegularDefinition(definitionKey);
 
 			definitionValue = separateRDByOrs(definitionValue);
 
