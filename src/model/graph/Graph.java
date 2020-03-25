@@ -39,7 +39,7 @@ public class Graph implements Serializable {
 		this.destination = destination;
 	}
 
-	void DFSUtil(Node node, boolean visited[]) {
+	private void DFSUtil(Node node, boolean visited[]) {
 		visited[node.getCurrentId()] = true;
 		System.out.print(node.getCurrentId() + " ");
 

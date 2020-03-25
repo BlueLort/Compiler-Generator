@@ -11,9 +11,9 @@ import utilities.NfaUtility;
 
 public class Punctuation {
 
-	HashMap<String, Graph> punctuationNfa;
+	private HashMap<String, Graph> punctuationNfa;
 
-	RulesContainer rulesContainer;
+	private RulesContainer rulesContainer;
 
 	public Punctuation(RulesContainer rulesCont) {
 		punctuationNfa = new HashMap<String, Graph>();
@@ -26,7 +26,8 @@ public class Punctuation {
 			String operator = rulesContainer.GetOperator(i);
 			String[] operatorCharacters = operator.replace("\\", "").split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(operatorCharacters);
-			String postFixExpression = NfaUtility.infixToPostFix(characters);
+			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
+			// System.out.println(postFixExpression);
 			Graph nfa = createNfa(postFixExpression);
 			punctuationNfa.put(operator, nfa);
 		}
@@ -39,19 +40,21 @@ public class Punctuation {
 			System.out.println();
 		}
 	}
-	
-	public static Graph createNfa(String expression) {
+
+	private static Graph createNfa(ArrayList<String> expression) {
 		// create a stack
 		Stack<Graph> nfa = new Stack<Graph>();
 
 		// Scan all characters one by one
-		for (int i = 0; i < expression.length(); i++) {
-			char c = expression.charAt(i);
-			String nodeName = String.valueOf(c);
-			nfa.push(new Graph(nodeName));
+		for (int i = 0; i < expression.size(); i++) {
+			String currentExpression = expression.get(i);
+			nfa.push(new Graph(currentExpression));
 		}
 		return nfa.pop();
 	}
 
+	public HashMap<String, Graph> getPunctuationNfa() {
+		return punctuationNfa;
+	}
 
 }

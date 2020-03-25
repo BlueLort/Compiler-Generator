@@ -8,13 +8,13 @@ import java.util.Stack;
 import model.construction.RulesContainer;
 import model.graph.Graph;
 import utilities.Constant;
-import utilities.GraphUtilities;
+import utilities.GraphUtility;
 
 public class RegularDefinition {
 
-	HashMap<String, Graph> definitionNfa;
+	private HashMap<String, Graph> definitionNfa;
 
-	RulesContainer rulesContainer;
+	private RulesContainer rulesContainer;
 
 	public RegularDefinition(RulesContainer rulesCont) {
 		definitionNfa = new HashMap<String, Graph>();
@@ -59,24 +59,24 @@ public class RegularDefinition {
 				}
 				i = j;
 			} else {
-				if (c == Constant.plus.charAt(0)) {
+				if (c == Constant.PLUS.charAt(0)) {
 					// Plus operator
-					nfa.push(GraphUtilities.plusClosure(nfa.pop()));
-				} else if (c == Constant.kleene.charAt(0)) {
+					nfa.push(GraphUtility.plusClosure(nfa.pop()));
+				} else if (c == Constant.KLEENE.charAt(0)) {
 					// Kleene Closure
-					nfa.push(GraphUtilities.kleeneClosure(nfa.pop()));
+					nfa.push(GraphUtility.kleeneClosure(nfa.pop()));
 				} else if (c == '(') {
 					operator.push(c);
-				} else if (c == Constant.or.charAt(0)) {
+				} else if (c == Constant.OR.charAt(0)) {
 					operator.push(c);
 				} else if (c == ')') {
 					// Pop until you find a ')'
 					merge.clear();
 					operator.push(c);
 					while (operator.pop() != '(') {
-						Graph a = nfa.pop();
-						Graph b = nfa.pop();
-						nfa.push(GraphUtilities.or(a, b));
+						Graph right = nfa.pop();
+						Graph left = nfa.pop();
+						nfa.push(GraphUtility.or(right, left));
 					}
 				}
 				i++;
@@ -92,11 +92,11 @@ public class RegularDefinition {
 			merge.add(nfa.pop());
 		}
 
-		Graph mergedGraph = GraphUtilities.or(merge);
+		Graph mergedGraph = GraphUtility.or(merge);
 		return mergedGraph;
 	}
 
-	static String separateRDByOrs(String definition) {
+	private String separateRDByOrs(String definition) {
 
 		StringBuilder expression = new StringBuilder();
 
@@ -117,12 +117,12 @@ public class RegularDefinition {
 					range = false;
 					String separated = null;
 
-					if (Constant.alphabets.indexOf(c) != -1) {
-						separated = Constant.alphabets;
-					} else if ((Constant.alphabets.toUpperCase()).indexOf(c) != -1) {
-						separated = Constant.alphabets.toUpperCase();
-					} else if (Constant.digits.indexOf(c) != -1) {
-						separated = Constant.digits;
+					if (Constant.ALPHABETS.indexOf(c) != -1) {
+						separated = Constant.ALPHABETS;
+					} else if ((Constant.ALPHABETS.toUpperCase()).indexOf(c) != -1) {
+						separated = Constant.ALPHABETS.toUpperCase();
+					} else if (Constant.DIGITS.indexOf(c) != -1) {
+						separated = Constant.DIGITS;
 					}
 
 					int startIndex = separated.indexOf(start);
@@ -158,6 +158,10 @@ public class RegularDefinition {
 			entry.getValue().dfs();
 			System.out.println();
 		}
+	}
+
+	public HashMap<String, Graph> getDefinitionNfa() {
+		return definitionNfa;
 	}
 
 }

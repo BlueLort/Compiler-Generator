@@ -8,13 +8,13 @@ import java.util.Map.Entry;
 import model.construction.RulesContainer;
 import model.graph.Graph;
 import utilities.Constant;
-import utilities.GraphUtilities;
+import utilities.GraphUtility;
 import utilities.NfaUtility;
 
 public class Keyword {
-	HashMap<String, Graph> keywordNfa;
+	private HashMap<String, Graph> keywordNfa;
 
-	RulesContainer rulesContainer;
+	private RulesContainer rulesContainer;
 
 	public Keyword(RulesContainer rulesCont) {
 		keywordNfa = new HashMap<String, Graph>();
@@ -27,7 +27,8 @@ public class Keyword {
 			String keyword = rulesContainer.GetKeyword(i);
 			String[] keywordCharacters = keyword.split("");
 			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(keywordCharacters);
-			String postFixExpression = NfaUtility.infixToPostFix(characters);
+			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
+			// System.out.println(postFixExpression);
 			Graph nfa = createNfa(postFixExpression);
 			keywordNfa.put(keyword, nfa);
 
@@ -41,28 +42,28 @@ public class Keyword {
 			System.out.println();
 		}
 	}
-	
-	public static Graph createNfa(String expression) {
+
+	private static Graph createNfa(ArrayList<String> expression) {
 		// create a stack
 		Stack<Graph> nfa = new Stack<Graph>();
 
 		// Scan all characters one by one
-		for (int i = 0; i < expression.length(); i++) {
-			char c = expression.charAt(i);
+		for (int i = 0; i < expression.size(); i++) {
+			String currentExpression = expression.get(i);
 
-			if (c == Constant.concatenate.charAt(0)) {
-				Graph a = nfa.pop();
-				Graph b = nfa.pop();
-				nfa.push(GraphUtilities.concatenate(b, a));
+			if (currentExpression.equals(Constant.CONCATENATE)) {
+				Graph right = nfa.pop();
+				Graph left = nfa.pop();
+				nfa.push(GraphUtility.concatenate(left, right));
 			} else {
-				String nodeName = String.valueOf(c);
-				nfa.push(new Graph(nodeName));
+				nfa.push(new Graph(currentExpression));
 			}
 		}
 		return nfa.pop();
 	}
 
-	
-	
+	public HashMap<String, Graph> getKeywordNfa() {
+		return keywordNfa;
+	}
 
 }

@@ -2,8 +2,10 @@ package controller;
 
 import model.construction.RulesContainer;
 import model.nfa.Keyword;
+import model.nfa.NFA;
 import model.nfa.Punctuation;
 import model.nfa.RegularDefinition;
+import model.nfa.RegularExpression;
 
 public class Controller {
 	// TODO ADD NFA/DFA MEMBERS TO BE USED IN RUN CODE ANALYSIS
@@ -22,12 +24,9 @@ public class Controller {
 			RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
 			Keyword keyword = new Keyword(rulesCont);
 			Punctuation punctuation = new Punctuation(rulesCont);
-			regularDefinition.definitionsToNfa();
-			regularDefinition.dfsGraphs();
-			keyword.keywordToNfa();
-			keyword.dfsGraphs();
-			punctuation.punctuationToNfa();
-			punctuation.dfsGraphs();
+			RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
+			NFA nfa = new NFA(regularDefinition, keyword, punctuation, regex);
+			nfa.combine();
 			return true;
 		}
 		return false;
