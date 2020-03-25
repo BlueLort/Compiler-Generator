@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import model.graph.Graph;
-import model.graph.Node;
 import utilities.GraphUtility;
 
 public class NFA {
