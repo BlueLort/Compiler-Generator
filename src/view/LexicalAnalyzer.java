@@ -55,6 +55,8 @@ public class LexicalAnalyzer {
 		}
 		if (controller.ConstructRules(textArea.getText()) == false) {
 			handleTextError("Wrong file format !");
+		}else{
+			endTask("DFA constructed successfully !");
 		}
 	}
 
@@ -135,14 +137,12 @@ public class LexicalAnalyzer {
 
 	/* Helper function to be used at the end of the program */
 
-	private void endTask(boolean noErrors) {
+	private void endTask(String message) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Note");
 		alert.setHeaderText(null);
-		String msg;
-		msg = noErrors ? "Successful Operation" : "Incomplete Operation";
-		alert.setContentText(msg);
+		alert.setContentText(message);
 		alert.showAndWait();
 	}
 
