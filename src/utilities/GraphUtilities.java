@@ -21,15 +21,33 @@ public class GraphUtilities {
 		return newGraph;
 	}
 
+	public static Graph or(Graph firstGraph, Graph secondGraph) {
+		Graph newGraph = new Graph(Constant.epsilon);
+		newGraph.getInitialNode().removeAllEdges(Constant.epsilon);
+
+		newGraph.getInitialNode().addEdge(Constant.epsilon, firstGraph.getInitialNode());
+		firstGraph.getInitialNode().setStart(false);
+		firstGraph.getDestination().addEdge(Constant.epsilon, newGraph.getDestination());
+		firstGraph.getDestination().setEnd(false);
+
+		newGraph.getInitialNode().addEdge(Constant.epsilon, secondGraph.getInitialNode());
+		secondGraph.getInitialNode().setStart(false);
+		secondGraph.getDestination().addEdge(Constant.epsilon, newGraph.getDestination());
+		secondGraph.getDestination().setEnd(false);
+
+		return newGraph;
+	}
+
 	public static Graph kleeneClosure(Graph graph) {
 
 		Graph newGraph = new Graph(Constant.epsilon);
+		Graph clonedGraph = graph.deepCopy(graph);
 
-		newGraph.getInitialNode().addEdge(Constant.epsilon, graph.getInitialNode());
-		graph.getInitialNode().setStart(false);
-		graph.getDestination().addEdge(Constant.epsilon, newGraph.getDestination());
-		graph.getDestination().setEnd(false);
-		graph.getDestination().addEdge(Constant.epsilon, graph.getInitialNode());
+		newGraph.getInitialNode().addEdge(Constant.epsilon, clonedGraph.getInitialNode());
+		clonedGraph.getInitialNode().setStart(false);
+		clonedGraph.getDestination().addEdge(Constant.epsilon, newGraph.getDestination());
+		clonedGraph.getDestination().setEnd(false);
+		clonedGraph.getDestination().addEdge(Constant.epsilon, clonedGraph.getInitialNode());
 
 		return newGraph;
 	}
@@ -38,12 +56,13 @@ public class GraphUtilities {
 
 		Graph newGraph = new Graph(Constant.epsilon);
 		newGraph.getInitialNode().removeAllEdges(Constant.epsilon);
+		Graph clonedGraph = graph.deepCopy(graph);
 
-		newGraph.getInitialNode().addEdge(Constant.epsilon, graph.getInitialNode());
-		graph.getInitialNode().setStart(false);
-		graph.getDestination().addEdge(Constant.epsilon, newGraph.getDestination());
-		graph.getDestination().setEnd(false);
-		graph.getDestination().addEdge(Constant.epsilon, graph.getInitialNode());
+		newGraph.getInitialNode().addEdge(Constant.epsilon, clonedGraph.getInitialNode());
+		clonedGraph.getInitialNode().setStart(false);
+		clonedGraph.getDestination().addEdge(Constant.epsilon, newGraph.getDestination());
+		clonedGraph.getDestination().setEnd(false);
+		clonedGraph.getDestination().addEdge(Constant.epsilon, clonedGraph.getInitialNode());
 
 		// System.out.println("+" + newGraph.getInitialNode().getCurrentId());
 		// System.out.println("+" + newGraph.getDestination().getCurrentId());
@@ -52,12 +71,10 @@ public class GraphUtilities {
 	}
 
 	public static Graph concatenate(Graph firstGraph, Graph secondGraph) {
-		Graph newGraph = firstGraph;
-
-		newGraph.getDestination().addEdge(Constant.epsilon, secondGraph.getInitialNode());
-		newGraph.getDestination().setEnd(false);
-		newGraph.setDestination(secondGraph.getDestination());
-		return newGraph;
+		firstGraph.getDestination().addEdge(Constant.epsilon, secondGraph.getInitialNode());
+		firstGraph.getDestination().setEnd(false);
+		firstGraph.setDestination(secondGraph.getDestination());
+		return firstGraph;
 	}
 
 }

@@ -1,10 +1,15 @@
 package model.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Node {
+public class Node implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private HashMap<String, ArrayList<Node>> map;
 	private boolean start;
 	private boolean end;

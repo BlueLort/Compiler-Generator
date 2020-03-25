@@ -94,4 +94,12 @@ public class RulesContainer {
 		operators.add(op);
 	}
 
+	public ArrayList<String> getOperators() {
+		return operators;
+	}
+
+	public ArrayList<String> getKeywords() {
+		return keywords;
+	}
+
 }

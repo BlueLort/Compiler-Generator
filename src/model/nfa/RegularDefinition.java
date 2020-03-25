@@ -12,12 +12,12 @@ import utilities.GraphUtilities;
 
 public class RegularDefinition {
 
-	HashMap<String, Graph> definitionNFA;
+	HashMap<String, Graph> definitionNfa;
 
 	RulesContainer rulesContainer;
 
 	public RegularDefinition(RulesContainer rulesCont) {
-		definitionNFA = new HashMap<String, Graph>();
+		definitionNfa = new HashMap<String, Graph>();
 		this.rulesContainer = rulesCont;
 	}
 
@@ -30,7 +30,7 @@ public class RegularDefinition {
 			definitionValue = separateRDByOrs(definitionValue);
 
 			Graph currentDefinitionNfa = createNfa(definitionValue);
-			definitionNFA.put(definitionKey, currentDefinitionNfa);
+			definitionNfa.put(definitionKey, currentDefinitionNfa);
 		}
 	}
 
@@ -54,29 +54,30 @@ public class RegularDefinition {
 				String nodeName = definition.substring(i, j);
 				if (nodeName.length() == 1)
 					nfa.push(new Graph(nodeName));
-				else if (definitionNFA.containsKey(nodeName)) {
-					nfa.push(definitionNFA.get(nodeName));
+				else if (definitionNfa.containsKey(nodeName)) {
+					nfa.push(definitionNfa.get(nodeName));
 				}
 				i = j;
 			} else {
-				if (c == '+') {
+				if (c == Constant.plus.charAt(0)) {
 					// Plus operator
 					nfa.push(GraphUtilities.plusClosure(nfa.pop()));
-				} else if (c == '*') {
+				} else if (c == Constant.kleene.charAt(0)) {
 					// Kleene Closure
 					nfa.push(GraphUtilities.kleeneClosure(nfa.pop()));
 				} else if (c == '(') {
 					operator.push(c);
-				} else if (c == '|') {
+				} else if (c == Constant.or.charAt(0)) {
 					operator.push(c);
 				} else if (c == ')') {
 					// Pop until you find a ')'
 					merge.clear();
 					operator.push(c);
 					while (operator.pop() != '(') {
-						merge.add(nfa.pop());
+						Graph a = nfa.pop();
+						Graph b = nfa.pop();
+						nfa.push(GraphUtilities.or(a, b));
 					}
-					nfa.push(GraphUtilities.or(merge));
 				}
 				i++;
 			}
@@ -152,7 +153,8 @@ public class RegularDefinition {
 	}
 
 	public void dfsGraphs() {
-		for (Entry<String, Graph> entry : definitionNFA.entrySet()) {
+		for (Entry<String, Graph> entry : definitionNfa.entrySet()) {
+			System.out.print(entry.getKey() + " ");
 			entry.getValue().dfs();
 			System.out.println();
 		}
