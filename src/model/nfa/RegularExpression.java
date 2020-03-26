@@ -93,6 +93,7 @@ public class RegularExpression {
 	}
 
 	private Graph createNfa(ArrayList<String> expression) {
+		System.out.println(expression);
 		// create a stack
 		Stack<Graph> nfa = new Stack<Graph>();
 		// Scan all characters one by one
@@ -101,22 +102,45 @@ public class RegularExpression {
 			if (NfaUtility.isRegexOperator(currentExpression)) {
 				if (currentExpression.equals(Constant.KLEENE)) {
 					Graph g = nfa.pop();
+					System.out.println("Now star");
+					System.out.println(g);
+					System.out.println();
 					nfa.push(GraphUtility.kleeneClosure(g));
+					System.out.println("Star result");
+					System.out.println(nfa.peek());
 				} else if (currentExpression.equals(Constant.PLUS)) {
 					Graph g = nfa.pop();
+					System.out.println("Now plus");
+					System.out.println(g);
+					System.out.println();
 					nfa.push(GraphUtility.plusClosure(g));
+					System.out.println("Plus result");
+					System.out.println(nfa.peek());
 				} else if (currentExpression.equals(Constant.OR)) {
 					Graph right = nfa.pop();
 					Graph left = nfa.pop();
+					System.out.println("Now Oring 2 graphs");
+					System.out.println(right);
+					System.out.println();
+					System.out.println(left);
 					nfa.push(GraphUtility.or(right, left));
+					System.out.println("Or result");
+					System.out.println(nfa.peek());
 				} else if (currentExpression.equals(Constant.CONCATENATE)) {
 					Graph right = nfa.pop();
 					Graph left = nfa.pop();
+					System.out.println("Now concatenating 2 graphs");
+					System.out.println(left);
+					System.out.println();
+					System.out.println(right);
 					nfa.push(GraphUtility.concatenate(left, right));
+					System.out.println("Concatenate result");
+					System.out.println(nfa.peek());
 				}
 			} else {
 				if (definitionNfa.containsKey(currentExpression)) {
-					nfa.push(definitionNfa.get(currentExpression));
+					Graph g = definitionNfa.get(currentExpression).clone();
+					nfa.push(g);
 				} else if (NfaUtility.isSymbol(currentExpression)) {
 					String nodeName = expression.get(i).substring(1);
 					nfa.push(new Graph(nodeName));
@@ -130,7 +154,11 @@ public class RegularExpression {
 
 	public void DFSGraphs() {
 		for (Entry<String, Graph> entry : regExpressionNfa.entrySet()) {
-			entry.getValue().DFS();
+			// entry.getValue().DFS();
+			System.out.println("\n\n\n");
+			System.out.println(entry.getKey());
+			System.out.println(entry.getValue());
+
 		}
 	}
 

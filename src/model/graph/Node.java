@@ -1,15 +1,10 @@
 package model.graph;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Node implements Serializable {
+public class Node {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private HashMap<String, ArrayList<Node>> map;
 	private boolean start;
 	private boolean end;
@@ -21,6 +16,13 @@ public class Node implements Serializable {
 		map = new HashMap<String, ArrayList<Node>>();
 		this.start = start;
 		this.end = end;
+	}
+
+	public Node(Node node) {
+		this.currentId = id++;
+		this.start = node.isStart();
+		this.end = node.isEnd();
+		map = new HashMap<String, ArrayList<Node>>();
 	}
 
 	public Node() {
@@ -46,6 +48,10 @@ public class Node implements Serializable {
 
 	public HashMap<String, ArrayList<Node>> getMap() {
 		return map;
+	}
+
+	void setID(int ID) {
+		currentId = ID;
 	}
 
 	public boolean isStart() {

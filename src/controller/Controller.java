@@ -1,6 +1,7 @@
 package controller;
 
 import model.construction.RulesContainer;
+import model.graph.Graph;
 import model.nfa.Keyword;
 import model.nfa.NFA;
 import model.nfa.Punctuation;
@@ -17,8 +18,8 @@ public class Controller {
 	public boolean ConstructRules(String file) {
 		RulesContainer rulesCont = new RulesContainer(file);
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
-			NFA NFACombined = getCombinedNFA(rulesCont);
-			//TODO Pass NFACombined to DFA Constructor
+			Graph NFACombined = getCombinedNFA(rulesCont);
+			// TODO Pass NFACombined to DFA Constructor
 			return true;
 		}
 		return false;
@@ -31,14 +32,13 @@ public class Controller {
 		return false;
 	}
 
-
-	private NFA getCombinedNFA(RulesContainer rulesCont){
+	private Graph getCombinedNFA(RulesContainer rulesCont) {
 		RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
 		Keyword keyword = new Keyword(rulesCont);
 		Punctuation punctuation = new Punctuation(rulesCont);
 		RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
 		NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
-		NFACombined.combine();
-		return NFACombined;
+		Graph combinedNFAs = NFACombined.combine();
+		return combinedNFAs;
 	}
 }

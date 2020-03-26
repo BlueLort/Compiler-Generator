@@ -1,26 +1,26 @@
 package model.graph;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-public class Graph implements Serializable {
+public class Graph {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private Node initialNode;
 	private Node destination;
+	private String word;
 
 	public Graph(String string) {
+		this.word = string;
 		initialNode = new Node(true, false);
 		destination = new Node(false, true);
 		initialNode.addEdge(string, destination);
+	}
+
+	public Graph(Graph g) {
+		this.word = g.getWord();
+		this.initialNode = new Node(g.getInitialNode());
+		this.destination = new Node(g.getDestination());
+
 	}
 
 	public Node getInitialNode() {
@@ -55,43 +55,50 @@ public class Graph implements Serializable {
 		boolean visited[] = new boolean[1024];
 		DFSUtil(this.getInitialNode(), visited);
 	}
-	
-    public Graph deepCopy(Graph graph) {
- 	   try {
- 	     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
- 	     ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream);
- 	     outputStrm.writeObject(graph);
- 	     ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
- 	     ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
- 	     return (Graph)objInputStream.readObject();
- 	   }
- 	   catch (Exception e) {
- 	     e.printStackTrace();
- 	     return null;
- 	   }
-	 }
 
-	 @Override
-	 public String toString(){
+	/*
+	 * public Graph clone() { try { ByteArrayOutputStream outputStream = new
+	 * ByteArrayOutputStream(); ObjectOutputStream outputStrm = new
+	 * ObjectOutputStream(outputStream); outputStrm.writeObject(this);
+	 * ByteArrayInputStream inputStream = new
+	 * ByteArrayInputStream(outputStream.toByteArray()); ObjectInputStream
+	 * objInputStream = new ObjectInputStream(inputStream); Graph clonedGraph =
+	 * (Graph) objInputStream.readObject(); return clonedGraph;
+	 * 
+	 * } catch (Exception e) { e.printStackTrace(); return null; } }
+	 */
+
+	@Override
+	public String toString() {
 		String out = "";
-		 boolean visited[] = new boolean[Node.id];
-		 out += DFSPrintTree(initialNode,visited);
+		boolean visited[] = new boolean[Node.id];
+		out += DFSPrintTree(initialNode, visited);
 		return out;
-	 }
-	 private String DFSPrintTree(Node node,boolean visited[]){
-		 if(visited[node.getCurrentId()])return "";
-		 visited[node.getCurrentId()] = true;
-		 String out = Integer.toString(node.getCurrentId()) + "\n";
-		 for (Entry<String, ArrayList<Node>> entry : node.getMap().entrySet()) {
-			 ArrayList<Node> current = entry.getValue();
-			 for (int i = 0; i < current.size(); i++) {
-			 		String edge = entry.getKey();
-			 		if(edge.equals("\\L"))edge = "eps";
-			 		 out += Integer.toString(node.getCurrentId())+" "+Integer.toString(current.get(i).getCurrentId())+" "+edge+"\n";
-					 out += DFSPrintTree(current.get(i),visited);
-			 }
-		 }
-		 return out;
-	 }
+	}
+
+	private String DFSPrintTree(Node node, boolean visited[]) {
+		if (visited[node.getCurrentId()])
+			return "";
+		visited[node.getCurrentId()] = true;
+		String out = Integer.toString(node.getCurrentId()) + "\n";
+		for (Entry<String, ArrayList<Node>> entry : node.getMap().entrySet()) {
+			ArrayList<Node> current = entry.getValue();
+			for (int i = 0; i < current.size(); i++) {
+				String edge = entry.getKey();
+				if (edge.equals("\\L"))
+					edge = "eps";
+				out += Integer.toString(node.getCurrentId()) + " " + Integer.toString(current.get(i).getCurrentId())
+						+ " " + edge + "\n";
+				System.out.println(node.getCurrentId() + " " + node.isStart() + " " + current.get(i).getCurrentId()
+						+ " " + current.get(i).isEnd());
+				out += DFSPrintTree(current.get(i), visited);
+			}
+		}
+		return out;
+	}
+
+	public String getWord() {
+		return word;
+	}
 
 }

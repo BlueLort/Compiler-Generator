@@ -34,7 +34,11 @@ public class Punctuation {
 
 	public void DFSGraphs() {
 		for (Entry<String, Graph> entry : punctuationNfa.entrySet()) {
-			entry.getValue().DFS();
+			// entry.getValue().DFS();
+			System.out.println("\n\n\n");
+			System.out.println(entry.getKey());
+			System.out.println(entry.getValue());
+
 		}
 	}
 

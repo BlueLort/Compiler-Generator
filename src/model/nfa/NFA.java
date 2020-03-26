@@ -24,13 +24,13 @@ public class NFA {
 	
 	private void getNfa() {
 		regularDefinition.definitionsToNfa();
-		regularDefinition.DFSGraphs();
+		// regularDefinition.DFSGraphs();
 		keyword.keywordToNfa();
-		keyword.DFSGraphs();
+		// keyword.DFSGraphs();
 		punctuation.punctuationToNfa();
-		punctuation.DFSGraphs();
+		// punctuation.DFSGraphs();
 		regex.regexToNfa();
-		regex.DFSGraphs();
+		//regex.DFSGraphs();
 	}
 	
 	private void addToList() {

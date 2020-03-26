@@ -41,8 +41,8 @@ public class GraphUtility {
 	public static Graph kleeneClosure(Graph graph) {
 
 		Graph newGraph = new Graph(Constant.EPSILON);
-		Graph clonedGraph = graph.deepCopy(graph);
-
+		Graph clonedGraph = graph.clone();
+		
 		newGraph.getInitialNode().addEdge(Constant.EPSILON, clonedGraph.getInitialNode());
 		clonedGraph.getInitialNode().setStart(false);
 		clonedGraph.getDestination().addEdge(Constant.EPSILON, newGraph.getDestination());
@@ -56,7 +56,7 @@ public class GraphUtility {
 
 		Graph newGraph = new Graph(Constant.EPSILON);
 		newGraph.getInitialNode().removeAllEdges(Constant.EPSILON);
-		Graph clonedGraph = graph.deepCopy(graph);
+		Graph clonedGraph = graph.clone();
 
 		newGraph.getInitialNode().addEdge(Constant.EPSILON, clonedGraph.getInitialNode());
 		clonedGraph.getInitialNode().setStart(false);
@@ -71,10 +71,14 @@ public class GraphUtility {
 	}
 
 	public static Graph concatenate(Graph firstGraph, Graph secondGraph) {
-		firstGraph.getDestination().addEdge(Constant.EPSILON, secondGraph.getInitialNode());
-		firstGraph.getDestination().setEnd(false);
-		firstGraph.setDestination(secondGraph.getDestination());
-		return firstGraph;
+		Graph first = firstGraph.clone();
+		Graph second = secondGraph.clone();
+
+		first.getDestination().addEdge(Constant.EPSILON, second.getInitialNode());
+		first.getDestination().setEnd(false);
+		second.getInitialNode().setStart(false);
+		first.setDestination(second.getDestination());
+		return first;
 	}
 
 }
