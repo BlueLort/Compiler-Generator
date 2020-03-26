@@ -41,7 +41,7 @@ public class GraphUtility {
 	public static Graph kleeneClosure(Graph graph) {
 
 		Graph newGraph = new Graph(Constant.EPSILON);
-		Graph clonedGraph = graph.clone();
+		Graph clonedGraph = new Graph(graph);
 		
 		newGraph.getInitialNode().addEdge(Constant.EPSILON, clonedGraph.getInitialNode());
 		clonedGraph.getInitialNode().setStart(false);
@@ -56,7 +56,7 @@ public class GraphUtility {
 
 		Graph newGraph = new Graph(Constant.EPSILON);
 		newGraph.getInitialNode().removeAllEdges(Constant.EPSILON);
-		Graph clonedGraph = graph.clone();
+		Graph clonedGraph = new Graph(graph);
 
 		newGraph.getInitialNode().addEdge(Constant.EPSILON, clonedGraph.getInitialNode());
 		clonedGraph.getInitialNode().setStart(false);
@@ -71,8 +71,8 @@ public class GraphUtility {
 	}
 
 	public static Graph concatenate(Graph firstGraph, Graph secondGraph) {
-		Graph first = firstGraph.clone();
-		Graph second = secondGraph.clone();
+		Graph first = new Graph(firstGraph);
+		Graph second = new Graph(secondGraph);
 
 		first.getDestination().addEdge(Constant.EPSILON, second.getInitialNode());
 		first.getDestination().setEnd(false);

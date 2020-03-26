@@ -139,7 +139,7 @@ public class RegularExpression {
 				}
 			} else {
 				if (definitionNfa.containsKey(currentExpression)) {
-					Graph g = definitionNfa.get(currentExpression).clone();
+					Graph g = new Graph(definitionNfa.get(currentExpression));
 					nfa.push(g);
 				} else if (NfaUtility.isSymbol(currentExpression)) {
 					String nodeName = expression.get(i).substring(1);

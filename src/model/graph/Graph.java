@@ -1,6 +1,7 @@
 package model.graph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class Graph {
@@ -18,10 +19,32 @@ public class Graph {
 
 	public Graph(Graph g) {
 		this.word = g.getWord();
+		HashMap<Node,Node> oldToNew = new HashMap();
 		this.initialNode = new Node(g.getInitialNode());
-		this.destination = new Node(g.getDestination());
-
+		oldToNew.put(g.getInitialNode(),this.initialNode);
+		boolean[] visited = new boolean[Node.id];
+		cloneDFS(g.getInitialNode(), visited, oldToNew);
+		this.destination = oldToNew.get(g.getDestination());
 	}
+
+	public void cloneDFS(Node node,boolean[] visited,HashMap<Node,Node> oldToNew){
+		if(visited[node.getCurrentId()]) return;
+		visited[node.getCurrentId()]=true;
+		for (Entry<String, ArrayList<Node>> entry : node.getMap().entrySet()) {
+			ArrayList<Node> current = entry.getValue();
+			for (int i = 0; i < current.size(); i++) {
+				if(oldToNew.containsKey(current.get(i)) == false){
+					oldToNew.put(current.get(i),new Node(current.get(i)));
+				}
+				if(oldToNew.get(node).getMap().containsKey(entry.getKey()) == false){
+					oldToNew.get(node).getMap().put(entry.getKey(),new ArrayList<>());
+				}
+				oldToNew.get(node).getMap().get(entry.getKey()).add(oldToNew.get(current.get(i)));
+				cloneDFS(current.get(i), visited ,oldToNew);
+			}
+		}
+	}
+
 
 	public Node getInitialNode() {
 		return initialNode;
