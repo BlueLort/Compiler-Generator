@@ -1,24 +1,16 @@
 package model.dfa;
 
-
 import model.graph.*;
 import utilities.DfaUtility;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-
-
-
 public class DFA {
-    Graph                  NFACombined;
-    Graph                  DFA;
-    Stack<String>          dfaStatesUnmarked;
-    HashMap<String,Node>   DfatransTable;
-
-
-
+    Graph                   NFACombined;
+    Graph                   DFA;
+    Stack<ArrayList<Node>>  dfaStatesUnmarked;
+    HashMap<String,Node>    DfatransTable;
 
     public DFA(Graph NFACombined) {
         DFA = new Graph("DFA");
@@ -27,39 +19,37 @@ public class DFA {
         ArrayList<Node> s0 = new ArrayList<>();
         s0.add(NFACombined.getInitialNode());
         ArrayList<Node> epsClosureS0 = DfaUtility.epsilonClosure(s0);
-        dfaStatesUnmarked.push(DfaUtility.createDfaID(epsClosureS0));
-        constructDFA(epsClosureS0);
+        DFA.getInitialNode().setDfaNodeID(DfaUtility.createDfaID(epsClosureS0));
+        dfaStatesUnmarked.push(epsClosureS0);
+        DfatransTable.put(DfaUtility.createDfaID(epsClosureS0),DFA.getInitialNode());
+        constructDFA();
         minimizeDfa();
     }
-
 
     private void minimizeDfa() {
 
     }
 
-
-    private void constructDFA(ArrayList<Node> epsClosureS0) {
+    private void constructDFA() {
         while (!dfaStatesUnmarked.empty()) {
-
+            ArrayList<Node> T = dfaStatesUnmarked.pop();
+            String TsID = DfaUtility.createDfaID(T);
+            ArrayList<Node> U = new ArrayList<>();
+            for (String a:DfaUtility.getUnionInputs(T)) {
+                U = DfaUtility.epsilonClosure(DfaUtility.move(T,a));
+                String newID = DfaUtility.createDfaID(U);
+                if (!DfatransTable.containsKey(newID)) {
+                    dfaStatesUnmarked.push(U);
+                    Node node = new Node();
+                    DfatransTable.put(newID,node);
+                }
+                DfatransTable.get(TsID).addEdge(a,DfatransTable.get(newID));
+            }
         }
     }
 
     public Graph getDFA() {
         return DFA;
-    }
-
-    /** to check if a state  is already visited */
-    private boolean isInUnmarked(Node node) {
-        if (dfaStatesUnmarked.contains(node.getDfaNodeID()))
-            return true;
-        return false;
-    }
-
-    /** to check if a state  is already visited or explored */
-    private boolean isInDstates(Node node) {
-            if (DfatransTable.keySet().contains(node.getDfaNodeID()))
-                return true;
-        return false;
     }
 }
 

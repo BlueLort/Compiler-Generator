@@ -1,6 +1,6 @@
 package utilities;
 
-import model.graph.Graph;
+
 import model.graph.Node;
 
 import java.util.ArrayList;
@@ -10,7 +10,9 @@ import java.util.Stack;
 
 public class DfaUtility {
 
-    /** get union of all inputs in a set of NFA states that doesn't go to the dead node */
+    /**
+     * get union of all inputs in a set of NFA states that doesn't go to the dead node
+     */
     public static ArrayList<String> getUnionInputs(ArrayList<Node> nfaNodes) {
         ArrayList<String> possibleInputs = new ArrayList<>();
         for (Node node : nfaNodes) {
@@ -24,7 +26,9 @@ public class DfaUtility {
     }
 
 
-    /** get union of T & all nodes reachable from the set of nodes in T through an edge epsilon */
+    /**
+     * get union of T & all nodes reachable from the set of nodes in T through an edge epsilon
+     */
     public static ArrayList<Node> epsilonClosure(ArrayList<Node> T) {
         Stack<Node> stack = new Stack<>();
         ArrayList<Node> epsilonClosureOut = new ArrayList<>();
@@ -62,7 +66,9 @@ public class DfaUtility {
     }
 
 
-    /** create DFA state ID by concatenating NFA nodes ID'S into one sorted comma separated string  */
+    /**
+     * create DFA state ID by concatenating NFA nodes ID'S into one sorted comma separated string
+     */
     public static String createDfaID(ArrayList<Node> nfaNodes) {
         int length = nfaNodes.size();
         int[] intArr = new int[length];
@@ -83,8 +89,18 @@ public class DfaUtility {
     }
 
 
-    /** TODO move(T,a) */
-    public static ArrayList<Node> move(){
-        return null;
+    /** Set of NFA states to which there is a transition on
+     input symbol a from some state s in T. */
+    public static ArrayList<Node> move(ArrayList<Node> T, String a) {
+        ArrayList<Node> res = new ArrayList<>();
+        for (Node node : T) {
+            if (node.getMap().keySet().contains(a)) {
+                for (Node nodeIterator:node.getMap().get(a)) {
+                    if (!res.contains(nodeIterator))
+                        res.add(nodeIterator);
+                }
+            }
+        }
+        return res;
     }
 }
