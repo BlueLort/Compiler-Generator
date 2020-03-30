@@ -17,7 +17,7 @@ public class DfaUtility {
         ArrayList<String> possibleInputs = new ArrayList<>();
         for (Node node : nfaNodes) {
             for (String string : node.getMap().keySet()) {
-                if (!possibleInputs.contains(string)) {
+                if (!possibleInputs.contains(string) && string != Constant.EPSILON) {
                     possibleInputs.add(string);
                 }
             }
