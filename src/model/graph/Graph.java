@@ -74,29 +74,24 @@ public class Graph {
 		}
 	}
 
-	public Node DFS(Node node, int nodeID,boolean visited[]) {
-		if (node.getCurrentId() == nodeID) {
-			visited[node.getCurrentId()] = true;
-			return node;
-		}
-		if (node.getMap().isEmpty()) {
-			visited[node.getCurrentId()] = true;
+	public Node DFS(Node node, int nodeID,boolean[] visited) {
+		if (visited[node.getCurrentId()])
 			return null;
-		}
+		visited[node.getCurrentId()] = true;
+		if (node.getCurrentId() == nodeID)
+			return node;
 		Node res = null;
-		for (String string:node.getMap().keySet()) {
-			for (Node nodeIterator:node.getMap().get(string)) {
-				if (!visited[nodeIterator.getCurrentId()]) {
-					res = DFS(nodeIterator,nodeID,visited);
-					if (res != null) {
-					visited[node.getCurrentId()] = true;
-					return res;
+		if (node.getMap() != null) {
+			for (String string : node.getMap().keySet()) {
+				for (Node nodeIterator : node.getMap().get(string)) {
+						res = DFS(nodeIterator, nodeID, visited);
+						if (res != null) {
+							return res;
 					}
 				}
 			}
 		}
-		visited[node.getCurrentId()] = true;
-		return res;
+		return null;
 	}
 
 	public void DFS() {
