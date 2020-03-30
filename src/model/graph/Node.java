@@ -9,6 +9,7 @@ public class Node {
 	private boolean start;
 	private boolean end;
 	private int currentId;
+	private String dfaNodeID;
 	public static int id = 0;
 
 	public Node(boolean start, boolean end) {
@@ -16,6 +17,14 @@ public class Node {
 		map = new HashMap<String, ArrayList<Node>>();
 		this.start = start;
 		this.end = end;
+	}
+
+	public Node(boolean start, boolean end, String dfaNodeID) {
+		currentId = id++;
+		map = new HashMap<String, ArrayList<Node>>();
+		this.start = start;
+		this.end = end;
+		this.dfaNodeID = dfaNodeID;
 	}
 
 	public Node(Node node) {
@@ -74,4 +83,7 @@ public class Node {
 		return currentId;
 	}
 
+	public String getDfaNodeID() { return dfaNodeID; }
+
+	public void setDfaNodeID(String dfaNode) { this.dfaNodeID = dfaNode; }
 }

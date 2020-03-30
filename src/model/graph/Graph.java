@@ -74,6 +74,31 @@ public class Graph {
 		}
 	}
 
+	public Node DFS(Node node, int nodeID,boolean visited[]) {
+		if (node.getCurrentId() == nodeID) {
+			visited[node.getCurrentId()] = true;
+			return node;
+		}
+		if (node.getMap().isEmpty()) {
+			visited[node.getCurrentId()] = true;
+			return null;
+		}
+		Node res = null;
+		for (String string:node.getMap().keySet()) {
+			for (Node nodeIterator:node.getMap().get(string)) {
+				if (!visited[nodeIterator.getCurrentId()]) {
+					res = DFS(nodeIterator,nodeID,visited);
+					if (res != null) {
+					visited[node.getCurrentId()] = true;
+					return res;
+					}
+				}
+			}
+		}
+		visited[node.getCurrentId()] = true;
+		return res;
+	}
+
 	public void DFS() {
 		boolean visited[] = new boolean[1024];
 		DFSUtil(this.getInitialNode(), visited);

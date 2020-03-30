@@ -81,4 +81,10 @@ public class DfaUtility {
         }
         return string;
     }
+
+
+    /** TODO move(T,a) */
+    public static ArrayList<Node> move(){
+        return null;
+    }
 }
