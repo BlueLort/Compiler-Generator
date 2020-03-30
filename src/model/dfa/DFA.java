@@ -13,7 +13,7 @@ public class DFA {
     HashMap<String,Node>    DfatransTable;
 
     public DFA(Graph NFACombined) {
-        DFA = new Graph("DFA");
+        DFA = new Graph();
         this.NFACombined = NFACombined;
         dfaStatesUnmarked = new Stack<>();
         DfatransTable = new HashMap<>();

@@ -17,6 +17,10 @@ public class Graph {
 		initialNode.addEdge(string, destination);
 	}
 
+    public Graph() {
+        initialNode = new Node(true, false);
+    }
+
 	public Graph(Graph g) {
 		this.word = g.getWord();
 		HashMap<Node,Node> oldToNew = new HashMap();
