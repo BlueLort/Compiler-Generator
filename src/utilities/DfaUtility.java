@@ -79,7 +79,7 @@ public class DfaUtility {
         String string = new String();
         for (int i = 0; i < length - 1; i++) {
             if (!string.contains(Integer.toString(intArr[i]))) {
-                string.concat(Integer.toString(intArr[i]) + ",");
+                string+=Integer.toString(intArr[i]) + ",";
             }
         }
         if (!string.contains(Integer.toString(intArr[length-1]))) {
