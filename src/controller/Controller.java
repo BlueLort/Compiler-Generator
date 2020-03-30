@@ -1,6 +1,7 @@
 package controller;
 
 import model.construction.RulesContainer;
+import model.dfa.DFA;
 import model.graph.Graph;
 import model.nfa.Keyword;
 import model.nfa.NFA;
@@ -10,6 +11,7 @@ import model.nfa.RegularExpression;
 
 public class Controller {
 	// TODO ADD NFA/DFA MEMBERS TO BE USED IN RUN CODE ANALYSIS
+	DFA  DFAMinimized;
 
 	public Controller() {
 
@@ -19,6 +21,8 @@ public class Controller {
 		RulesContainer rulesCont = new RulesContainer(file);
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
+			DFAMinimized = new  DFA(NFACombined);
+
 			// TODO Pass NFACombined to DFA Constructor
 			return true;
 		}

@@ -16,6 +16,7 @@ public class DFA {
         DFA = new Graph("DFA");
         this.NFACombined = NFACombined;
         dfaStatesUnmarked = new Stack<>();
+        DfatransTable = new HashMap<>();
         ArrayList<Node> s0 = new ArrayList<>();
         s0.add(NFACombined.getInitialNode());
         ArrayList<Node> epsClosureS0 = DfaUtility.epsilonClosure(s0);
@@ -34,7 +35,7 @@ public class DFA {
         while (!dfaStatesUnmarked.empty()) {
             ArrayList<Node> T = dfaStatesUnmarked.pop();
             String TsID = DfaUtility.createDfaID(T);
-            ArrayList<Node> U = new ArrayList<>();
+            ArrayList<Node> U;
             for (String a:DfaUtility.getUnionInputs(T)) {
                 U = DfaUtility.epsilonClosure(DfaUtility.move(T,a));
                 String newID = DfaUtility.createDfaID(U);
