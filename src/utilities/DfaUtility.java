@@ -17,7 +17,7 @@ public class DfaUtility {
         ArrayList<String> possibleInputs = new ArrayList<>();
         for (Node node : nfaNodes) {
             for (String string : node.getMap().keySet()) {
-                if (!possibleInputs.contains(string) && string != Constant.EPSILON) {
+                if (!possibleInputs.contains(string)&&!string.equals(Constant.EPSILON)) {
                     possibleInputs.add(string);
                 }
             }
@@ -62,6 +62,8 @@ public class DfaUtility {
  }
  System.out.println("\n************* epsilon closure \n"+T.size());
  */
+
+        System.out.println(createDfaID(epsilonClosureOut));
         return epsilonClosureOut;
     }
 

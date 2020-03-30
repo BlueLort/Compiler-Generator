@@ -152,15 +152,6 @@ public class RegularDefinition {
 		return expression.toString();
 	}
 
-	public void DFSGraphs() {
-		for (Entry<String, Graph> entry : definitionNfa.entrySet()) {
-			// entry.getValue().DFS();
-			System.out.println("\n\n\n");
-			System.out.println(entry.getKey());
-			System.out.println(entry.getValue());
-		}
-	}
-
 	public HashMap<String, Graph> getDefinitionNfa() {
 		return definitionNfa;
 	}

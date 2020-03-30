@@ -21,8 +21,11 @@ public class Controller {
 		RulesContainer rulesCont = new RulesContainer(file);
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
+            System.out.println("\n\n\n\n");
+            System.out.println(NFACombined);
 			DFAMinimized = new  DFA(NFACombined);
-
+			System.out.println("\n\n\n\n");
+            System.out.println(DFAMinimized.getDFA());
 			// TODO Pass NFACombined to DFA Constructor
 			return true;
 		}
