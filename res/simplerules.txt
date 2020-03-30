@@ -1,0 +1,9 @@
+letter = a
+digit = 0
+id: letter (letter|digit)*
+{int}
+relop: \=\=
+assign: =
+[;]
+addop:\+
+mulop:\*
