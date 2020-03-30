@@ -83,7 +83,7 @@ public class DfaUtility {
             }
         }
         if (!string.contains(Integer.toString(intArr[length-1]))) {
-            string.concat(Integer.toString(intArr[length - 1]));
+            string += Integer.toString(intArr[length - 1]);
         }
         return string;
     }
