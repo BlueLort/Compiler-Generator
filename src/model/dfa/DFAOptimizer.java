@@ -44,6 +44,11 @@ public class DFAOptimizer {
               minimizedDFATransTable.get(string).addEdge(s,minimizedDFATransTable.get(groupingsID));
             }
         }
+        HashMap<String,Node> temp = new HashMap<>();
+        for (Node node : minimizedDFATransTable.values()) { /** renaming groups by new nodes ID */
+            temp.put(Integer.toString(node.getCurrentId()),node);
+        }
+        minimizedDFATransTable = temp;
     }
 
     private void minimizeDFA() {
@@ -91,6 +96,7 @@ public class DFAOptimizer {
         }
         return newGroupings;
     }
+
 
     public Graph getDFAMinimized() { return DFAMinimized; }
 
