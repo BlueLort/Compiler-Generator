@@ -4,15 +4,20 @@ import model.construction.RulesContainer;
 import model.dfa.DFA;
 import model.dfa.DFAOptimizer;
 import model.graph.Graph;
+import model.graph.Node;
 import model.nfa.Keyword;
 import model.nfa.NFA;
 import model.nfa.Punctuation;
 import model.nfa.RegularDefinition;
 import model.nfa.RegularExpression;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Controller {
-	// TODO ADD NFA/DFA MEMBERS TO BE USED IN RUN CODE ANALYSIS
-	DFA  DFAMinimized;
+
+	Graph  DFAMinimized;
+	HashMap<String, Node> DFAMinimizedTransTable;
 
 	public Controller() {
 
@@ -22,14 +27,10 @@ public class Controller {
 		RulesContainer rulesCont = new RulesContainer(file);
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
-            System.out.println("\n\n\n\n");
-            System.out.println(NFACombined);
-			DFAMinimized = new  DFA(NFACombined);
-			System.out.println("\n\n\n\n");
-            System.out.println(DFAMinimized.getDFA());
-            System.out.println("\n\n\n\n\n\n");
-			DFAOptimizer dfaOptimizer = new DFAOptimizer(DFAMinimized);
-			// TODO Pass NFACombined to DFA Constructor
+			DFA DFA = new  DFA(NFACombined);
+			DFAOptimizer dfaOptimizer = new DFAOptimizer(DFA);
+			DFAMinimized = dfaOptimizer.getDFAMinimized();
+			DFAMinimizedTransTable = dfaOptimizer.getMinimizedDFATransTable();
 			return true;
 		}
 		return false;

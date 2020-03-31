@@ -3,24 +3,51 @@ package model.dfa;
 import model.graph.Graph;
 import model.graph.Node;
 import utilities.DfaUtility;
-
-import javax.naming.NamingEnumeration;
 import java.util.*;
 
 public class DFAOptimizer {
     Graph DFA;
     Graph DFAMinimized;
     HashMap<String, Node> DFATransTable;
-    HashMap<String, ArrayList<Node>> finalGroup;
+    HashMap<String, Node> minimizedDFATransTable;
+    HashMap<String, ArrayList<Node>> finalGroupings;
 
     public DFAOptimizer(DFA DFA) {
         this.DFA = DFA.getDFA();
         this.DFATransTable = DFA.getDFATransTable();
         minimizeDFA();
+        linkDFAFinalGroupings();
+        System.out.println("************"+"\t\t\t minimized DFA" + "\t\t****************");
+        System.out.println(DFAMinimized.toString());
+        System.out.println("\n\n\n\n\n");
+        System.out.println("************"+"\t\t\t original DFA" + "\t\t****************");
+        System.out.println(DFA.getDFA().toString());
+    }
+
+    private void linkDFAFinalGroupings() {
+        DFAMinimized = new Graph();
+        minimizedDFATransTable = new HashMap<>();
+        for (String string :  finalGroupings.keySet()) {
+            Node node = new Node();
+            if (DfaUtility.isEndGroupings(finalGroupings.get(string)))
+                node.setEnd(true);
+            minimizedDFATransTable.put(string,node);
+        }
+        String initialNodeGroupId = DfaUtility.findPartitionOfNode(DFA.getInitialNode(), finalGroupings);
+        Node initialNode = minimizedDFATransTable.get(initialNodeGroupId);
+        initialNode.setStart(true);
+        DFAMinimized.setInitialNode(initialNode); /** setting the initial node in the minimized DFA */
+        for (String string : finalGroupings.keySet()) {
+            Node firstNodeOfGroup = finalGroupings.get(string).get(0); /** first node of each partition use it's edges to find what partition does it points to*/
+            for (String s : firstNodeOfGroup.getMap().keySet()) {
+              String groupingsID =  DfaUtility.findPartitionOfNode(firstNodeOfGroup.getMap().get(s).get(0), finalGroupings);
+              minimizedDFATransTable.get(string).addEdge(s,minimizedDFATransTable.get(groupingsID));
+            }
+        }
     }
 
     private void minimizeDFA() {
-        HashMap<String, ArrayList<Node>> group = new HashMap<>();
+        HashMap<String, ArrayList<Node>> grouping = new HashMap<>();
         ArrayList<Node> nonAcceptingState = new ArrayList<>();
         ArrayList<Node> acceptingState = new ArrayList<>();
         for (String string : DFATransTable.keySet()) {
@@ -31,92 +58,41 @@ public class DFAOptimizer {
         }
         Collections.sort(nonAcceptingState);
         Collections.sort(acceptingState);
-        group.put("start", nonAcceptingState);
-        group.put("final", acceptingState);
-        HashMap<String, ArrayList<Node>> newGroup = group;
+        grouping.put("start", nonAcceptingState);
+        grouping.put("final", acceptingState);
+        HashMap<String, ArrayList<Node>> newGrouping = grouping;
         do {
-            group = newGroup;
-            newGroup = constructGroup(group);
-        } while (!isGroupsEqual(newGroup, group));
-        finalGroup = newGroup;
-        System.out.println("final group finished");
-        System.out.println(newGroup.size());
+            grouping = newGrouping;                               /** last grouping */
+            newGrouping = constructGroupings(grouping);               /** new grouping */
+        } while (!DfaUtility.isTwoGroupingsEqual(newGrouping, grouping)); /** while last groupings not the same as the new groupings continue to minimize */
+        finalGroupings = newGrouping;
     }
 
-
     /**
-     * sort array list of each group
+     * NOTE: Whenever the array list is accessed it must be sorted  to maintain order to compare the lists easily
      */
-    private HashMap<String, ArrayList<Node>> constructGroup(HashMap<String, ArrayList<Node>> group) {
-        HashMap<String, ArrayList<Node>> newGroup = new HashMap<>();
-        for (String string : group.keySet()) {
-            for (Node node : group.get(string)) {
-                String newGroupID = createGroupID(node, group, string);
-                if (newGroup.keySet().contains(newGroupID)) {
-                    newGroup.get(newGroupID).add(node);
-                    Collections.sort(newGroup.get(newGroupID));
+
+    /** constructing groupings by building a partition for each node and if it isn't built before added it to the groupings */
+    private HashMap<String, ArrayList<Node>> constructGroupings(HashMap<String, ArrayList<Node>> groupings) {
+        HashMap<String, ArrayList<Node>> newGroupings = new HashMap<>();
+        for (String string : groupings.keySet()) {
+            for (Node node : groupings.get(string)) {
+                String newGroupingsID = DfaUtility.createGroupingsID(node, groupings, string);
+                if (newGroupings.keySet().contains(newGroupingsID)) {
+                    newGroupings.get(newGroupingsID).add(node);
+                    Collections.sort(newGroupings.get(newGroupingsID));
                 }
                 else {
                     ArrayList<Node> newPartition = new ArrayList<>();
                     newPartition.add(node);
-                    newGroup.put(newGroupID,newPartition);
+                    newGroupings.put(newGroupingsID,newPartition);
                 }
             }
         }
-        return newGroup;
+        return newGroupings;
     }
 
-    public Graph getDFAMinimized() {
-        return DFAMinimized;
-    }
+    public Graph getDFAMinimized() { return DFAMinimized; }
 
-    public HashMap<String, Node> getDFATransTable() {
-        return DFATransTable;
-    }
-
-    private boolean isGroupsEqual(HashMap<String, ArrayList<Node>> groupA, HashMap<String, ArrayList<Node>> groupB) {
-        if (groupA.size() != groupB.size())
-            return false;
-
-        for (ArrayList<Node> partition : groupA.values()) {
-            if (!isPrtInGroup(groupB, partition))
-                return false;
-        }
-        return true;
-    }
-
-    private String createGroupID(Node node, HashMap<String, ArrayList<Node>> group, String oldGroupID) {
-        StringBuilder stringBuilder = new StringBuilder(oldGroupID);
-        for (String string : node.getMap().keySet()) {
-            stringBuilder.append(string);
-            stringBuilder.append(",");
-            for (Node nodeIterator : node.getMap().get(string)) {
-                if (node.equals(nodeIterator)) {
-                    stringBuilder.append(findGroupOfNode(nodeIterator,group));
-                    break;
-                }
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    private String findGroupOfNode(Node node, HashMap<String , ArrayList<Node>> group) {
-        for (String string : group.keySet()) {
-            for (Node nodeIterator: group.get(string)) {
-                if (nodeIterator.equals(node))
-                    return string;
-            }
-        }
-        return "";
-    }
-
-    private boolean isPrtInGroup(HashMap<String, ArrayList<Node>> group, ArrayList<Node> partition) {
-        for (ArrayList<Node> partIterator : group.values()) {
-            if (partIterator.equals(partition))
-                return true;
-        }
-        return false;
-    }
-
-
+    public HashMap<String, Node> getMinimizedDFATransTable() { return minimizedDFATransTable; }
 }
