@@ -33,7 +33,6 @@
       <TextArea fx:id="textArea" layoutX="14.0" layoutY="32.0" prefHeight="343.0" prefWidth="588.0" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="32.0" />
    </children>
    <stylesheets>
-       <URL value="@Style.css" />
        <URL value="@darkTheme.css" />
    </stylesheets>
 </AnchorPane>

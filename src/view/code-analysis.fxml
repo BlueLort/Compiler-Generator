@@ -21,7 +21,6 @@
          </font></Label>
    </children>
     <stylesheets>
-        <URL value="@Style.css" />
         <URL value="@darkTheme.css" />
     </stylesheets>
 </AnchorPane>

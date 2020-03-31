@@ -12,7 +12,7 @@
     -fx-color: derive(-fx-base, 10%);
 
     /* text fields and table rows background */
-    -fx-control-inner-background: #efefef22;
+    -fx-control-inner-background: #252525;
     /* version of -fx-control-inner-background for alternative rows */
     -fx-control-inner-background-alt: derive(-fx-control-inner-background, 2.5%);
 
@@ -23,10 +23,11 @@
 
     /* A bright blue for highlighting/accenting objects.  For example: selected
      * text; selected items in menus, lists, trees, and tables; progress bars */
-
     /* color of non-focused yet selected elements */
     -fx-selection-bar-non-focused: rgb(50, 50, 50);
 }
+
+
 
 /* Fix derived prompt color for text fields */
 .text-input {
@@ -35,8 +36,9 @@
     -fx-font-weight: 900;
     -fx-font-family: monospace;
     -fx-text-fill: #ffffff;
-    -fx-opacity: 0.7;
+    -fx-opacity: 1.0;
 }
+
 
 /* Keep prompt invisible when focused (above color fix overrides it) */
 .text-input:focused {
