@@ -71,7 +71,7 @@ public class Graph {
 				out += Integer.toString(node.getCurrentId()) + " " + Integer.toString(current.get(i).getCurrentId())
 						+ " " + edge + "\n";
 				System.out.println(node.getCurrentId() + " " + node.getNodeType() + " " + node.isStart() + " " + current.get(i).getCurrentId()
-						+ " " + current.get(i).isEnd());
+						+ " " + current.get(i).isEnd() +" " + current.get(i).getNodeType());
 				out += DFSPrintTree(current.get(i), visited);
 			}
 		}

@@ -8,14 +8,12 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class DFA {
-    private Graph                   NFACombined;
     private Graph                   DFA;
     private Stack<ArrayList<Node>>  DFAStatesUnmarked;
     private HashMap<String,Node>    DFATransTable;
 
     public DFA(Graph NFACombined) {
         DFA = new Graph();
-        this.NFACombined = NFACombined;
         DFAStatesUnmarked = new Stack<>();
         DFATransTable = new HashMap<>();
         ArrayList<Node> s0 = new ArrayList<>();
@@ -23,22 +21,24 @@ public class DFA {
         ArrayList<Node> epsClosureS0 = epsilonClosure(s0);
         DFAStatesUnmarked.push(epsClosureS0);
         DFATransTable.put(DfaUtility.createUnionID(epsClosureS0),DFA.getInitialNode());
-        constructDFA();
+        constructDFA(NFACombined);
     }
 
 
 
-    private void constructDFA() {
+    private void constructDFA(Graph NFACombined) {
         while (!DFAStatesUnmarked.empty()) { /** while there is unmarked states */
             ArrayList<Node> T = DFAStatesUnmarked.pop(); /** mark */
             String TsID = DfaUtility.createUnionID(T);
             ArrayList<Node> U;
             for (String a : DfaUtility.getUnionInputs(T)) { /** for all possible inputs a */
                 U = epsilonClosure(move(T,a));                  /** U (a new DFA state) =  */
+                String newNodeType = DfaUtility.getNodeType(U);
                 String newID = DfaUtility.createUnionID(U);
                 if (!DFATransTable.containsKey(newID)) {        /** if U is new add to Unmarked and transition table */
                     DFAStatesUnmarked.push(U);
                     Node node = new Node();
+                    node.setNodeType(newNodeType);
                     DFATransTable.put(newID,node);
                     if(U.contains(NFACombined.getDestination()))
                         node.setEnd(true);

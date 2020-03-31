@@ -27,9 +27,10 @@ public class Controller {
 		RulesContainer rulesCont = new RulesContainer(file);
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
-			System.out.println(NFACombined);
 			DFA DFA = new  DFA(NFACombined);
-			DFAOptimizer dfaOptimizer = new DFAOptimizer(DFA);
+			//DFAOptimizer dfaOptimizer = new DFAOptimizer(DFA);
+			//testing DFA OPtimizer
+			DFAOptimizer dfaOptimizer = new DFAOptimizer();
 			DFAMinimized = dfaOptimizer.getDFAMinimized();
 			DFAMinimizedTransTable = dfaOptimizer.getMinimizedDFATransTable();
 			return true;

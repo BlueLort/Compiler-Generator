@@ -27,6 +27,7 @@ public class Node implements Comparable{
 		map = new HashMap<String, ArrayList<Node>>();
 		this.start = start;
 		this.end = end;
+		nodeType = "";
 	}
 
 	public Node(Node node) {
@@ -42,6 +43,7 @@ public class Node implements Comparable{
 		map = new HashMap<String, ArrayList<Node>>();
 		this.start = false;
 		this.end = false;
+		nodeType = "";
 	}
 
 	public void addEdge(String word, Node destination) {
@@ -89,7 +91,7 @@ public class Node implements Comparable{
 	public String getNodeType() {
 		return nodeType;
 	}
-	
+
 
 	@Override
 	public int compareTo(Object o) {

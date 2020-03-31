@@ -21,6 +21,19 @@ public class DfaUtility {
         }
         return possibleInputs;
     }
+    /**
+     * returns the new node's type correctly
+     */
+    public  static String getNodeType(ArrayList<Node> nfaNodes){
+        String nodeType = "";
+        int length = nfaNodes.size();
+        for (int i = 0; i < length - 1; i++) {
+            if(!nfaNodes.get(i).getNodeType().equals("")){
+                nodeType += nfaNodes.get(i).getNodeType(); // concating to make sure there are no errors [no multiple accept states]
+            }
+        }
+        return nodeType;
+    }
 
     /**
      * create DFA state ID by concatenating NFA nodes ID'S into one sorted comma separated string
