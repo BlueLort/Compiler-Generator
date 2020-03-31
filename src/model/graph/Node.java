@@ -3,7 +3,7 @@ package model.graph;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Node {
+public class Node implements Comparable{
 
 	private HashMap<String, ArrayList<Node>> map;
 	private boolean start;
@@ -86,4 +86,10 @@ public class Node {
 	public String getDfaNodeID() { return dfaNodeID; }
 
 	public void setDfaNodeID(String dfaNode) { this.dfaNodeID = dfaNode; }
+
+	@Override
+	public int compareTo(Object o) {
+		Node otherNode = (Node)o;
+		return  (this.getCurrentId() - otherNode.getCurrentId());
+	}
 }

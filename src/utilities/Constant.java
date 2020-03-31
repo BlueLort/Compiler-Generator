@@ -27,5 +27,7 @@ public class Constant {
 			"\\)",
 	};
 
-	
+	public static final String UNALLOWED = "^_^";
+	public static final String ANYINPUT = "-_-";
+
 }

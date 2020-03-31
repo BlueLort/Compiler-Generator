@@ -63,7 +63,7 @@ public class DfaUtility {
  System.out.println("\n************* epsilon closure \n"+T.size());
  */
 
-        System.out.println(createDfaID(epsilonClosureOut));
+        System.out.println(createUnionID(epsilonClosureOut));
         return epsilonClosureOut;
     }
 
@@ -71,7 +71,7 @@ public class DfaUtility {
     /**
      * create DFA state ID by concatenating NFA nodes ID'S into one sorted comma separated string
      */
-    public static String createDfaID(ArrayList<Node> nfaNodes) {
+    public static String createUnionID(ArrayList<Node> nfaNodes) {
         int length = nfaNodes.size();
         int[] intArr = new int[length];
         for (int i = 0; i < length; i++) {
@@ -81,7 +81,7 @@ public class DfaUtility {
         String string = new String();
         for (int i = 0; i < length - 1; i++) {
             if (!string.contains(Integer.toString(intArr[i]))) {
-                string+=Integer.toString(intArr[i]) + ",";
+                string += Integer.toString(intArr[i]) + ",";
             }
         }
         if (!string.contains(Integer.toString(intArr[length-1]))) {

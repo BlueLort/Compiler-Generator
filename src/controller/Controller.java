@@ -2,6 +2,7 @@ package controller;
 
 import model.construction.RulesContainer;
 import model.dfa.DFA;
+import model.dfa.DFAOptimizer;
 import model.graph.Graph;
 import model.nfa.Keyword;
 import model.nfa.NFA;
@@ -26,6 +27,8 @@ public class Controller {
 			DFAMinimized = new  DFA(NFACombined);
 			System.out.println("\n\n\n\n");
             System.out.println(DFAMinimized.getDFA());
+            System.out.println("\n\n\n\n\n\n");
+			DFAOptimizer dfaOptimizer = new DFAOptimizer(DFAMinimized);
 			// TODO Pass NFACombined to DFA Constructor
 			return true;
 		}

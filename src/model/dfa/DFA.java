@@ -7,51 +7,50 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class DFA {
-    Graph                   NFACombined;
-    Graph                   DFA;
-    Stack<ArrayList<Node>>  dfaStatesUnmarked;
-    HashMap<String,Node>    DfatransTable;
+    private Graph                   NFACombined;
+    private Graph                   DFA;
+    private Stack<ArrayList<Node>>  DFAStatesUnmarked;
+    private HashMap<String,Node>    DFATransTable;
 
     public DFA(Graph NFACombined) {
         DFA = new Graph();
         this.NFACombined = NFACombined;
-        dfaStatesUnmarked = new Stack<>();
-        DfatransTable = new HashMap<>();
+        DFAStatesUnmarked = new Stack<>();
+        DFATransTable = new HashMap<>();
         ArrayList<Node> s0 = new ArrayList<>();
         s0.add(NFACombined.getInitialNode());
         ArrayList<Node> epsClosureS0 = DfaUtility.epsilonClosure(s0);
-        DFA.getInitialNode().setDfaNodeID(DfaUtility.createDfaID(epsClosureS0));
-        dfaStatesUnmarked.push(epsClosureS0);
-        DfatransTable.put(DfaUtility.createDfaID(epsClosureS0),DFA.getInitialNode());
+        DFA.getInitialNode().setDfaNodeID(DfaUtility.createUnionID(epsClosureS0));
+        DFAStatesUnmarked.push(epsClosureS0);
+        DFATransTable.put(DfaUtility.createUnionID(epsClosureS0),DFA.getInitialNode());
         constructDFA();
-        minimizeDfa();
     }
 
-    private void minimizeDfa() {
 
-    }
 
     private void constructDFA() {
-        while (!dfaStatesUnmarked.empty()) {
-            ArrayList<Node> T = dfaStatesUnmarked.pop();
-            String TsID = DfaUtility.createDfaID(T);
+        while (!DFAStatesUnmarked.empty()) {
+            ArrayList<Node> T = DFAStatesUnmarked.pop();
+            String TsID = DfaUtility.createUnionID(T);
             ArrayList<Node> U;
-            for (String a:DfaUtility.getUnionInputs(T)) {
+            for (String a : DfaUtility.getUnionInputs(T)) {
                 U = DfaUtility.epsilonClosure(DfaUtility.move(T,a));
-                String newID = DfaUtility.createDfaID(U);
-                if (!DfatransTable.containsKey(newID)) {
-                    dfaStatesUnmarked.push(U);
+                String newID = DfaUtility.createUnionID(U);
+                if (!DFATransTable.containsKey(newID)) {
+                    DFAStatesUnmarked.push(U);
                     Node node = new Node();
-                    DfatransTable.put(newID,node);
+                    DFATransTable.put(newID,node);
+                    if(U.contains(NFACombined.getDestination()))
+                        node.setEnd(true);
                 }
-                DfatransTable.get(TsID).addEdge(a,DfatransTable.get(newID));
+                DFATransTable.get(TsID).addEdge(a, DFATransTable.get(newID));
             }
         }
     }
 
-    public Graph getDFA() {
-        return DFA;
-    }
+    public Graph getDFA() { return DFA; }
+
+    public HashMap<String,Node> getDFATransTable() { return DFATransTable; }
 }
 
 
