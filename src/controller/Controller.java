@@ -27,6 +27,7 @@ public class Controller {
 		RulesContainer rulesCont = new RulesContainer(file);
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
+			System.out.println(NFACombined);
 			DFA DFA = new  DFA(NFACombined);
 			DFAOptimizer dfaOptimizer = new DFAOptimizer(DFA);
 			DFAMinimized = dfaOptimizer.getDFAMinimized();
@@ -49,7 +50,7 @@ public class Controller {
 		Punctuation punctuation = new Punctuation(rulesCont);
 		RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
 		NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
-		Graph combinedNFAs = NFACombined.combine();
+		Graph combinedNFAs = NFACombined.getCombinedGraph();
 		return combinedNFAs;
 	}
 }

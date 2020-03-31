@@ -1,5 +1,7 @@
 package model.graph;
 
+import utilities.Constant;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +11,7 @@ public class Node implements Comparable{
 	private boolean start;
 	private boolean end;
 	private int currentId;
-	private String dfaNodeID;
+	private String nodeType;
 	public static int id = 0;
 
 	public Node(boolean start, boolean end) {
@@ -17,6 +19,7 @@ public class Node implements Comparable{
 		map = new HashMap<String, ArrayList<Node>>();
 		this.start = start;
 		this.end = end;
+		nodeType = "";
 	}
 
 	public Node(boolean start, boolean end, String dfaNodeID) {
@@ -24,13 +27,13 @@ public class Node implements Comparable{
 		map = new HashMap<String, ArrayList<Node>>();
 		this.start = start;
 		this.end = end;
-		this.dfaNodeID = dfaNodeID;
 	}
 
 	public Node(Node node) {
 		this.currentId = id++;
 		this.start = node.isStart();
 		this.end = node.isEnd();
+		this.nodeType = node.nodeType;
 		map = new HashMap<String, ArrayList<Node>>();
 	}
 
@@ -59,10 +62,6 @@ public class Node implements Comparable{
 		return map;
 	}
 
-	void setID(int ID) {
-		currentId = ID;
-	}
-
 	public boolean isStart() {
 		return start;
 	}
@@ -83,9 +82,14 @@ public class Node implements Comparable{
 		return currentId;
 	}
 
-	public String getDfaNodeID() { return dfaNodeID; }
+	public void setNodeType(String nodeType) {
+		this.nodeType = nodeType;
+	}
 
-	public void setDfaNodeID(String dfaNode) { this.dfaNodeID = dfaNode; }
+	public String getNodeType() {
+		return nodeType;
+	}
+	
 
 	@Override
 	public int compareTo(Object o) {

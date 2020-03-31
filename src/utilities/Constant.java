@@ -10,8 +10,8 @@ public class Constant {
 
 	public static final String ALPHABETS = "abcdefghijklmnopqrstuvwxyz";
 	public static final String DIGITS = "0123456789";
-	
-	
+
+
 	/*
 	 * Valid Operators : * ( ) \\L 
 	 * Math Operators: \\+ \\* / -
@@ -26,8 +26,4 @@ public class Constant {
 			"\\=",
 			"\\)",
 	};
-
-	public static final String UNALLOWED = "^_^";
-	public static final String ANYINPUT = "-_-";
-
 }

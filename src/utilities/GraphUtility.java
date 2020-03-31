@@ -16,8 +16,6 @@ public class GraphUtility {
 			graph.getDestination().addEdge(Constant.EPSILON, newGraph.getDestination());
 			graph.getDestination().setEnd(false);
 		}
-		// System.out.println("OR" + newGraph.getInitialNode().getCurrentId());
-		// System.out.println("OR" + newGraph.getDestination().getCurrentId());
 		return newGraph;
 	}
 
@@ -63,9 +61,6 @@ public class GraphUtility {
 		clonedGraph.getDestination().addEdge(Constant.EPSILON, newGraph.getDestination());
 		clonedGraph.getDestination().setEnd(false);
 		clonedGraph.getDestination().addEdge(Constant.EPSILON, clonedGraph.getInitialNode());
-
-		// System.out.println("+" + newGraph.getInitialNode().getCurrentId());
-		// System.out.println("+" + newGraph.getDestination().getCurrentId());
 
 		return newGraph;
 	}

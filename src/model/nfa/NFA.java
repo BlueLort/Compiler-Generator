@@ -9,31 +9,13 @@ import utilities.GraphUtility;
 public class NFA {
 	
 	private ArrayList<Graph> combinedNfa;
-	private RegularExpression regex;
-	private Punctuation punctuation;
-	private Keyword keyword;
-	RegularDefinition regularDefinition;
-
+	private Graph combinedGraph;
 	public NFA(RegularDefinition regularDefinition ,Keyword keyword, Punctuation punctuation, RegularExpression regex) {
-		this.regularDefinition = regularDefinition;
-		this.keyword = keyword;
-		this.punctuation = punctuation;
-		this.regex = regex;
 		combinedNfa = new ArrayList<Graph>();
+		combine(keyword,punctuation,regex);
 	}
-	
-	private void getNfa() {
-		regularDefinition.definitionsToNfa();
-		// regularDefinition.DFSGraphs();
-		keyword.keywordToNfa();
-		// keyword.DFSGraphs();
-		punctuation.punctuationToNfa();
-		// punctuation.DFSGraphs();
-		regex.regexToNfa();
-		//regex.DFSGraphs();
-	}
-	
-	private void addToList() {
+
+	private void addToList(Keyword keyword, Punctuation punctuation, RegularExpression regex) {
 		for (Entry<String, Graph> entry : punctuation.getPunctuationNfa().entrySet()) {
 			combinedNfa.add(entry.getValue());
 		}
@@ -44,12 +26,13 @@ public class NFA {
 			combinedNfa.add(entry.getValue());
 		}
 	}
-	
-	
-	public Graph combine() {
-		getNfa();
-		addToList();
-		Graph combinedNfas = GraphUtility.or(this.combinedNfa);
-		return combinedNfas;
+
+	public Graph getCombinedGraph() {
+		return combinedGraph;
+	}
+
+	private void combine(Keyword keyword, Punctuation punctuation, RegularExpression regex) {
+		addToList(keyword,punctuation,regex);
+		combinedGraph = GraphUtility.or(this.combinedNfa);
 	}
 }

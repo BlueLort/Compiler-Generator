@@ -16,15 +16,14 @@ public class RegularExpression {
 	private HashMap<String, Graph> definitionNfa;
 	private HashMap<String, Graph> regExpressionNfa;
 
-	RulesContainer rulesContainer;
 
 	public RegularExpression(RulesContainer rulesCont, HashMap<String, Graph> definitionNfa) {
 		regExpressionNfa = new HashMap<String, Graph>();
 		this.definitionNfa = definitionNfa;
-		this.rulesContainer = rulesCont;
+		regexToNfa(rulesCont);
 	}
 
-	public void regexToNfa() {
+	private void regexToNfa(RulesContainer rulesContainer) {
 
 		for (int i = 0; i < rulesContainer.getRegularExpressionsKeys().size(); i++) {
 			String definitionKey = rulesContainer.getRegularExpressionsKeys().get(i);
@@ -38,6 +37,7 @@ public class RegularExpression {
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(words);
 			Graph nfa = createNfa(postFixExpression);
 			regExpressionNfa.put(definitionKey, nfa);
+			nfa.getDestination().setNodeType(definitionKey);
 
 		}
 	}
@@ -102,40 +102,18 @@ public class RegularExpression {
 			if (NfaUtility.isRegexOperator(currentExpression)) {
 				if (currentExpression.equals(Constant.KLEENE)) {
 					Graph g = nfa.pop();
-					//System.out.println("Now star");
-					//System.out.println(g);
-					//System.out.println();
 					nfa.push(GraphUtility.kleeneClosure(g));
-					//System.out.println("Star result");
-					//System.out.println(nfa.peek());
 				} else if (currentExpression.equals(Constant.PLUS)) {
 					Graph g = nfa.pop();
-					//System.out.println("Now plus");
-					//System.out.println(g);
-					//System.out.println();
 					nfa.push(GraphUtility.plusClosure(g));
-					//System.out.println("Plus result");
-					//System.out.println(nfa.peek());
 				} else if (currentExpression.equals(Constant.OR)) {
 					Graph right = nfa.pop();
 					Graph left = nfa.pop();
-					//System.out.println("Now Oring 2 graphs");
-					//System.out.println(right);
-					//System.out.println();
-					//System.out.println(left);
 					nfa.push(GraphUtility.or(right, left));
-					//System.out.println("Or result");
-					//System.out.println(nfa.peek());
 				} else if (currentExpression.equals(Constant.CONCATENATE)) {
 					Graph right = nfa.pop();
 					Graph left = nfa.pop();
-					//System.out.println("Now concatenating 2 graphs");
-					//System.out.println(left);
-					//System.out.println();
-					//System.out.println(right);
 					nfa.push(GraphUtility.concatenate(left, right));
-					//System.out.println("Concatenate result");
-					//System.out.println(nfa.peek());
 				}
 			} else {
 				if (definitionNfa.containsKey(currentExpression)) {

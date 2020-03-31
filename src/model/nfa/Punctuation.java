@@ -13,14 +13,12 @@ public class Punctuation {
 
 	private HashMap<String, Graph> punctuationNfa;
 
-	private RulesContainer rulesContainer;
-
 	public Punctuation(RulesContainer rulesCont) {
 		punctuationNfa = new HashMap<String, Graph>();
-		this.rulesContainer = rulesCont;
+		punctuationToNfa(rulesCont);
 	}
 
-	public void punctuationToNfa() {
+	private void punctuationToNfa(RulesContainer rulesContainer) {
 
 		for (int i = 0; i < rulesContainer.getOperators().size(); i++) {
 			String operator = rulesContainer.getOperator(i);
@@ -29,6 +27,7 @@ public class Punctuation {
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
 			Graph nfa = createNfa(postFixExpression);
 			punctuationNfa.put(operator, nfa);
+			nfa.getDestination().setNodeType(operator);
 		}
 	}
 

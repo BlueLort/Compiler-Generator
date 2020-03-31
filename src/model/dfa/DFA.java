@@ -21,7 +21,6 @@ public class DFA {
         ArrayList<Node> s0 = new ArrayList<>();
         s0.add(NFACombined.getInitialNode());
         ArrayList<Node> epsClosureS0 = epsilonClosure(s0);
-        DFA.getInitialNode().setDfaNodeID(DfaUtility.createUnionID(epsClosureS0));
         DFAStatesUnmarked.push(epsClosureS0);
         DFATransTable.put(DfaUtility.createUnionID(epsClosureS0),DFA.getInitialNode());
         constructDFA();

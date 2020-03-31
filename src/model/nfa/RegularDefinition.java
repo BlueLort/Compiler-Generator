@@ -14,14 +14,13 @@ public class RegularDefinition {
 
 	private HashMap<String, Graph> definitionNfa;
 
-	private RulesContainer rulesContainer;
 
 	public RegularDefinition(RulesContainer rulesCont) {
 		definitionNfa = new HashMap<String, Graph>();
-		this.rulesContainer = rulesCont;
+		definitionsToNfa(rulesCont);
 	}
 
-	public void definitionsToNfa() {
+	private void definitionsToNfa(RulesContainer rulesContainer) {
 
 		for (int i = 0; i < rulesContainer.getRegularDefinitionsKeys().size(); i++) {
 			String definitionKey = rulesContainer.getRegularDefinitionsKeys().get(i);

@@ -112,7 +112,7 @@ public class DfaUtility {
         if (node == null)
             return null;
         if (node.getMap().get(input) != null)
-            return  node.getMap().get(input).get(0);;
+            return  node.getMap().get(input).get(0);
         return null;
     }
 

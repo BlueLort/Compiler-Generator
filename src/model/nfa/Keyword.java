@@ -14,14 +14,12 @@ import utilities.NfaUtility;
 public class Keyword {
 	private HashMap<String, Graph> keywordNfa;
 
-	private RulesContainer rulesContainer;
-
 	public Keyword(RulesContainer rulesCont) {
 		keywordNfa = new HashMap<String, Graph>();
-		this.rulesContainer = rulesCont;
+		keywordToNfa(rulesCont);
 	}
 
-	public void keywordToNfa() {
+	private void keywordToNfa(RulesContainer rulesContainer) {
 
 		for (int i = 0; i < rulesContainer.getKeywords().size(); i++) {
 			String keyword = rulesContainer.getKeyword(i);
@@ -30,6 +28,7 @@ public class Keyword {
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
 			Graph nfa = createNfa(postFixExpression);
 			keywordNfa.put(keyword, nfa);
+			nfa.getDestination().setNodeType(keyword);
 
 		}
 	}
