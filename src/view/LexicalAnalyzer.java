@@ -5,13 +5,12 @@ import java.nio.file.Paths;
 
 import IOManagement.IOManager;
 import controller.Controller;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
@@ -21,15 +20,15 @@ public class LexicalAnalyzer {
 
 	private Stage window;
 
-	public MenuItem clearResult;
-	public MenuItem loadFile;
+	@FXML
+	private MenuItem clearResult;
+	@FXML
+	private MenuItem loadFile;
 
-	public CheckMenuItem restricted;
-	public Label restrictedMsgLabel;
+	@FXML
+	private TextArea textArea;
 
-	public TextArea textArea;
-
-	private Controller controller = new Controller();
+	private  Controller controller = new Controller();
 
 	private String path;
 
@@ -65,7 +64,7 @@ public class LexicalAnalyzer {
 			handleTextError("Empty text field !");
 			return;
 		}
-		if (controller.RunCodeAnalysisOnAction(textArea.getText()) == false) {
+		if (controller.RunCodeAnalysisOnAction(textArea.getText(),new Stage()) == false) {
 			handleTextError("Failed to run code analysis!");
 		}
 	}
@@ -119,11 +118,6 @@ public class LexicalAnalyzer {
 		textArea.setText("");
 	}
 
-	/* Helper functions */
-	public void setRestrictedMsg() {
-
-		restrictedMsgLabel.setVisible(!restricted.isSelected());
-	}
 
 	/* error Handling Functions */
 

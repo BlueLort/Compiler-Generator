@@ -31,7 +31,6 @@
         </menus>
       </MenuBar>
       <TextArea fx:id="textArea" layoutX="14.0" layoutY="32.0" prefHeight="343.0" prefWidth="588.0" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="32.0" />
-      <Label fx:id="restrictedMsgLabel" layoutX="14.0" layoutY="385.0" prefHeight="41.0" prefWidth="587.0" text="Inline comments should be preceeded with ';'" textFill="RED" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
    </children>
    <stylesheets>
        <URL value="@Style.css" />

@@ -75,11 +75,8 @@ public class DfaUtility {
             stringBuilder.append(",");
             stringBuilder.append(string);
             for (Node nodeIterator : node.getMap().get(string)) {
-                if (node.equals(nodeIterator)) {
                     stringBuilder.append(",");
                     stringBuilder.append(findPartitionOfNode(nodeIterator,groupings));
-                    break;
-                }
             }
         }
         return stringBuilder.toString();
@@ -95,6 +92,14 @@ public class DfaUtility {
             }
         }
         return "";
+    }
+    /** check if the given group contains an start state */
+    public static boolean isStartGroupings(ArrayList<Node> groupings) {
+        for (Node node : groupings) {
+            if (node.isStart())
+                return true;
+        }
+        return false;
     }
 
     /** check if the given group contains an end state */
