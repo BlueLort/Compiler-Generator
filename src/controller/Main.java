@@ -6,12 +6,12 @@ import view.LexicalAnalyzer;
 
 public class Main extends Application {
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-	public void start(Stage primaryStage) {
-		LexicalAnalyzer lexerTool = new LexicalAnalyzer();
-		lexerTool.initialize(primaryStage);
-	}
+    public void start(Stage primaryStage) {
+        LexicalAnalyzer lexerTool = new LexicalAnalyzer();
+        lexerTool.initialize(primaryStage);
+    }
 }

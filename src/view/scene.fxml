@@ -9,30 +9,34 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="438.0" prefWidth="617.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.LexicalAnalyzer">
-   <children>
-      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem fx:id="loadFile" mnemonicParsing="false" onAction="#loadFileOnAction" text="Load..." />
-                  <MenuItem fx:id="clearResult" mnemonicParsing="false" onAction="#clearOnAction" text="Clear" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveOnAction" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveAsOnAction" text="Save As..." />
-            </items>
-          </Menu>
-          <Menu fx:id="load" mnemonicParsing="false" text="Lexical Tool">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#constructRulesOnAction" text="Construct Rules" />
-                  <MenuItem mnemonicParsing="false" onAction="#runCodeAnalysisOnAction" text="Run Code Analysis" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <TextArea fx:id="textArea" layoutX="14.0" layoutY="32.0" prefHeight="343.0" prefWidth="588.0" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="32.0" />
-   </children>
-   <stylesheets>
-       <URL value="@darkTheme.css" />
-   </stylesheets>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="438.0"
+            prefWidth="617.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="view.LexicalAnalyzer">
+    <children>
+        <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem fx:id="loadFile" mnemonicParsing="false" onAction="#loadFileOnAction" text="Load..."/>
+                        <MenuItem fx:id="clearResult" mnemonicParsing="false" onAction="#clearOnAction" text="Clear"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveOnAction" text="Save"/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAsOnAction" text="Save As..."/>
+                    </items>
+                </Menu>
+                <Menu fx:id="load" mnemonicParsing="false" text="Lexical Tool">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#constructRulesOnAction" text="Construct Rules"/>
+                        <MenuItem mnemonicParsing="false" onAction="#runCodeAnalysisOnAction" text="Run Code Analysis"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <TextArea fx:id="textArea" layoutX="14.0" layoutY="32.0" prefHeight="343.0" prefWidth="588.0"
+                  AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0"
+                  AnchorPane.topAnchor="32.0"/>
+    </children>
+    <stylesheets>
+        <URL value="@darkTheme.css"/>
+    </stylesheets>
 </AnchorPane>

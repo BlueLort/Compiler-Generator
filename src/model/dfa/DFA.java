@@ -3,14 +3,15 @@ package model.dfa;
 import model.graph.*;
 import utilities.Constant;
 import utilities.DfaUtility;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
 public class DFA {
-    private Graph                   DFA;
-    private Stack<ArrayList<Node>>  DFAStatesUnmarked;
-    private HashMap<String,Node>    DFATransTable;
+    private Graph DFA;
+    private Stack<ArrayList<Node>> DFAStatesUnmarked;
+    private HashMap<String, Node> DFATransTable;
 
     public DFA(Graph NFACombined) {
         DFA = new Graph();
@@ -20,10 +21,9 @@ public class DFA {
         s0.add(NFACombined.getInitialNode());
         ArrayList<Node> epsClosureS0 = epsilonClosure(s0);
         DFAStatesUnmarked.push(epsClosureS0);
-        DFATransTable.put(DfaUtility.createUnionID(epsClosureS0),DFA.getInitialNode());
+        DFATransTable.put(DfaUtility.createUnionID(epsClosureS0), DFA.getInitialNode());
         constructDFA(NFACombined);
     }
-
 
 
     private void constructDFA(Graph NFACombined) {
@@ -32,15 +32,15 @@ public class DFA {
             String TsID = DfaUtility.createUnionID(T);
             ArrayList<Node> U;
             for (String a : DfaUtility.getUnionInputs(T)) { /** for all possible inputs a */
-                U = epsilonClosure(move(T,a));                  /** U (a new DFA state) =  */
+                U = epsilonClosure(move(T, a));                  /** U (a new DFA state) =  */
                 String newNodeType = DfaUtility.getNodeType(U);
                 String newID = DfaUtility.createUnionID(U);
                 if (!DFATransTable.containsKey(newID)) {        /** if U is new add to Unmarked and transition table */
                     DFAStatesUnmarked.push(U);
                     Node node = new Node();
                     node.setNodeType(newNodeType);
-                    DFATransTable.put(newID,node);
-                    if(U.contains(NFACombined.getDestination()))
+                    DFATransTable.put(newID, node);
+                    if (U.contains(NFACombined.getDestination()))
                         node.setEnd(true);
                 }
                 DFATransTable.get(TsID).addEdge(a, DFATransTable.get(newID)); /** transition table [T , a] = U */
@@ -51,7 +51,7 @@ public class DFA {
     /**
      * get union of T & all nodes reachable from the set of nodes in T through an edge epsilon
      */
-    private  ArrayList<Node> epsilonClosure(ArrayList<Node> T) {
+    private ArrayList<Node> epsilonClosure(ArrayList<Node> T) {
         Stack<Node> stack = new Stack<>();
         ArrayList<Node> epsilonClosureOut = new ArrayList<>();
         epsilonClosureOut = T;
@@ -80,13 +80,15 @@ public class DFA {
     }
 
 
-    /** Set of NFA states to which there is a transition on
-     input symbol a from some state s in T. */
+    /**
+     * Set of NFA states to which there is a transition on
+     * input symbol a from some state s in T.
+     */
     public static ArrayList<Node> move(ArrayList<Node> T, String a) {
         ArrayList<Node> res = new ArrayList<>();
         for (Node node : T) {
             if (node.getMap().keySet().contains(a)) {
-                for (Node nodeIterator:node.getMap().get(a)) {
+                for (Node nodeIterator : node.getMap().get(a)) {
                     if (!res.contains(nodeIterator))
                         res.add(nodeIterator);
                 }
@@ -95,9 +97,13 @@ public class DFA {
         return res;
     }
 
-    public Graph getDFA() { return DFA; }
+    public Graph getDFA() {
+        return DFA;
+    }
 
-    public HashMap<String,Node> getDFATransTable() { return DFATransTable; }
+    public HashMap<String, Node> getDFATransTable() {
+        return DFATransTable;
+    }
 }
 
 

@@ -1,5 +1,7 @@
 package view;
+
 import java.io.File;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,7 +14,7 @@ public class CodeAnalysisInfo {
     private Stage window;
 
     @FXML
-    public TableView<InfoModel> dataTable ;
+    public TableView<InfoModel> dataTable;
     @FXML
     public TableColumn<InfoModel, String> inputCol;
     @FXML
@@ -33,10 +35,11 @@ public class CodeAnalysisInfo {
             e.printStackTrace();
         }
     }
+
     @FXML
-    public void initialize(){
-        inputCol.setCellValueFactory( new PropertyValueFactory("input"));
-        matchCol.setCellValueFactory( new PropertyValueFactory("match"));
+    public void initialize() {
+        inputCol.setCellValueFactory(new PropertyValueFactory("input"));
+        matchCol.setCellValueFactory(new PropertyValueFactory("match"));
         messageLabel.setText("Auto-Saved to: bla bla bla");
     }
 
@@ -45,7 +48,7 @@ public class CodeAnalysisInfo {
         private final String input;
         private final String match;
 
-        private InfoModel(String input,String match) {
+        private InfoModel(String input, String match) {
             this.input = input;
             this.match = match;
         }

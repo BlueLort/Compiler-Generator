@@ -19,39 +19,40 @@ import java.util.HashMap;
 
 public class Controller {
 
-	private Tokenizer tokenizer = null;
-	public Controller() {
+    private Tokenizer tokenizer = null;
 
-	}
+    public Controller() {
 
-	public boolean ConstructRules(String file) {
-		RulesContainer rulesCont = new RulesContainer(file);
-		if (rulesCont.isValid()) { // if No Errors found during rules processing
-			Graph NFACombined = getCombinedNFA(rulesCont);
-			DFA DFA = new  DFA(NFACombined);
-			DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
-			tokenizer = new Tokenizer(minimalDFA);
-			return true;
-		}
-		return false;
-	}
+    }
 
-	public boolean RunCodeAnalysisOnAction(String file,Stage primaryStage) {
-		if(tokenizer == null)return false;
-		ArrayList<String> lexemes = tokenizer.getTokens(file);
-		if(lexemes == null)return false;
-		CodeAnalysisInfo infoViewer = new CodeAnalysisInfo();
-		infoViewer.initialize(primaryStage);
-		return false;
-	}
+    public boolean ConstructRules(String file) {
+        RulesContainer rulesCont = new RulesContainer(file);
+        if (rulesCont.isValid()) { // if No Errors found during rules processing
+            Graph NFACombined = getCombinedNFA(rulesCont);
+            DFA DFA = new DFA(NFACombined);
+            DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
+            tokenizer = new Tokenizer(minimalDFA);
+            return true;
+        }
+        return false;
+    }
 
-	private Graph getCombinedNFA(RulesContainer rulesCont) {
-		RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
-		Keyword keyword = new Keyword(rulesCont);
-		Punctuation punctuation = new Punctuation(rulesCont);
-		RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
-		NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
-		Graph combinedNFAs = NFACombined.getCombinedGraph();
-		return combinedNFAs;
-	}
+    public boolean RunCodeAnalysisOnAction(String file, Stage primaryStage) {
+        if (tokenizer == null) return false;
+        ArrayList<String> lexemes = tokenizer.getTokens(file);
+        if (lexemes == null) return false;
+        CodeAnalysisInfo infoViewer = new CodeAnalysisInfo();
+        infoViewer.initialize(primaryStage);
+        return false;
+    }
+
+    private Graph getCombinedNFA(RulesContainer rulesCont) {
+        RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
+        Keyword keyword = new Keyword(rulesCont);
+        Punctuation punctuation = new Punctuation(rulesCont);
+        RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
+        NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
+        Graph combinedNFAs = NFACombined.getCombinedGraph();
+        return combinedNFAs;
+    }
 }

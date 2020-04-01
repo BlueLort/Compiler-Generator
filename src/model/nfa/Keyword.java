@@ -12,48 +12,48 @@ import utilities.GraphUtility;
 import utilities.NfaUtility;
 
 public class Keyword {
-	private HashMap<String, Graph> keywordNfa;
+    private HashMap<String, Graph> keywordNfa;
 
-	public Keyword(RulesContainer rulesCont) {
-		keywordNfa = new HashMap<String, Graph>();
-		keywordToNfa(rulesCont);
-	}
+    public Keyword(RulesContainer rulesCont) {
+        keywordNfa = new HashMap<String, Graph>();
+        keywordToNfa(rulesCont);
+    }
 
-	private void keywordToNfa(RulesContainer rulesContainer) {
+    private void keywordToNfa(RulesContainer rulesContainer) {
 
-		for (int i = 0; i < rulesContainer.getKeywords().size(); i++) {
-			String keyword = rulesContainer.getKeyword(i);
-			String[] keywordCharacters = keyword.split("");
-			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(keywordCharacters);
-			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
-			Graph nfa = createNfa(postFixExpression);
-			keywordNfa.put(keyword, nfa);
-			nfa.getDestination().setNodeType(keyword);
+        for (int i = 0; i < rulesContainer.getKeywords().size(); i++) {
+            String keyword = rulesContainer.getKeyword(i);
+            String[] keywordCharacters = keyword.split("");
+            ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(keywordCharacters);
+            ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
+            Graph nfa = createNfa(postFixExpression);
+            keywordNfa.put(keyword, nfa);
+            nfa.getDestination().setNodeType(keyword);
 
-		}
-	}
+        }
+    }
 
-	private static Graph createNfa(ArrayList<String> expression) {
-		// create a stack
-		Stack<Graph> nfa = new Stack<Graph>();
+    private static Graph createNfa(ArrayList<String> expression) {
+        // create a stack
+        Stack<Graph> nfa = new Stack<Graph>();
 
-		// Scan all characters one by one
-		for (int i = 0; i < expression.size(); i++) {
-			String currentExpression = expression.get(i);
+        // Scan all characters one by one
+        for (int i = 0; i < expression.size(); i++) {
+            String currentExpression = expression.get(i);
 
-			if (currentExpression.equals(Constant.CONCATENATE)) {
-				Graph right = nfa.pop();
-				Graph left = nfa.pop();
-				nfa.push(GraphUtility.concatenate(left, right));
-			} else {
-				nfa.push(new Graph(currentExpression));
-			}
-		}
-		return nfa.pop();
-	}
+            if (currentExpression.equals(Constant.CONCATENATE)) {
+                Graph right = nfa.pop();
+                Graph left = nfa.pop();
+                nfa.push(GraphUtility.concatenate(left, right));
+            } else {
+                nfa.push(new Graph(currentExpression));
+            }
+        }
+        return nfa.pop();
+    }
 
-	public HashMap<String, Graph> getKeywordNfa() {
-		return keywordNfa;
-	}
+    public HashMap<String, Graph> getKeywordNfa() {
+        return keywordNfa;
+    }
 
 }

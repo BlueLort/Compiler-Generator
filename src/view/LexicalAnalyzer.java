@@ -18,126 +18,126 @@ import javafx.stage.Stage;
 
 public class LexicalAnalyzer {
 
-	private Stage window;
+    private Stage window;
 
-	@FXML
-	private MenuItem clearResult;
-	@FXML
-	private MenuItem loadFile;
+    @FXML
+    private MenuItem clearResult;
+    @FXML
+    private MenuItem loadFile;
 
-	@FXML
-	private TextArea textArea;
+    @FXML
+    private TextArea textArea;
 
-	private  Controller controller = new Controller();
+    private Controller controller = new Controller();
 
-	private String path;
+    private String path;
 
-	public void initialize(Stage primaryStage) {
+    public void initialize(Stage primaryStage) {
 
-		window = primaryStage;
-		primaryStage.setTitle("Lexical Analyzer");
-		try {
-			Parent root = FXMLLoader.load(new File("src/view/scene.fxml").toURI().toURL());
-			Scene scene = new Scene(root, 1000, 750);
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        window = primaryStage;
+        primaryStage.setTitle("Lexical Analyzer");
+        try {
+            Parent root = FXMLLoader.load(new File("src/view/scene.fxml").toURI().toURL());
+            Scene scene = new Scene(root, 1000, 750);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	/* PLT Needed Operations */
-	public void constructRulesOnAction() {
-		if (textArea.getText().equalsIgnoreCase("")) {
-			handleTextError("Empty text field !");
-			return;
-		}
-		if (controller.ConstructRules(textArea.getText()) == false) {
-			handleTextError("Wrong file format !");
-		}else{
-			endTask("DFA constructed successfully !");
-		}
-	}
+    /* PLT Needed Operations */
+    public void constructRulesOnAction() {
+        if (textArea.getText().equalsIgnoreCase("")) {
+            handleTextError("Empty text field !");
+            return;
+        }
+        if (controller.ConstructRules(textArea.getText()) == false) {
+            handleTextError("Wrong file format !");
+        } else {
+            endTask("DFA constructed successfully !");
+        }
+    }
 
-	public void runCodeAnalysisOnAction() {
-		if (textArea.getText().equalsIgnoreCase("")) {
-			handleTextError("Empty text field !");
-			return;
-		}
-		if (controller.RunCodeAnalysisOnAction(textArea.getText(),new Stage()) == false) {
-			handleTextError("Failed to run code analysis/Tokenization Error!");
-		}
-	}
+    public void runCodeAnalysisOnAction() {
+        if (textArea.getText().equalsIgnoreCase("")) {
+            handleTextError("Empty text field !");
+            return;
+        }
+        if (controller.RunCodeAnalysisOnAction(textArea.getText(), new Stage()) == false) {
+            handleTextError("Failed to run code analysis/Tokenization Error!");
+        }
+    }
 
-	/*
-	 * File Handling Methods including : Load file , Save file and clearing the text
-	 * area
-	 */
+    /*
+     * File Handling Methods including : Load file , Save file and clearing the text
+     * area
+     */
 
-	public void loadFileOnAction() {
+    public void loadFileOnAction() {
 
-		FileChooser fileChooser = new FileChooser();
-		setFileChooserOptions(fileChooser);
+        FileChooser fileChooser = new FileChooser();
+        setFileChooserOptions(fileChooser);
 
-		File file = fileChooser.showOpenDialog(window);
-		if (file != null) {
-			path = file.getAbsolutePath();
-			textArea.setText(IOManager.getInstance().readFile(path));
-		}
-	}
+        File file = fileChooser.showOpenDialog(window);
+        if (file != null) {
+            path = file.getAbsolutePath();
+            textArea.setText(IOManager.getInstance().readFile(path));
+        }
+    }
 
-	public void saveAsOnAction() {
-		FileChooser fileChooser = new FileChooser();
-		setFileChooserOptions(fileChooser);
-		File file = fileChooser.showSaveDialog(window);
-		if (file != null) {
-			path = file.getAbsolutePath();
-			IOManager.getInstance().writeFile(textArea.getText(), path);
-		}
-	}
+    public void saveAsOnAction() {
+        FileChooser fileChooser = new FileChooser();
+        setFileChooserOptions(fileChooser);
+        File file = fileChooser.showSaveDialog(window);
+        if (file != null) {
+            path = file.getAbsolutePath();
+            IOManager.getInstance().writeFile(textArea.getText(), path);
+        }
+    }
 
-	private void setFileChooserOptions(FileChooser fileChooser) {
-		FileChooser.ExtensionFilter extFilterAll = new FileChooser.ExtensionFilter("All", "*.*");
-		FileChooser.ExtensionFilter extFilterTxt = new FileChooser.ExtensionFilter("TXT (*.txt)", "*.txt");
-		FileChooser.ExtensionFilter extFilterJava = new FileChooser.ExtensionFilter("Java (*.java)", "*.java");
-		fileChooser.getExtensionFilters().add(extFilterAll);
-		fileChooser.getExtensionFilters().add(extFilterTxt);
-		fileChooser.getExtensionFilters().add(extFilterJava);
-		String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-		fileChooser.setInitialDirectory(new File(currentPath));
-	}
+    private void setFileChooserOptions(FileChooser fileChooser) {
+        FileChooser.ExtensionFilter extFilterAll = new FileChooser.ExtensionFilter("All", "*.*");
+        FileChooser.ExtensionFilter extFilterTxt = new FileChooser.ExtensionFilter("TXT (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilterJava = new FileChooser.ExtensionFilter("Java (*.java)", "*.java");
+        fileChooser.getExtensionFilters().add(extFilterAll);
+        fileChooser.getExtensionFilters().add(extFilterTxt);
+        fileChooser.getExtensionFilters().add(extFilterJava);
+        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        fileChooser.setInitialDirectory(new File(currentPath));
+    }
 
-	public void saveOnAction() {
-		if (path == null) {
-			handleTextError("Path is undefined use `Save As` or `Load File` at least once !");
-		}
-		IOManager.getInstance().writeFile(textArea.getText(), path);
-	}
+    public void saveOnAction() {
+        if (path == null) {
+            handleTextError("Path is undefined use `Save As` or `Load File` at least once !");
+        }
+        IOManager.getInstance().writeFile(textArea.getText(), path);
+    }
 
-	public void clearOnAction() {
-		textArea.setText("");
-	}
+    public void clearOnAction() {
+        textArea.setText("");
+    }
 
 
-	/* error Handling Functions */
+    /* error Handling Functions */
 
-	private void handleTextError(String txt) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Error");
-		alert.setHeaderText(null);
-		alert.setContentText(txt);
-		alert.showAndWait();
-	}
+    private void handleTextError(String txt) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(txt);
+        alert.showAndWait();
+    }
 
-	/* Helper function to be used at the end of the program */
+    /* Helper function to be used at the end of the program */
 
-	private void endTask(String message) {
+    private void endTask(String message) {
 
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Note");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
-	}
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Note");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
 }

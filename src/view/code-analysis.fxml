@@ -7,20 +7,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.CodeAnalysisInfo">
-   <children>
-      <TableView fx:id="dataTable" layoutX="60.0" layoutY="47.0" prefHeight="350.0" prefWidth="500.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="47.0">
-        <columns>
-          <TableColumn fx:id="inputCol" editable="false" prefWidth="356.0" text="Word" />
-          <TableColumn fx:id="matchCol" editable="false" prefWidth="323.0" sortable="false" text="Match" />
-        </columns>
-      </TableView>
-      <Label fx:id="messageLabel" layoutX="60.0" layoutY="14.0" prefHeight="21.0" prefWidth="487.0" AnchorPane.topAnchor="14.0">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font></Label>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="view.CodeAnalysisInfo">
+    <children>
+        <TableView fx:id="dataTable" layoutX="60.0" layoutY="47.0" prefHeight="350.0" prefWidth="500.0"
+                   AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0"
+                   AnchorPane.topAnchor="47.0">
+            <columns>
+                <TableColumn fx:id="inputCol" editable="false" prefWidth="356.0" text="Word"/>
+                <TableColumn fx:id="matchCol" editable="false" prefWidth="323.0" sortable="false" text="Match"/>
+            </columns>
+        </TableView>
+        <Label fx:id="messageLabel" layoutX="60.0" layoutY="14.0" prefHeight="21.0" prefWidth="487.0"
+               AnchorPane.topAnchor="14.0">
+            <font>
+                <Font name="System Bold" size="15.0"/>
+            </font>
+        </Label>
+    </children>
     <stylesheets>
-        <URL value="@darkTheme.css" />
+        <URL value="@darkTheme.css"/>
     </stylesheets>
 </AnchorPane>
