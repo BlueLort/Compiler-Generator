@@ -80,12 +80,12 @@ public class NfaUtility {
 	}
 
 	public static boolean isSymbol(String character) {
-		for (String s : Constant.REGEX_OPERATORS2) {
+		for (String s : Constant.RESERVED_REGEX_OPERATORS) {
 			if (s.equals(character))
 				return true;
 		}
 
 		return false;
 	}
-
+	
 }
