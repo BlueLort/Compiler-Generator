@@ -11,6 +11,7 @@ import model.nfa.NFA;
 import model.nfa.Punctuation;
 import model.nfa.RegularDefinition;
 import model.nfa.RegularExpression;
+import model.tokenization.Tokenizer;
 import view.CodeAnalysisInfo;
 
 import java.util.ArrayList;
@@ -18,9 +19,7 @@ import java.util.HashMap;
 
 public class Controller {
 
-	Graph  DFAMinimized;
-	HashMap<String, Node> DFAMinimizedTransTable;
-
+	private Tokenizer tokenizer = null;
 	public Controller() {
 
 	}
@@ -30,17 +29,17 @@ public class Controller {
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
 			DFA DFA = new  DFA(NFACombined);
-			DFAOptimizer dfaOptimizer = new DFAOptimizer(DFA);
-			DFAMinimized = dfaOptimizer.getDFAMinimized();
-			DFAMinimizedTransTable = dfaOptimizer.getMinimizedDFATransTable();
+			DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
+			tokenizer = new Tokenizer(minimalDFA);
 			return true;
 		}
 		return false;
 	}
 
 	public boolean RunCodeAnalysisOnAction(String file,Stage primaryStage) {
-		// TODO HANDLE ERRORS IF FILE IS BAD OR DFA/NFA NOT CONSTRUCTED [Return false if
-		// bad operation]
+		if(tokenizer == null)return false;
+		ArrayList<String> lexemes = tokenizer.getTokens(file);
+		if(lexemes == null)return false;
 		CodeAnalysisInfo infoViewer = new CodeAnalysisInfo();
 		infoViewer.initialize(primaryStage);
 		return false;

@@ -123,15 +123,5 @@ public class DfaUtility {
         return true;
     }
 
-    /** return next state given from a node and input char if found
-     * else null is returned */
-    public static Node getNextState(HashMap<String,Node> transitionTable, int nodeID, String input) {
-        Node node = transitionTable.get(Integer.toString(nodeID));
-        if (node == null)
-            return null;
-        if (node.getMap().get(input) != null)
-            return  node.getMap().get(input).get(0);
-        return null;
-    }
 
 }

@@ -65,7 +65,7 @@ public class LexicalAnalyzer {
 			return;
 		}
 		if (controller.RunCodeAnalysisOnAction(textArea.getText(),new Stage()) == false) {
-			handleTextError("Failed to run code analysis!");
+			handleTextError("Failed to run code analysis/Tokenization Error!");
 		}
 	}
 
