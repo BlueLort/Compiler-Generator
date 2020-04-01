@@ -114,7 +114,6 @@ public class RegularExpression {
 					nfa.push(GraphUtility.concatenate(left, right));
 				}
 			} else {
-				System.out.println(currentExpression);
 				if (definitionNfa.containsKey(currentExpression)) {
 					Graph g = new Graph(definitionNfa.get(currentExpression));
 					nfa.push(g);
