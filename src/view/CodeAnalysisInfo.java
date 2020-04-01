@@ -21,7 +21,7 @@ import javafx.util.Pair;
 import model.graph.Node;
 
 public class CodeAnalysisInfo {
-	private final String SAVING_PATH = "out/lexemes.txt";
+	private final String SAVING_PATH = "output/lexemes.txt";
 	@FXML
 	public TableView<InfoModelLexemes> dataLexemesTable;
 	@FXML

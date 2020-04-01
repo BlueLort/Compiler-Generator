@@ -28,8 +28,9 @@ public class Controller {
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
 			DFA DFA = new DFA(NFACombined);
+			System.out.println(DFA.getDFA());
 			DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
-			System.out.println(minimalDFA.getDFAMinimized());
+			//System.out.println(minimalDFA.getDFAMinimized());
 			tokenizer = new Tokenizer(minimalDFA,rulesCont.getRegularExpressionsKeys());
 			return true;
 		}
