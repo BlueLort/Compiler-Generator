@@ -17,10 +17,7 @@ public class Tokenizer {
     public Tokenizer(DFAOptimizer OptimizedDFA,ArrayList<String> regularExpressionsKeys) {
         this.minimalDFA = OptimizedDFA.getDFAMinimized();
         this.transitionTable = OptimizedDFA.getFinalStates();
-        this.regularExpressions = new ArrayList<>();
-        for(String reg:regularExpressionsKeys){
-        	regularExpressions.add(reg.replace("\\",""));
-		}
+        this.regularExpressions = regularExpressionsKeys;
     }
 
 	public ArrayList<Pair<String, String>> getTokens(String input) {
