@@ -69,8 +69,8 @@ public class Graph {
                     edge = "eps";
                 out += Integer.toString(node.getCurrentId()) + " " + Integer.toString(current.get(i).getCurrentId())
                         + " " + edge + "\n";
-                System.out.println(node.getCurrentId() + " " + node.getNodeType() + " " + node.isStart() + " " + current.get(i).getCurrentId()
-                        + " " + current.get(i).isEnd() + " " + current.get(i).getNodeType());
+                System.out.println(node.getCurrentId() + " " + node.getNodeTypes() + " " + node.isStart() + " " + current.get(i).getCurrentId()
+                        + " " + current.get(i).isEnd() + " " + current.get(i).getNodeTypes());
                 out += DFSPrintTree(current.get(i), visited);
             }
         }

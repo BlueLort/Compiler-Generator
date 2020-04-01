@@ -82,8 +82,14 @@ public class DFAOptimizer {
         Node newSource = transTable.get(DfaUtility.findPartitionOfNode(oldSource, finalGroupings));
         for (Node to : toNodes) {
             Node destination = transTable.get(DfaUtility.findPartitionOfNode(to, finalGroupings));
-            String type = to.getNodeType();
-            finalStates.put(new Pair(new Pair(newSource, destination), input), type);
+            ArrayList<String> types = to.getNodeTypes();
+            StringBuilder type = new StringBuilder("");
+            for(String s:types){
+                type.append(s);
+                type.append(',');
+            }
+
+            finalStates.put(new Pair(new Pair(newSource, destination), input), type.toString().substring(0,type.length()>0?type.length()-1:0));
         }
     }
     /**

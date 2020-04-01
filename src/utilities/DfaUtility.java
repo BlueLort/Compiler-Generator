@@ -2,6 +2,7 @@ package utilities;
 
 import model.graph.Node;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,15 +27,16 @@ public class DfaUtility {
     /**
      * returns the new node's type correctly
      */
-    public static String getNodeType(ArrayList<Node> nfaNodes) {
-        String nodeType = "";
+    public static ArrayList<String> getNodeType(ArrayList<Node> nfaNodes) {
+        ArrayList<String> nodeTypes = new ArrayList<>();
         int length = nfaNodes.size();
         for (int i = 0; i < length - 1; i++) {
-            if (!nfaNodes.get(i).getNodeType().equals("")) {
-                nodeType += nfaNodes.get(i).getNodeType(); // concating to make sure there are no errors [no multiple accept states]
+            if (!nfaNodes.get(i).getNodeTypes().isEmpty()) {
+                for(String s:nfaNodes.get(i).getNodeTypes())
+                    nodeTypes.add(s);
             }
         }
-        return nodeType;
+        return nodeTypes;
     }
 
     /**

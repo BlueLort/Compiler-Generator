@@ -30,6 +30,7 @@ public class Controller {
         if (rulesCont.isValid()) { // if No Errors found during rules processing
             Graph NFACombined = getCombinedNFA(rulesCont);
             DFA DFA = new DFA(NFACombined);
+            System.out.println(NFACombined);
             DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
             tokenizer = new Tokenizer(minimalDFA);
             return true;
@@ -39,6 +40,7 @@ public class Controller {
 
     public boolean RunCodeAnalysisOnAction(String file, Stage primaryStage) {
         if (tokenizer == null) return false;
+        //TODO ADAPT NODE TYPES TO TRANSITION TABLE AND CODE ANALYSIS
         ArrayList<String> lexemes = tokenizer.getTokens(file);
         if (lexemes == null) return false;
         CodeAnalysisInfo infoViewer = new CodeAnalysisInfo();

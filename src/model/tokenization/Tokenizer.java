@@ -29,10 +29,7 @@ public class Tokenizer {
             Pair<Node, String> val = new Pair(entry.getKey().getKey().getValue(), entry.getValue());
             transitionTable.put(key, val);
         }
-        System.out.println(transitionTable.get("78,;"));
-        System.out.println(transitionTable.get("78,i"));
     }
-
     public ArrayList<String> getTokens(String input) {
         savedLexems = new ArrayList<>();
         savedMatches = new ArrayList<>();
@@ -54,8 +51,9 @@ public class Tokenizer {
     }
 
     private int addGenerations(String input, int idx, ArrayList<String> lexems, Node currNode) {
+        if(idx >= input.length()) return -2;
         char currentChar = input.charAt(idx);
-        if (currentChar == ' ' || currentChar == '\n' || idx >= input.length()) return -2;
+        if (currentChar == ' ' || currentChar == '\n' || currentChar == '\r') return -2;
         String transition = Integer.toString(currNode.getCurrentId()) + "," + input.charAt(idx);
         Pair<Node, String> nextTransition = transitionTable.get(transition);
         if (nextTransition != null) {
@@ -71,6 +69,8 @@ public class Tokenizer {
         }
         return -1;
     }
+
+
 
 
 }

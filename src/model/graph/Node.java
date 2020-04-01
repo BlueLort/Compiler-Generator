@@ -11,7 +11,7 @@ public class Node implements Comparable {
     private boolean start;
     private boolean end;
     private int currentId;
-    private String nodeType;
+    private ArrayList<String> nodeTypes;
     public static int id = 0;
 
     public Node(boolean start, boolean end) {
@@ -19,7 +19,7 @@ public class Node implements Comparable {
         map = new HashMap<String, ArrayList<Node>>();
         this.start = start;
         this.end = end;
-        nodeType = "";
+        nodeTypes = new ArrayList<>();
     }
 
     public Node(boolean start, boolean end, String dfaNodeID) {
@@ -27,14 +27,17 @@ public class Node implements Comparable {
         map = new HashMap<String, ArrayList<Node>>();
         this.start = start;
         this.end = end;
-        nodeType = "";
+        nodeTypes = new ArrayList<>();
     }
 
     public Node(Node node) {
         this.currentId = id++;
         this.start = node.isStart();
         this.end = node.isEnd();
-        this.nodeType = node.nodeType;
+        this.nodeTypes = new ArrayList<>();
+        for(String s:node.nodeTypes){
+            this.nodeTypes.add(s);
+        }
         map = new HashMap<String, ArrayList<Node>>();
     }
 
@@ -43,7 +46,7 @@ public class Node implements Comparable {
         map = new HashMap<String, ArrayList<Node>>();
         this.start = false;
         this.end = false;
-        nodeType = "";
+        nodeTypes = new ArrayList<>();
     }
 
     public void addEdge(String word, Node destination) {
@@ -83,13 +86,10 @@ public class Node implements Comparable {
     public int getCurrentId() {
         return currentId;
     }
+    public void setNodeTypes(ArrayList<String> types) {this.nodeTypes = types;}
 
-    public void setNodeType(String nodeType) {
-        this.nodeType = nodeType;
-    }
-
-    public String getNodeType() {
-        return nodeType;
+    public ArrayList<String> getNodeTypes() {
+        return nodeTypes;
     }
 
 
