@@ -2,7 +2,7 @@ package controller;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import view.LexicalAnalyzer;
+import view.Compiler;
 
 public class Main extends Application {
 
@@ -11,7 +11,7 @@ public class Main extends Application {
     }
 
     public void start(Stage primaryStage) {
-        LexicalAnalyzer lexerTool = new LexicalAnalyzer();
-        lexerTool.initialize(primaryStage);
+        Compiler compiler = new Compiler();
+        compiler.initialize(primaryStage);
     }
 }

@@ -11,12 +11,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class LexicalAnalyzer {
+public class Compiler {
 
     private Stage window;
 
@@ -33,9 +34,8 @@ public class LexicalAnalyzer {
     private String path;
 
     public void initialize(Stage primaryStage) {
-
         window = primaryStage;
-        primaryStage.setTitle("Lexical Analyzer");
+        primaryStage.setTitle("Compiler");
         try {
             Parent root = FXMLLoader.load(new File("src/view/scene.fxml").toURI().toURL());
             Scene scene = new Scene(root, 1000, 750);
@@ -123,6 +123,8 @@ public class LexicalAnalyzer {
 
     private void handleTextError(String txt) {
         Alert alert = new Alert(AlertType.INFORMATION);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
         alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(txt);
@@ -134,6 +136,9 @@ public class LexicalAnalyzer {
     private void endTask(String message) {
 
         Alert alert = new Alert(AlertType.INFORMATION);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
+        //dialogPane.getStyleClass().add("myDialog");
         alert.setTitle("Note");
         alert.setHeaderText(null);
         alert.setContentText(message);
