@@ -32,7 +32,7 @@ public class Controller {
             Graph NFACombined = getCombinedNFA(rulesCont);
             DFA DFA = new DFA(NFACombined);
             DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
-            tokenizer = new Tokenizer(minimalDFA);
+            tokenizer = new Tokenizer(minimalDFA,rulesCont.getRegularExpressionsKeys());
             return true;
         }
         return false;

@@ -15,10 +15,11 @@ public class Tokenizer {
     private Graph minimalDFA;
     private ArrayList<Pair<String, String>> savedLexems;//first field for the input , 2nd field for the lexeme
     private HashMap<String, Pair<Node, String>> transitionTable; //currentNode,input -> nextNode,Output
-
-    public Tokenizer(DFAOptimizer OptimizedDFA) {
+    private ArrayList<String> regularExpressions;
+    public Tokenizer(DFAOptimizer OptimizedDFA,ArrayList<String> regularExpressionsKeys) {
         this.minimalDFA = OptimizedDFA.getDFAMinimized();
         this.transitionTable = OptimizedDFA.getFinalStates();
+        this.regularExpressions = regularExpressionsKeys;
     }
 
     public ArrayList<Pair<String, String>> getTokens(String input) {
@@ -60,7 +61,15 @@ public class Tokenizer {
 
     private String getAcceptanceState(String acceptanceStates[], String input) {
         if (acceptanceStates.length == 1) return acceptanceStates[0];
-        return input;//TODO MAKE SURE THIS ASSUMPTION CORRECT
+        for(String s:acceptanceStates){
+            if(input.equals(s))return input;
+        }
+        for(String reg:regularExpressions){
+            for (String s:acceptanceStates){
+                if(reg.equals(s))return reg;
+            }
+        }
+        return input;
     }
 
 
