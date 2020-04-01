@@ -17,5 +17,5 @@ public class Constant {
 	 * : \\= < > Add the \\, To split the regex correctly
 	 */
 	public static final String REGEX_OPERATORS = "\\*()\\L\\+*/-\\=<>";
-	public static final String[] REGEX_OPERATORS2 = { "\\+", "\\*", "\\(", "\\=", "\\)", };
+	public static final String[] REGEX_OPERATORS2 = { "\\+", "\\*", "\\(", "\\=", "\\)"};
 }
