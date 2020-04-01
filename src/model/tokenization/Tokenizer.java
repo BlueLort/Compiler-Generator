@@ -40,7 +40,7 @@ public class Tokenizer {
     private int addGenerations(String input, int startIdx, int idx, ArrayList<Pair<String, String>> lexems, Node currNode) {
         if (idx >= input.length()) return -2;
         char currentChar = input.charAt(idx);
-        if (currentChar == ' ' || currentChar == '\n' || currentChar == '\r') return -2;
+        if (currentChar == ' ' || currentChar == '\n' || currentChar == '\r' || currentChar == '\t') return -2;
         String transition = Integer.toString(currNode.getCurrentId()) + Constant.SEPARATOR + input.charAt(idx);
         Pair<Node, String> nextTransition = transitionTable.get(transition);
         if (nextTransition != null) {

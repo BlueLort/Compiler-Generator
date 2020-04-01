@@ -33,8 +33,6 @@ public class Controller {
             DFA DFA = new DFA(NFACombined);
             DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
             tokenizer = new Tokenizer(minimalDFA);
-            //TODO RUN THREAD TO VERIFY CODE
-
             return true;
         }
         return false;
@@ -57,5 +55,9 @@ public class Controller {
         NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
         Graph combinedNFAs = NFACombined.getCombinedGraph();
         return combinedNFAs;
+    }
+
+    public Tokenizer getTokenizer() {
+        return tokenizer;
     }
 }

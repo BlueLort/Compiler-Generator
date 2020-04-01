@@ -56,9 +56,15 @@ public class Compiler {
             handleTextError("Wrong file format !");
         } else {
             endTask("DFA constructed successfully !");
+            handleTextAreaInput();
         }
-    }
 
+
+    }
+    private void handleTextAreaInput(){
+        //TODO RUN THREAD TO VERIFY CODE
+       // textArea.style
+    }
     public void runCodeAnalysisOnAction() {
         if (textArea.getText().equalsIgnoreCase("")) {
             handleTextError("Empty text field !");

@@ -1,0 +1,1 @@
+a token match a lower priority RE while a subtoken match a higher priority RE
