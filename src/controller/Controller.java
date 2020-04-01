@@ -31,9 +31,10 @@ public class Controller {
         if (rulesCont.isValid()) { // if No Errors found during rules processing
             Graph NFACombined = getCombinedNFA(rulesCont);
             DFA DFA = new DFA(NFACombined);
-            System.out.println(NFACombined);
             DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
             tokenizer = new Tokenizer(minimalDFA);
+            //TODO RUN THREAD TO VERIFY CODE
+
             return true;
         }
         return false;

@@ -16,11 +16,12 @@ public class DFAOptimizer {
     public DFAOptimizer(DFA DFA) {
         finalStates = new HashMap<>();
         minimizeDFA(DFA);
-        System.out.println("************" + "\t\t\t minimized DFA" + "\t\t****************");
-        System.out.println(DFAMinimized.toString());
-        System.out.println("\n\n\n\n\n");
-        System.out.println("************" + "\t\t\t original DFA" + "\t\t****************");
-        System.out.println(DFA.getDFA().toString());
+        //Tests
+        //System.out.println("************" + "\t\t\t minimized DFA" + "\t\t****************");
+        //System.out.println(DFAMinimized.toString());
+        //System.out.println("\n\n\n\n\n");
+        //System.out.println("************" + "\t\t\t original DFA" + "\t\t****************");
+        //System.out.println(DFA.getDFA().toString());
     }
 
 
@@ -85,7 +86,6 @@ public class DFAOptimizer {
                 Node destination = transTable.get(DfaUtility.findPartitionOfNode(to, finalGroupings));
                 String key = Integer.toString(newSource.getCurrentId()) + Constant.SEPARATOR + input;
                 String types = getAllTypes(key, to.getNodeTypes());
-                System.out.println(types);
                 finalStates.put(key, new Pair(destination, types));
             }
         }
