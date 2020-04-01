@@ -10,7 +10,7 @@ public class Constant {
 
     public static final String ALPHABETS = "abcdefghijklmnopqrstuvwxyz";
     public static final String DIGITS = "0123456789";
-
+    public static final String SEPARATOR = " ";
 
     /*
      * Valid Operators : * ( ) \\L

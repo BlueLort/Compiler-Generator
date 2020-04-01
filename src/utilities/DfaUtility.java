@@ -27,16 +27,16 @@ public class DfaUtility {
     /**
      * returns the new node's type correctly
      */
-    public static ArrayList<String> getNodeType(ArrayList<Node> nfaNodes) {
-        ArrayList<String> nodeTypes = new ArrayList<>();
+    public static String getNodeType(ArrayList<Node> nfaNodes) {
+        String nodeTypes = "";
         int length = nfaNodes.size();
         for (int i = 0; i < length - 1; i++) {
             if (!nfaNodes.get(i).getNodeTypes().isEmpty()) {
-                for(String s:nfaNodes.get(i).getNodeTypes())
-                    nodeTypes.add(s);
+                nodeTypes += nfaNodes.get(i).getNodeTypes();
+                nodeTypes += Constant.SEPARATOR;
             }
         }
-        return nodeTypes;
+        return nodeTypes.substring(0, nodeTypes.length() > 0 ? nodeTypes.length() - 1 : 0);
     }
 
     /**
@@ -52,7 +52,7 @@ public class DfaUtility {
         String string = "";
         for (int i = 0; i < length - 1; i++) {
             if (!string.contains(Integer.toString(intArr[i]))) {
-                string += Integer.toString(intArr[i]) + ",";
+                string += Integer.toString(intArr[i]) + Constant.SEPARATOR;
             }
         }
         if (!string.contains(Integer.toString(intArr[length - 1]))) {
@@ -80,10 +80,10 @@ public class DfaUtility {
     public static String createGroupingsID(Node node, HashMap<String, ArrayList<Node>> groupings, String oldGroupingsID) {
         StringBuilder stringBuilder = new StringBuilder(oldGroupingsID);
         for (String string : node.getMap().keySet()) {
-            stringBuilder.append(",");
+            stringBuilder.append(Constant.SEPARATOR);
             stringBuilder.append(string);
             for (Node nodeIterator : node.getMap().get(string)) {
-                stringBuilder.append(",");
+                stringBuilder.append(Constant.SEPARATOR);
                 stringBuilder.append(findPartitionOfNode(nodeIterator, groupings));
             }
         }

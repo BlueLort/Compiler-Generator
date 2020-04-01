@@ -64,7 +64,7 @@ public class Compiler {
             handleTextError("Empty text field !");
             return;
         }
-        if (controller.RunCodeAnalysisOnAction(textArea.getText(), new Stage()) == false) {
+        if (controller.RunCodeAnalysisOnAction(textArea.getText()) == false) {
             handleTextError("Failed to run code analysis/Tokenization Error!");
         }
     }

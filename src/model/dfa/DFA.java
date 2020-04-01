@@ -33,7 +33,7 @@ public class DFA {
             ArrayList<Node> U;
             for (String a : DfaUtility.getUnionInputs(T)) { /** for all possible inputs a */
                 U = epsilonClosure(move(T, a));                  /** U (a new DFA state) =  */
-                ArrayList<String> newNodeTypes = DfaUtility.getNodeType(U);
+                String newNodeTypes = DfaUtility.getNodeType(U);
                 String newID = DfaUtility.createUnionID(U);
                 if (!DFATransTable.containsKey(newID)) {        /** if U is new add to Unmarked and transition table */
                     DFAStatesUnmarked.push(U);

@@ -28,7 +28,7 @@ public class Keyword {
             ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
             Graph nfa = createNfa(postFixExpression);
             keywordNfa.put(keyword, nfa);
-            nfa.getDestination().getNodeTypes().add(keyword);
+            nfa.getDestination().setNodeTypes(keyword);
 
         }
     }

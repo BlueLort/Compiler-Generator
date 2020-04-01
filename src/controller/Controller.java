@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.construction.RulesContainer;
 import model.dfa.DFA;
 import model.dfa.DFAOptimizer;
@@ -38,14 +39,13 @@ public class Controller {
         return false;
     }
 
-    public boolean RunCodeAnalysisOnAction(String file, Stage primaryStage) {
+    public boolean RunCodeAnalysisOnAction(String file) {
         if (tokenizer == null) return false;
-        //TODO ADAPT NODE TYPES TO TRANSITION TABLE AND CODE ANALYSIS
-        ArrayList<String> lexemes = tokenizer.getTokens(file);
+        ArrayList<Pair<String, String>> lexemes = tokenizer.getTokens(file);
         if (lexemes == null) return false;
         CodeAnalysisInfo infoViewer = new CodeAnalysisInfo();
-        infoViewer.initialize(primaryStage);
-        return false;
+        infoViewer.initialize(lexemes, tokenizer.getTransitionTable());
+        return true;
     }
 
     private Graph getCombinedNFA(RulesContainer rulesCont) {

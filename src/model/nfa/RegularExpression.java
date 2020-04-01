@@ -37,7 +37,7 @@ public class RegularExpression {
             ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(words);
             Graph nfa = createNfa(postFixExpression);
             regExpressionNfa.put(definitionKey, nfa);
-            nfa.getDestination().getNodeTypes().add(definitionKey);
+            nfa.getDestination().setNodeTypes(definitionKey);
 
         }
     }

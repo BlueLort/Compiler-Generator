@@ -3,6 +3,7 @@ package model.dfa;
 import javafx.util.Pair;
 import model.graph.Graph;
 import model.graph.Node;
+import utilities.Constant;
 import utilities.DfaUtility;
 
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.*;
 public class DFAOptimizer {
     private Graph DFAMinimized;
 
-    private HashMap<Pair<Pair<Node, Node>, String>, String> finalStates;
+    private HashMap<String, Pair<Node, String>> finalStates;
 
     public DFAOptimizer(DFA DFA) {
         finalStates = new HashMap<>();
@@ -77,20 +78,33 @@ public class DFAOptimizer {
      */
     private void updateFinalStates(String input, String currentID, HashMap<String, ArrayList<Node>> finalGroupings,
                                    HashMap<String, Node> transTable) {
-        Node oldSource = finalGroupings.get(currentID).get(0);
-        ArrayList<Node> toNodes = oldSource.getMap().get(input);
-        Node newSource = transTable.get(DfaUtility.findPartitionOfNode(oldSource, finalGroupings));
-        for (Node to : toNodes) {
-            Node destination = transTable.get(DfaUtility.findPartitionOfNode(to, finalGroupings));
-            ArrayList<String> types = to.getNodeTypes();
-            StringBuilder type = new StringBuilder("");
-            for(String s:types){
-                type.append(s);
-                type.append(',');
+        for (Node oldSource : finalGroupings.get(currentID)) {
+            ArrayList<Node> toNodes = oldSource.getMap().get(input);
+            Node newSource = transTable.get(DfaUtility.findPartitionOfNode(oldSource, finalGroupings));
+            for (Node to : toNodes) {
+                Node destination = transTable.get(DfaUtility.findPartitionOfNode(to, finalGroupings));
+                String key = Integer.toString(newSource.getCurrentId()) + Constant.SEPARATOR + input;
+                String types = getAllTypes(key, to.getNodeTypes());
+                System.out.println(types);
+                finalStates.put(key, new Pair(destination, types));
             }
-
-            finalStates.put(new Pair(new Pair(newSource, destination), input), type.toString().substring(0,type.length()>0?type.length()-1:0));
         }
+    }
+
+    private String getAllTypes(String key, String types) {
+        Pair<Node, String> currentVal = finalStates.get(key);
+        if (currentVal == null) return types;
+        String currTypes[] = currentVal.getValue().split(Constant.SEPARATOR);
+        String newTypes[] = types.split(Constant.SEPARATOR);
+        Set<String> alltypes = new LinkedHashSet();
+        alltypes.addAll(Arrays.asList(currTypes));
+        alltypes.addAll(Arrays.asList(newTypes));
+        String out = "";
+        for (String type : alltypes) {
+            out += type;
+            out += Constant.SEPARATOR;
+        }
+        return out.substring(0, out.length() - 1);
     }
     /**
      * NOTE: Whenever the array list is accessed it must be sorted  to maintain order to compare the lists easily
@@ -118,7 +132,7 @@ public class DFAOptimizer {
     }
 
 
-    public HashMap<Pair<Pair<Node, Node>, String>, String> getFinalStates() {
+    public HashMap<String, Pair<Node, String>> getFinalStates() {
         return finalStates;
     }
 

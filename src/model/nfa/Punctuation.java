@@ -27,7 +27,7 @@ public class Punctuation {
             ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
             Graph nfa = createNfa(postFixExpression);
             punctuationNfa.put(operator, nfa);
-            nfa.getDestination().getNodeTypes().add(operator);
+            nfa.getDestination().setNodeTypes(operator);
         }
     }
 
