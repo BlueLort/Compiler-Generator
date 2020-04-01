@@ -30,7 +30,6 @@ public class RegularExpression {
 			definitionValue = definitionValue.replace(" ", "");
 
 			ArrayList<String> words = separateRegularExpression(definitionValue);
-
 			words = addConcatSymbolToRegex(words);
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(words);
 			Graph nfa = createNfa(postFixExpression);
@@ -93,6 +92,7 @@ public class RegularExpression {
 	private Graph createNfa(ArrayList<String> expression) {
 		// System.out.println(expression);
 		// create a stack
+		System.out.println("Expression" + expression);
 		Stack<Graph> nfa = new Stack<Graph>();
 		// Scan all characters one by one
 		for (int i = 0; i < expression.size(); i++) {
@@ -114,6 +114,7 @@ public class RegularExpression {
 					nfa.push(GraphUtility.concatenate(left, right));
 				}
 			} else {
+				System.out.println(currentExpression);
 				if (definitionNfa.containsKey(currentExpression)) {
 					Graph g = new Graph(definitionNfa.get(currentExpression));
 					nfa.push(g);
