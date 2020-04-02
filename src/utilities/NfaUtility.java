@@ -70,8 +70,11 @@ public class NfaUtility {
 	}
 
 	public static boolean isRegexOperator(String character) {
-		String regexOperators = "*+|`";
-		return regexOperators.indexOf(character) == -1 ? false : true;
+		for (String s : Constant.REGEX_OPERATOR) {
+			if (s.equals(character))
+				return true;
+		}
+		return false;
 	}
 
 	public static boolean isOperator(String character) {
@@ -84,8 +87,7 @@ public class NfaUtility {
 			if (s.equals(character))
 				return true;
 		}
-
 		return false;
 	}
-	
+
 }

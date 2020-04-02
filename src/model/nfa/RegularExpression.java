@@ -50,7 +50,7 @@ public class RegularExpression {
 			for (int k = i + 1; k < regex.length(); k++) {
 				// K + 1 - > Substring is exclusive
 				String temp = regex.substring(i, k + 1);
-				if (definitionNfa.containsKey(temp) || Constant.REGEX_OPERATORS.indexOf(temp) != -1) {
+				if (definitionNfa.containsKey(temp) || Constant.OPERATORS.indexOf(temp) != -1) {
 					// Don't break from the loop (Digit / Digit(s))
 					j = k + 1;
 				}
