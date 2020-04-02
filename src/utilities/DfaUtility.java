@@ -75,47 +75,18 @@ public class DfaUtility {
 	}
 
 	/**
-	 * create a new group ID by concatenating old group ID to the following format :
-	 * ",input(S0), groupID(node that edge S0 points to),...,input(Si),groupID(node
-	 * that edge Si points to),......
-	 */
-	public static String createGroupingsID(Node node, HashMap<String, ArrayList<Node>> groupings,
-			String oldGroupingsID) {
-		StringBuilder stringBuilder = new StringBuilder(oldGroupingsID);
-		for (String string : node.getMap().keySet()) {
-			stringBuilder.append(Constant.SEPARATOR);
-			stringBuilder.append(string);
-			for (Node nodeIterator : node.getMap().get(string)) {
-				stringBuilder.append(Constant.SEPARATOR);
-				stringBuilder.append(findPartitionOfNode(nodeIterator, groupings));
-			}
-		}
-		return stringBuilder.toString();
-	}
-
-	/**
 	 * find the group which a node belongs to
 	 */
-	public static String findPartitionOfNode(Node node, HashMap<String, ArrayList<Node>> groupings) {
-		for (String string : groupings.keySet()) {
-			for (Node nodeIterator : groupings.get(string)) {
+	public static Integer findPartitionOfNode(Node node, HashMap<Integer, ArrayList<Node>> groupings) {
+		for (Integer groupID : groupings.keySet()) {
+			for (Node nodeIterator : groupings.get(groupID)) {
 				if (nodeIterator.equals(node))
-					return string;
+					return groupID;
 			}
 		}
-		return "";
+		return -1;
 	}
 
-	/**
-	 * check if the given group contains an start state
-	 */
-	public static boolean isStartGroupings(ArrayList<Node> groupings) {
-		for (Node node : groupings) {
-			if (node.isStart())
-				return true;
-		}
-		return false;
-	}
 
 	/**
 	 * check if the given group contains an end state
@@ -128,19 +99,30 @@ public class DfaUtility {
 		return false;
 	}
 
-	/**
-	 * checks if two given grouping results are the same
-	 */
-	public static boolean isTwoGroupingsEqual(HashMap<String, ArrayList<Node>> groupingsA,
-			HashMap<String, ArrayList<Node>> groupingsB) {
-		if (groupingsA.size() != groupingsB.size())
+	/** checks if a node's inputs transform to the same partitions that
+	 *  the group nodes' inputs transform to,
+	 *  to know if the node fits in that group*/
+	public static boolean canFit(Node node,										/** node I need to fit in a partition*/
+								 Node newGroupingNode,								/** group ID in new Grouping */
+								 HashMap<Integer,Integer>  nodeParent, 			/** nodeParent with respect to old groupings */
+								 HashMap<Integer, ArrayList<Node>>  groupings) 	/** old groupings */
+	{
+
+//		Node newParentNode = groupings.get(nodeParent.get(newGroupID)).get(0);
+		if (!nodeParent.get(newGroupingNode.getCurrentId()).equals(nodeParent.get(node.getCurrentId())) ||
+				newGroupingNode.getMap().keySet().size() != node.getMap().keySet().size())
 			return false;
 
-		for (ArrayList<Node> partition : groupingsA.values()) {
-			if (!DfaUtility.isPrtInGroupings(groupingsB, partition))
+		for (String input : node.getMap().keySet()) {
+			if(newGroupingNode.getMap().get(input) == null)
 				return false;
+			Node nodeRes = node.getMap().get(input).get(0);
+			Node parentRes = newGroupingNode.getMap().get(input).get(0);
+
+			if (!nodeParent.get(nodeRes.getCurrentId()).equals(nodeParent.get(parentRes.getCurrentId()))) {
+				return false;
+			}
 		}
 		return true;
 	}
-
 }

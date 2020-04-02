@@ -15,25 +15,18 @@ import utilities.DfaUtility;
 
 public class DFAOptimizer {
 	private Graph DFAMinimized;
-
 	private HashMap<String, Pair<Node, String>> finalStates;
+
 
 	public DFAOptimizer(DFA DFA) {
 		finalStates = new HashMap<>();
 		minimizeDFA(DFA);
-		// Tests
-		// System.out.println("************" + "\t\t\t minimized DFA" +
-		// "\t\t****************");
-		// System.out.println(DFAMinimized.toString());
-		// System.out.println("\n\n\n\n\n");
-		// System.out.println("************" + "\t\t\t original DFA" +
-		// "\t\t****************");
-		// System.out.println(DFA.getDFA().toString());
 	}
 
 	private void minimizeDFA(DFA DFA) {
+		HashMap<Integer,Integer> nodeParents = new HashMap<>(); /** int node -> int parent */
 		HashMap<String, Node> DFATransTable = DFA.getDFATransTable();
-		HashMap<String, ArrayList<Node>> grouping = new HashMap<>();
+		HashMap<Integer, ArrayList<Node>> grouping = new HashMap<>();
 		ArrayList<Node> nonAcceptingState = new ArrayList<>();
 		ArrayList<Node> acceptingState = new ArrayList<>();
 		for (String string : DFATransTable.keySet()) {
@@ -43,44 +36,51 @@ public class DFAOptimizer {
 			else
 				nonAcceptingState.add(node);
 		}
-		Collections.sort(nonAcceptingState);
-		Collections.sort(acceptingState);
-		grouping.put("start", nonAcceptingState);
-		grouping.put("final", acceptingState);
-		HashMap<String, ArrayList<Node>> newGrouping = grouping;
+
+		grouping.put(nonAcceptingState.get(0).getCurrentId(), nonAcceptingState);
+		while (!acceptingState.isEmpty()) {
+			ArrayList<Node> partition = new ArrayList<>();
+			for (int i = 1 ; i < acceptingState.size() ; i++ ) {
+				if(acceptingState.get(i).getNodeTypes().equals(acceptingState.get(0).getNodeTypes())) {
+					partition.add(acceptingState.remove(i));
+					i--;
+				}
+			}
+			partition.add(acceptingState.remove(0));
+			initNodeParents(partition,nodeParents);
+			grouping.put(partition.get(0).getCurrentId(),partition);
+		}
+
+   		initNodeParents(nonAcceptingState,nodeParents);
+		HashMap<Integer, ArrayList<Node>> newGrouping = grouping;
 		do {
 			grouping = newGrouping; /** last grouping */
-			newGrouping = constructGroupings(grouping); /** new grouping */
-		} while (!DfaUtility.isTwoGroupingsEqual(newGrouping,
-				grouping)); /**
+			newGrouping = constructGroupings(grouping, nodeParents); /** new grouping */
+		} while (newGrouping.size() != grouping.size()); /**
 							 * while last groupings not the same as the new groupings continue to minimize
 							 */
 		linkDFAFinalGroupings(newGrouping, DFA);
 	}
 
-	private void linkDFAFinalGroupings(HashMap<String, ArrayList<Node>> finalGroupings, DFA DFA) {
+	private void linkDFAFinalGroupings(HashMap<Integer, ArrayList<Node>> finalGroupings, DFA DFA) {
 		DFAMinimized = new Graph();
-		HashMap<String, Node> transTable = new HashMap<>();
-		for (String string : finalGroupings.keySet()) {
+		HashMap<Integer, Node> transTable = new HashMap<>();
+		for (Integer partitionID : finalGroupings.keySet()) {   /** partition ID */
 			Node node = new Node();
-			if (DfaUtility.isEndGroupings(finalGroupings.get(string)))
+			if (DfaUtility.isEndGroupings(finalGroupings.get(partitionID)))
 				node.setEnd(true);
-			transTable.put(string, node);
+			transTable.put(partitionID, node);
 		}
-		String initialNodeGroupId = DfaUtility.findPartitionOfNode(DFA.getDFA().getInitialNode(), finalGroupings);
+		Integer initialNodeGroupId = DfaUtility.findPartitionOfNode(DFA.getDFA().getInitialNode(), finalGroupings);
 		Node initialNode = transTable.get(initialNodeGroupId);
 		initialNode.setStart(true);
 		DFAMinimized.setInitialNode(initialNode); /** setting the initial node in the minimized DFA */
-		for (String currentID : finalGroupings.keySet()) {
-			Node firstNodeOfGroup = finalGroupings.get(currentID)
-					.get(0); /**
-								 * first node of each partition use it's edges to find what partition does it
-								 * points to
-								 */
-			for (String input : firstNodeOfGroup.getMap().keySet()) {
+		for (Integer currentID : finalGroupings.keySet()) {
+			Node firstNodeOfGroup = finalGroupings.get(currentID).get(0); /** first node of each partition */
+			for (String input : firstNodeOfGroup.getMap().keySet()) {		/** use it's edges to find what partition does it points to */
 				updateFinalStates(input, currentID, finalGroupings, transTable);
 				Node nextNode = firstNodeOfGroup.getMap().get(input).get(0);
-				String groupingsID = DfaUtility.findPartitionOfNode(nextNode, finalGroupings);
+				Integer groupingsID = DfaUtility.findPartitionOfNode(nextNode, finalGroupings);
 				transTable.get(currentID).addEdge(input, transTable.get(groupingsID));
 			}
 		}
@@ -89,18 +89,27 @@ public class DFAOptimizer {
 	/**
 	 * define final states and its generation on certain inputs
 	 */
-	private void updateFinalStates(String input, String currentID, HashMap<String, ArrayList<Node>> finalGroupings,
-			HashMap<String, Node> transTable) {
-		for (Node oldSource : finalGroupings.get(currentID)) {
-			ArrayList<Node> toNodes = oldSource.getMap().get(input);
-			Node newSource = transTable.get(DfaUtility.findPartitionOfNode(oldSource, finalGroupings));
-			for (Node to : toNodes) {
-				Node destination = transTable.get(DfaUtility.findPartitionOfNode(to, finalGroupings));
-				String key = Integer.toString(newSource.getCurrentId()) + Constant.SEPARATOR + input;
-				String types = getAllTypes(key, to.getNodeTypes());
-				finalStates.put(key, new Pair<Node, String>(destination, types));
-			}
+	private void updateFinalStates(String input, Integer currentID, HashMap<Integer, ArrayList<Node>> finalGroupings,
+			HashMap<Integer, Node> transTable) {
+		Node oldSource = finalGroupings.get(currentID).get(0);
+		Node newSource = transTable.get(oldSource.getCurrentId());
+		ArrayList<Node> toNodes = oldSource.getMap().get(input);
+		for (Node oldDestination : toNodes) {
+			Node newDestination = transTable.get(DfaUtility.findPartitionOfNode(oldDestination,finalGroupings));
+			String key = Integer.toString(newSource.getCurrentId()) + Constant.SEPARATOR + input;
+			String type = oldDestination.getNodeTypes();
+			finalStates.put(key,new Pair<>(newDestination,type));
 		}
+//		for (Node oldSource : finalGroupings.get(currentID)) {
+//			ArrayList<Node> toNodes = oldSource.getMap().get(input);
+//			Node newSource = transTable.get(DfaUtility.findPartitionOfNode(oldSource, finalGroupings));
+//			for (Node to : toNodes) {
+//				Node destination = transTable.get(DfaUtility.findPartitionOfNode(to, finalGroupings));
+//				String key = Integer.toString(newSource.getCurrentId()) + Constant.SEPARATOR + input;
+//				String types = getAllTypes(key, to.getNodeTypes());
+//				finalStates.put(key, new Pair<Node, String>(destination, types));
+//			}
+//		}
 	}
 
 	private String getAllTypes(String key, String types) {
@@ -129,21 +138,32 @@ public class DFAOptimizer {
 	 * constructing groupings by building a partition for each node and if it isn't
 	 * built before added it to the groupings
 	 */
-	private HashMap<String, ArrayList<Node>> constructGroupings(HashMap<String, ArrayList<Node>> groupings) {
-		HashMap<String, ArrayList<Node>> newGroupings = new HashMap<>();
-		for (String string : groupings.keySet()) {
-			for (Node node : groupings.get(string)) {
-				String newGroupingsID = DfaUtility.createGroupingsID(node, groupings, string);
-				if (newGroupings.keySet().contains(newGroupingsID)) {
-					newGroupings.get(newGroupingsID).add(node);
-					Collections.sort(newGroupings.get(newGroupingsID));
-				} else {
+	private HashMap<Integer, ArrayList<Node>> constructGroupings(HashMap<Integer, ArrayList<Node>> groupings,
+																 HashMap<Integer,Integer> nodeParents) {
+		HashMap<Integer,Integer> newNodeParents = new HashMap<>();
+		HashMap<Integer, ArrayList<Node>> newGroupings = new HashMap<>();
+		for (Integer oldGroupID : groupings.keySet()) {
+			for (Node node : groupings.get(oldGroupID)) {
+				boolean groupMatch = false;
+				for (Integer newGroupID : newGroupings.keySet()) {
+					Node newGroupingParent = newGroupings.get(newGroupID).get(0);
+					groupMatch = DfaUtility.canFit(node, newGroupingParent, nodeParents, groupings);
+					if (groupMatch) {
+						newGroupings.get(newGroupID).add(node);
+						newNodeParents.put(node.getCurrentId(),newGroupID);
+						break;
+					}
+				}
+				if (!groupMatch) {
 					ArrayList<Node> newPartition = new ArrayList<>();
 					newPartition.add(node);
-					newGroupings.put(newGroupingsID, newPartition);
+					newNodeParents.put(node.getCurrentId(),node.getCurrentId());
+					newGroupings.put(node.getCurrentId(), newPartition);
 				}
 			}
 		}
+
+		nodeParents = newNodeParents;
 		return newGroupings;
 	}
 
@@ -153,5 +173,11 @@ public class DFAOptimizer {
 
 	public Graph getDFAMinimized() {
 		return DFAMinimized;
+	}
+
+	private void initNodeParents(ArrayList<Node> partition, HashMap<Integer,Integer> nodeParent) {
+		for (Node node : partition) {
+			nodeParent.put(node.getCurrentId(),partition.get(0).getCurrentId());
+		}
 	}
 }
