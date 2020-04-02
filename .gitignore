@@ -1,5 +1,6 @@
 #Dir
 out/
+output/
 .settings/
 bin/
 .idea/
