@@ -18,12 +18,10 @@ decop
 while
 id
 relop
-relop
 num
 do
 begin
 id
-:
 relop
 id
 addop
@@ -37,10 +35,10 @@ id
 if
 id
 relop
+relop
 num
 then
 id
-:
 relop
 id
 addop
@@ -49,7 +47,6 @@ num
 num
 else
 id
-:
 relop
 id
 addop
