@@ -27,10 +27,13 @@ public class Controller {
 		RulesContainer rulesCont = new RulesContainer(file);
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 			Graph NFACombined = getCombinedNFA(rulesCont);
+
 			DFA DFA = new DFA(NFACombined);
+			System.out.println("\n\n\n\nDFA GRAPH \n\n\n\n");
 			System.out.println(DFA.getDFA());
 			DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
-			//System.out.println(minimalDFA.getDFAMinimized());
+			System.out.println("\n\n\n\nMINIMIZED GRAPH \n\n\n\n");
+			System.out.println(minimalDFA.getDFAMinimized());
 			tokenizer = new Tokenizer(minimalDFA,rulesCont.getRegularExpressionsKeys());
 			return true;
 		}

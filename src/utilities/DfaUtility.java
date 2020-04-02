@@ -31,7 +31,7 @@ public class DfaUtility {
 		String nodeTypes = "";
 		int length = nfaNodes.size();
 		for (int i = 0; i < length - 1; i++) {
-			if (!nfaNodes.get(i).getNodeTypes().isEmpty()) {
+			if (!nfaNodes.get(i).getNodeTypes().equals("")) {
 				nodeTypes += nfaNodes.get(i).getNodeTypes();
 				nodeTypes += Constant.SEPARATOR;
 			}

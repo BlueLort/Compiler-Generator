@@ -67,8 +67,10 @@ public class DFAOptimizer {
 		HashMap<Integer, Node> transTable = new HashMap<>();
 		for (Integer partitionID : finalGroupings.keySet()) {   /** partition ID */
 			Node node = new Node();
-			if (DfaUtility.isEndGroupings(finalGroupings.get(partitionID)))
+			node.setNodeTypes(finalGroupings.get(partitionID).get(0).getNodeTypes());
+			if (finalGroupings.get(partitionID).get(0).isEnd())
 				node.setEnd(true);
+
 			transTable.put(partitionID, node);
 		}
 		Integer initialNodeGroupId = DfaUtility.findPartitionOfNode(DFA.getDFA().getInitialNode(), finalGroupings);
@@ -91,14 +93,16 @@ public class DFAOptimizer {
 	 */
 	private void updateFinalStates(String input, Integer currentID, HashMap<Integer, ArrayList<Node>> finalGroupings,
 			HashMap<Integer, Node> transTable) {
-		Node oldSource = finalGroupings.get(currentID).get(0);
-		Node newSource = transTable.get(oldSource.getCurrentId());
-		ArrayList<Node> toNodes = oldSource.getMap().get(input);
-		for (Node oldDestination : toNodes) {
-			Node newDestination = transTable.get(DfaUtility.findPartitionOfNode(oldDestination,finalGroupings));
-			String key = Integer.toString(newSource.getCurrentId()) + Constant.SEPARATOR + input;
-			String type = oldDestination.getNodeTypes();
-			finalStates.put(key,new Pair<>(newDestination,type));
+		for(Node oldSource:finalGroupings.get(currentID)) {
+			//Node oldSource = finalGroupings.get(currentID).get(0);
+			Node newSource = transTable.get(DfaUtility.findPartitionOfNode(oldSource, finalGroupings));
+			ArrayList<Node> toNodes = oldSource.getMap().get(input);
+			for (Node oldDestination : toNodes) {
+				Node newDestination = transTable.get(DfaUtility.findPartitionOfNode(oldDestination, finalGroupings));
+				String key = Integer.toString(newSource.getCurrentId()) + Constant.SEPARATOR + input;
+				String type = oldDestination.getNodeTypes();
+				finalStates.put(key, new Pair(newDestination, type));
+			}
 		}
 //		for (Node oldSource : finalGroupings.get(currentID)) {
 //			ArrayList<Node> toNodes = oldSource.getMap().get(input);
@@ -128,11 +132,6 @@ public class DFAOptimizer {
 		}
 		return out.substring(0, out.length() - 1);
 	}
-
-	/**
-	 * NOTE: Whenever the array list is accessed it must be sorted to maintain order
-	 * to compare the lists easily
-	 */
 
 	/**
 	 * constructing groupings by building a partition for each node and if it isn't
