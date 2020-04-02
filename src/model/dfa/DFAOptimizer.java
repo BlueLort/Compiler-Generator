@@ -46,13 +46,7 @@ public class DFAOptimizer {
 		Collections.sort(nonAcceptingState);
 		Collections.sort(acceptingState);
 		grouping.put("start", nonAcceptingState);
-		int i = 0;
-		for (Node node: acceptingState) {
-			ArrayList<Node> acceptingNode = new ArrayList<>();
-			acceptingNode.add(node);
-			grouping.put("final"+i,acceptingNode);
-		}
-		//grouping.put("final", acceptingState);
+		grouping.put("final", acceptingState);
 		HashMap<String, ArrayList<Node>> newGrouping = grouping;
 		do {
 			grouping = newGrouping; /** last grouping */
