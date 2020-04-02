@@ -1,7 +1,7 @@
 letter = a
 digit = 0
 id: letter (letter|digit)*
-{int}
+{int while real}
 relop: \=\=
 assign: =
 [;]

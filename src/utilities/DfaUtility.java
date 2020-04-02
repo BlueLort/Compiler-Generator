@@ -103,12 +103,10 @@ public class DfaUtility {
 	 *  the group nodes' inputs transform to,
 	 *  to know if the node fits in that group*/
 	public static boolean canFit(Node node,										/** node I need to fit in a partition*/
-								 Node newGroupingNode,								/** group ID in new Grouping */
-								 HashMap<Integer,Integer>  nodeParent, 			/** nodeParent with respect to old groupings */
-								 HashMap<Integer, ArrayList<Node>>  groupings) 	/** old groupings */
+								 Node newGroupingNode,								/** partition node */
+								 HashMap<Integer,Integer>  nodeParent)			/** nodeParent with respect to old groupings */
 	{
 
-//		Node newParentNode = groupings.get(nodeParent.get(newGroupID)).get(0);
 		if (!nodeParent.get(newGroupingNode.getCurrentId()).equals(nodeParent.get(node.getCurrentId())) ||
 				newGroupingNode.getMap().keySet().size() != node.getMap().keySet().size())
 			return false;

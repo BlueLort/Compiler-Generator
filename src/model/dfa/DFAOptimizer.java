@@ -146,7 +146,7 @@ public class DFAOptimizer {
 				boolean groupMatch = false;
 				for (Integer newGroupID : newGroupings.keySet()) {
 					Node newGroupingParent = newGroupings.get(newGroupID).get(0);
-					groupMatch = DfaUtility.canFit(node, newGroupingParent, nodeParents, groupings);
+					groupMatch = DfaUtility.canFit(node, newGroupingParent, nodeParents);
 					if (groupMatch) {
 						newGroupings.get(newGroupID).add(node);
 						newNodeParents.put(node.getCurrentId(),newGroupID);
@@ -161,8 +161,7 @@ public class DFAOptimizer {
 				}
 			}
 		}
-
-		nodeParents = newNodeParents;
+		nodeParents.putAll(newNodeParents);
 		return newGroupings;
 	}
 
