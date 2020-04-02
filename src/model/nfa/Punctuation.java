@@ -10,41 +10,41 @@ import utilities.NfaUtility;
 
 public class Punctuation {
 
-	private HashMap<String, Graph> punctuationNfa;
+    private HashMap<String, Graph> punctuationNfa;
 
-	public Punctuation(RulesContainer rulesCont) {
-		punctuationNfa = new HashMap<String, Graph>();
-		punctuationToNfa(rulesCont);
-	}
+    public Punctuation(RulesContainer rulesCont) {
+        punctuationNfa = new HashMap<String, Graph>();
+        punctuationToNfa(rulesCont);
+    }
 
-	private void punctuationToNfa(RulesContainer rulesContainer) {
+    private void punctuationToNfa(RulesContainer rulesContainer) {
 
-		for (int i = 0; i < rulesContainer.getOperators().size(); i++) {
-			String operator = rulesContainer.getOperator(i);
-			operator = operator.replace("\\", "");
-			String[] operatorCharacters = operator.split("");
-			ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(operatorCharacters);
-			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
-			Graph nfa = createNfa(postFixExpression);
-			punctuationNfa.put(operator, nfa);
-			nfa.getDestination().setNodeTypes(operator);
-		}
-	}
+        for (int i = 0; i < rulesContainer.getOperators().size(); i++) {
+            String operator = rulesContainer.getOperator(i);
+            operator = operator.replace("\\", "");
+            String[] operatorCharacters = operator.split("");
+            ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(operatorCharacters);
+            ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);
+            Graph nfa = createNfa(postFixExpression);
+            punctuationNfa.put(operator, nfa);
+            nfa.getDestination().setNodeTypes(operator);
+        }
+    }
 
-	private static Graph createNfa(ArrayList<String> expression) {
-		// create a stack
-		Stack<Graph> nfa = new Stack<Graph>();
+    private static Graph createNfa(ArrayList<String> expression) {
+        // create a stack
+        Stack<Graph> nfa = new Stack<Graph>();
 
-		// Scan all characters one by one
-		for (int i = 0; i < expression.size(); i++) {
-			String currentExpression = expression.get(i);
-			nfa.push(new Graph(currentExpression));
-		}
-		return nfa.pop();
-	}
+        // Scan all characters one by one
+        for (int i = 0; i < expression.size(); i++) {
+            String currentExpression = expression.get(i);
+            nfa.push(new Graph(currentExpression));
+        }
+        return nfa.pop();
+    }
 
-	public HashMap<String, Graph> getPunctuationNfa() {
-		return punctuationNfa;
-	}
+    public HashMap<String, Graph> getPunctuationNfa() {
+        return punctuationNfa;
+    }
 
 }
