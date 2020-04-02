@@ -107,17 +107,23 @@ public class LineProcessor {
 	}
 
 	private class Operators extends Rule {
-		public String[] operators;// Takes keywords separated by space
+		public char[] operators;// Takes keywords separated by space
 
 		public Operators(String ops) {
-			this.operators = ops.split(" ");
+			this.operators = ops.toCharArray();
 		}
 
 		@Override
 		void addRule(RulesContainer container) {
 			for (int i = 0; i < this.operators.length; i++) {
-				if (!this.operators[i].equals(""))
-					container.addOperator(this.operators[i]);
+				if (this.operators[i] != ' ')
+					if(this.operators[i] != '\\'){
+						container.addOperator(String.valueOf(this.operators[i]));
+					}else{
+						container.addOperator(String.valueOf(this.operators,i,2));
+						i++;
+					}
+
 			}
 		}
 	}
