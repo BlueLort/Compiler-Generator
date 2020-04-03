@@ -16,7 +16,7 @@ public class Constant {
 	 * Valid Operators : * ( ) \\L Math Operators: \\+ \\* / - Comparison Operators
 	 * : \\= < > Add the \\, To split the regex correctly
 	 */
-	public static final String[] OPERATORS = { "(", ")", "*", "/", "-", "<", ">" };
+	public static final String[] OPERATORS = { "(", ")", "*", "/", "-", "<", ">", "%" };
 
 	public static final String[] REGEX_OPERATOR = { "*", "+", "|", "`", "(", ")" };
 
