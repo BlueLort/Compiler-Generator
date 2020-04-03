@@ -133,11 +133,11 @@ public class LineProcessor {
      */
     private class RegexFormats {
 
-        public static final String REGULAR_DEFINITION = "^(\\w+) =(.+)$";
+        public static final String REGULAR_DEFINITION = "^(\\w+)(?: )*=(.+)$";
         /**
          * match RD
          */
-        public static final String REGULAR_EXPRESSION = "^(\\w+):(.+)$";
+        public static final String REGULAR_EXPRESSION = "^(\\w+)(?: )*:(.+)$";
         /**
          * match RE
          */
