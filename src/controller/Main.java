@@ -6,12 +6,12 @@ import view.Compiler;
 
 public class Main extends Application {
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+	public static void main(String[] args) {
+		launch(args);
+	}
 
-    public void start(Stage primaryStage) {
-        Compiler compiler = new Compiler();
-        compiler.initialize(primaryStage);
-    }
+	public void start(Stage primaryStage) {
+		Compiler compiler = new Compiler();
+		compiler.initialize(primaryStage);
+	}
 }
