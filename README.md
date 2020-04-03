@@ -10,10 +10,9 @@ Develop a suitable Syntax Directed Translation Scheme to convert Java code to Ja
 (such as type checking and Expressions Evaluation).
 
 #### Sample Runs
+  * Images contain how the GUI was in the first phase of development.
+  * Simple editor to lay rules/code in and a simple code analyzer UI to check lexemes & transition table of the Minimized DFA
 
-Images contain how the GUI were in the first phase of development.
-
-Simple editor to lay rules/code in and a simple code analyzer UI to check lexemes results & transition table of the Minimized DFA
 ![GUI_rules](https://user-images.githubusercontent.com/48100957/78328400-5bd1e480-757f-11ea-90e2-400e52f4eb72.PNG)
 
 ![code-analysis](https://user-images.githubusercontent.com/48100957/78328476-8328b180-757f-11ea-929f-58eaa1ece005.PNG)
