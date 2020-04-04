@@ -11,6 +11,7 @@ public class RulesContainer {
 	private ArrayList<String> regularExpressionsKeys;
 	private ArrayList<String> operators;
 	private ArrayList<String> keywords;
+	private ArrayList<String> symbols;
 
 	private boolean hasErrors;
 
@@ -46,6 +47,7 @@ public class RulesContainer {
 		regularExpressionsKeys = new ArrayList<String>();
 		operators = new ArrayList<String>();
 		keywords = new ArrayList<String>();
+		symbols = new ArrayList<String>();
 		// regex search for each one of the elements and save them
 		hasErrors = processRules(rulesFile);
 	}
@@ -67,6 +69,8 @@ public class RulesContainer {
 	public ArrayList<String> getRegularExpressionsKeys() {
 		return regularExpressionsKeys;
 	}
+
+	public ArrayList<String> getSymbols() { return symbols; }
 
 	@Override
 	public String toString() {
@@ -96,6 +100,8 @@ public class RulesContainer {
 		operators.add(op);
 	}
 
+	void addSymbol(String symbol){
+		if(!symbols.contains(symbol)) symbols.add(symbol); }
 	public ArrayList<String> getOperators() {
 		return operators;
 	}

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  **/
 public class LineProcessor {
 	public static final String[] REGEX_FORMATS = { RegexFormats.REGULAR_DEFINITION, RegexFormats.REGULAR_EXPRESSION,
-			RegexFormats.KEYWORD, RegexFormats.OPERATOR };
+			RegexFormats.KEYWORD, RegexFormats.OPERATOR ,RegexFormats.SYMBOL};
 	private static LineProcessor instance = null;
 
 	public static LineProcessor GetInstance() {
@@ -85,6 +85,10 @@ public class LineProcessor {
 
 		@Override
 		void addRule(RulesContainer container) {
+			Pattern reg = Pattern.compile(REGEX_FORMATS[4]);
+			Matcher mat = reg.matcher(value);
+			while (mat.find())
+				container.addSymbol(mat.group(1));
 			container.putRegularExpression(key, value);
 		}
 	}
@@ -147,6 +151,10 @@ public class LineProcessor {
 		 */
 		public static final String OPERATOR = "^\\[(.+)\\]$";
 
+		/**
+		 * match symbols on regex to make it easier to construct NFA for regular expressions
+		 */
+		public static final String SYMBOL = "[^\\\\]([^\\w\\s\\d\\\\\\*\\+\\|\\(\\)])";
 		/**
 		 * Read After to end
 		 */

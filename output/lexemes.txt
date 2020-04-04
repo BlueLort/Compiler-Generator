@@ -10,8 +10,10 @@ integer
 ;
 begin
 id
-assign
-num
+incop
+;
+id
+decop
 ;
 while
 id
@@ -39,7 +41,7 @@ id
 assign
 id
 addop
-num
+floatNum
 else
 id
 assign

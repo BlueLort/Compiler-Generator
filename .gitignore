@@ -5,6 +5,7 @@ output/
 bin/
 .idea/
 #Files
+output/lexemes.txt
 
 *.user
 .classpath
