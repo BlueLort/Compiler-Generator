@@ -14,14 +14,14 @@ public class RegularExpression {
 
 	private HashMap<String, Graph> definitionNfa;
 	private HashMap<String, Graph> regExpressionNfa;
-	private ArrayList<String> symbols;
+	private ArrayList<String> backlashSymbols;
 	private RulesContainer rulesContainer;
 
 	public RegularExpression(RulesContainer rulesCont, HashMap<String, Graph> definitionNfa) {
 		regExpressionNfa = new HashMap<String, Graph>();
 		this.definitionNfa = definitionNfa;
 		rulesContainer = rulesCont;
-		symbols = generateSymbols();
+		backlashSymbols = generateSymbols();
 		regexToNfa(rulesCont);
 	}
 
@@ -34,7 +34,7 @@ public class RegularExpression {
 			definitionValue = definitionValue.replace(" ", "");
 
 			ArrayList<String> words = separateRegularExpression(definitionValue);
-			System.out.println(words);
+			System.out.println("Regex 1 " + words);
 			words = addConcatSymbolToRegex(words);
 			ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(words);
 			Graph nfa = createNfa(postFixExpression);
@@ -46,7 +46,7 @@ public class RegularExpression {
 	private ArrayList<String> separateRegularExpression(String regex) {
 
 		ArrayList<String> result = new ArrayList<String>();
-
+		ArrayList<String> symbols = rulesContainer.getSymbols();
 		int i = 0;
 		while (i < regex.length()) {
 			// To keep track of the last valid definition/operator
@@ -54,7 +54,7 @@ public class RegularExpression {
 			for (int k = i + 1; k < regex.length(); k++) {
 				// K + 1 - > Substring is exclusive
 				String temp = regex.substring(i, k + 1);
-				if (definitionNfa.containsKey(temp) || NfaUtility.isOperator(temp) || symbols.contains(temp)) {
+				if (definitionNfa.containsKey(temp) || symbols.contains(temp) || this.backlashSymbols.contains(temp)) {
 					// Don't break from the loop (Digit / Digit(s))
 					j = k + 1;
 				}
@@ -119,7 +119,7 @@ public class RegularExpression {
 				if (definitionNfa.containsKey(currentExpression)) {
 					Graph g = new Graph(definitionNfa.get(currentExpression));
 					nfa.push(g);
-				} else if (symbols.contains(currentExpression) && !currentExpression.equals("\\L")) {
+				} else if (backlashSymbols.contains(currentExpression) && !currentExpression.equals("\\L")) {
 					String nodeName = expression.get(i).substring(1);
 					nfa.push(new Graph(nodeName));
 				} else {
@@ -156,22 +156,12 @@ public class RegularExpression {
 		return result;
 	}
 
-	public ArrayList<String> getOtherOperators() {
-		ArrayList<String> result = new ArrayList<String>();
-
-		for (String s : rulesContainer.getRegularExpressionsKeys()) {
-			String regularExpression = rulesContainer.getRegularExpression(s);
-		}
-
-		return result;
-	}
-
 	public HashMap<String, Graph> getRegExpressionNfa() {
 		return regExpressionNfa;
 	}
 
-	public ArrayList<String> getSymbols() {
-		return symbols;
+	public ArrayList<String> getBackSlashSymbols() {
+		return backlashSymbols;
 	}
 
 }

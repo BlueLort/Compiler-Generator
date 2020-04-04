@@ -70,7 +70,9 @@ public class RulesContainer {
 		return regularExpressionsKeys;
 	}
 
-	public ArrayList<String> getSymbols() { return symbols; }
+	public ArrayList<String> getSymbols() {
+		return symbols;
+	}
 
 	@Override
 	public String toString() {
@@ -100,8 +102,11 @@ public class RulesContainer {
 		operators.add(op);
 	}
 
-	void addSymbol(String symbol){
-		if(!symbols.contains(symbol)) symbols.add(symbol); }
+	void addSymbol(String symbol) {
+		if (!symbols.contains(symbol))
+			symbols.add(symbol);
+	}
+
 	public ArrayList<String> getOperators() {
 		return operators;
 	}

@@ -58,7 +58,6 @@ public class Controller {
 		Keyword keyword = new Keyword(rulesCont);
 		Punctuation punctuation = new Punctuation(rulesCont);
 		RegularExpression regex = new RegularExpression(rulesCont, regularDefinition.getDefinitionNfa());
-		System.out.println(regex.getSymbols());
 		NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
 		Graph combinedNFAs = NFACombined.getCombinedGraph();
 		return combinedNFAs;
