@@ -2,7 +2,7 @@ package utilities;
 
 import java.util.ArrayList;
 
-import model.graph.Graph;
+import model.lexical_analyzer.graph.Graph;
 
 public class GraphUtility {
 

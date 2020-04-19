@@ -1,9 +1,9 @@
-package model.nfa;
+package model.lexical_analyzer.nfa;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import model.graph.Graph;
+import model.lexical_analyzer.graph.Graph;
 import utilities.GraphUtility;
 
 public class NFA {

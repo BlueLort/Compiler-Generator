@@ -1,9 +1,9 @@
-package model.construction;
+package model.lexical_analyzer.construction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RulesContainer {
+public class LexicalRulesContainer {
 
     private HashMap<String, String> regularDefinitions;
     private ArrayList<String> regularDefinitionsKeys;
@@ -39,7 +39,7 @@ public class RulesContainer {
         return operators.get(idx);
     }
 
-    public RulesContainer(String rulesFile) {
+    public LexicalRulesContainer(String rulesFile) {
         // init members
         regularDefinitions = new HashMap<String, String>();
         regularDefinitionsKeys = new ArrayList<String>();
@@ -55,7 +55,8 @@ public class RulesContainer {
     private boolean processRules(String rulesFile) {
         String lines[] = rulesFile.split("\\r?\\n");
         for (int i = 0; i < lines.length; i++) {
-            if (LineProcessor.GetInstance().processLine(lines[i], this) == false) {
+            if (lines[i].equals("")) continue;
+            if (LexicalLineProcessor.getInstance().processLine(lines[i], this) == false) {
                 return false;
             }
         }
@@ -76,13 +77,13 @@ public class RulesContainer {
 
     @Override
     public String toString() {
-        return "RulesContainer{" + "\nregularDefinitions=" + regularDefinitions + "\n regularDefinitionsKeys="
+        return "ParserRulesContainer{" + "\nregularDefinitions=" + regularDefinitions + "\n regularDefinitionsKeys="
                 + regularDefinitionsKeys + "\n regularExpressions=" + regularExpressions + "\n regularExpressionsKeys="
                 + regularExpressionsKeys + "\n operators=" + operators + "\n keywords=" + keywords + "\n}";
     }
 
     /**
-     * default functions for LineProcessor to use
+     * default functions for ParserLineProcessor to use
      */
     void putRegularDefinition(String key, String val) {
         regularDefinitions.put(key, val);

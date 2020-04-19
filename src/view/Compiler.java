@@ -46,33 +46,59 @@ public class Compiler {
         }
     }
 
-    /* PLT Needed Operations */
-    public void constructRulesOnAction() {
+    // Lexical Analyzer
+    //-----------------------------------------------------------------------
+    public void constructLexicalRulesOnAction() {
         if (textArea.getText().equalsIgnoreCase("")) {
             handleTextError("Empty text field !");
             return;
         }
-        if (controller.ConstructRules(textArea.getText()) == false) {
+        if (controller.constructLexicalRules(textArea.getText()) == false) {
             handleTextError("Wrong file format !");
         } else {
             endTask("DFA constructed successfully !");
-            handleTextAreaInput();
         }
 
     }
 
-    private void handleTextAreaInput() {
-        // TODO RUN THREAD TO VERIFY CODE
-        // textArea.style
-    }
 
     public void runCodeAnalysisOnAction() {
         if (textArea.getText().equalsIgnoreCase("")) {
             handleTextError("Empty text field !");
             return;
         }
-        if (controller.RunCodeAnalysisOnAction(textArea.getText()) == false) {
+        if (controller.runCodeAnalysisOnAction(textArea.getText()) == false) {
             handleTextError("Tokenization Errors \nNo DFA Constructed /\nSome symbols are unknown (specified with empty 'Match' field)!");
+        }
+    }
+
+    // Parser
+    //-----------------------------------------------------------------------
+    public void loadLexemesOnAction() {
+        FileChooser fileChooser = new FileChooser();
+        setFileChooserOptions(fileChooser);
+        File file = fileChooser.showOpenDialog(window);
+        if (file != null) {
+            path = file.getAbsolutePath();
+            controller.loadLexemesFromFile(path);
+        }
+    }
+
+    public void constructParserRulesOnAction() {
+        if (textArea.getText().equalsIgnoreCase("")) {
+            handleTextError("Empty text field !");
+            return;
+        }
+        if (controller.constructParserRules(textArea.getText()) == false) {
+            handleTextError("Wrong file format or Tokens were not generated !");
+        } else {
+            endTask("Parsing Table constructed successfully!");
+        }
+    }
+
+    public void parseInputOnAction() {
+        if (controller.parseInput() == false) {// parse lexemes saved in tokenizer
+            handleTextError("Error in Parsing the file no lexemes defined or error during parsing phase !");
         }
     }
 

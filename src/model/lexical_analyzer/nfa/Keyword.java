@@ -1,11 +1,11 @@
-package model.nfa;
+package model.lexical_analyzer.nfa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-import model.construction.RulesContainer;
-import model.graph.Graph;
+import model.lexical_analyzer.construction.LexicalRulesContainer;
+import model.lexical_analyzer.graph.Graph;
 import utilities.Constant;
 import utilities.GraphUtility;
 import utilities.NfaUtility;
@@ -13,15 +13,15 @@ import utilities.NfaUtility;
 public class Keyword {
     private HashMap<String, Graph> keywordNfa;
 
-    public Keyword(RulesContainer rulesCont) {
+    public Keyword(LexicalRulesContainer rulesCont) {
         keywordNfa = new HashMap<String, Graph>();
         keywordToNfa(rulesCont);
     }
 
-    private void keywordToNfa(RulesContainer rulesContainer) {
+    private void keywordToNfa(LexicalRulesContainer lexicalRulesContainer) {
 
-        for (int i = 0; i < rulesContainer.getKeywords().size(); i++) {
-            String keyword = rulesContainer.getKeyword(i);
+        for (int i = 0; i < lexicalRulesContainer.getKeywords().size(); i++) {
+            String keyword = lexicalRulesContainer.getKeyword(i);
             String[] keywordCharacters = keyword.split("");
             ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(keywordCharacters);
             ArrayList<String> postFixExpression = NfaUtility.infixToPostFix(characters);

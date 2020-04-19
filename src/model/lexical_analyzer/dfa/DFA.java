@@ -1,6 +1,6 @@
-package model.dfa;
+package model.lexical_analyzer.dfa;
 
-import model.graph.*;
+import model.lexical_analyzer.graph.*;
 import utilities.Constant;
 import utilities.DfaUtility;
 

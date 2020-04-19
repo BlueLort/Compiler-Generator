@@ -1,4 +1,4 @@
-package model.graph;
+package model.lexical_analyzer.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -18,7 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import model.graph.Node;
+import model.lexical_analyzer.graph.Node;
 
 public class CodeAnalysisInfo {
     private final String SAVING_PATH = "output/lexemes.txt";

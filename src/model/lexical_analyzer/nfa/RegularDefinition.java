@@ -1,11 +1,11 @@
-package model.nfa;
+package model.lexical_analyzer.nfa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-import model.construction.RulesContainer;
-import model.graph.Graph;
+import model.lexical_analyzer.construction.LexicalRulesContainer;
+import model.lexical_analyzer.graph.Graph;
 import utilities.Constant;
 import utilities.GraphUtility;
 
@@ -13,16 +13,16 @@ public class RegularDefinition {
 
     private HashMap<String, Graph> definitionNfa;
 
-    public RegularDefinition(RulesContainer rulesCont) {
+    public RegularDefinition(LexicalRulesContainer rulesCont) {
         definitionNfa = new HashMap<String, Graph>();
         definitionsToNfa(rulesCont);
     }
 
-    private void definitionsToNfa(RulesContainer rulesContainer) {
+    private void definitionsToNfa(LexicalRulesContainer lexicalRulesContainer) {
 
-        for (int i = 0; i < rulesContainer.getRegularDefinitionsKeys().size(); i++) {
-            String definitionKey = rulesContainer.getRegularDefinitionsKeys().get(i);
-            String definitionValue = rulesContainer.getRegularDefinition(definitionKey);
+        for (int i = 0; i < lexicalRulesContainer.getRegularDefinitionsKeys().size(); i++) {
+            String definitionKey = lexicalRulesContainer.getRegularDefinitionsKeys().get(i);
+            String definitionValue = lexicalRulesContainer.getRegularDefinition(definitionKey);
 
             definitionValue = separateRDByOrs(definitionValue);
 

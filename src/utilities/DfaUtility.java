@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import model.graph.Node;
+import model.lexical_analyzer.graph.Node;
 
 public class DfaUtility {
 

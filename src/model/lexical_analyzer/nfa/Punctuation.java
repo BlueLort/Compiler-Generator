@@ -1,26 +1,26 @@
-package model.nfa;
+package model.lexical_analyzer.nfa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-import model.construction.RulesContainer;
-import model.graph.Graph;
+import model.lexical_analyzer.construction.LexicalRulesContainer;
+import model.lexical_analyzer.graph.Graph;
 import utilities.NfaUtility;
 
 public class Punctuation {
 
     private HashMap<String, Graph> punctuationNfa;
 
-    public Punctuation(RulesContainer rulesCont) {
+    public Punctuation(LexicalRulesContainer rulesCont) {
         punctuationNfa = new HashMap<String, Graph>();
         punctuationToNfa(rulesCont);
     }
 
-    private void punctuationToNfa(RulesContainer rulesContainer) {
+    private void punctuationToNfa(LexicalRulesContainer lexicalRulesContainer) {
 
-        for (int i = 0; i < rulesContainer.getOperators().size(); i++) {
-            String operator = rulesContainer.getOperator(i);
+        for (int i = 0; i < lexicalRulesContainer.getOperators().size(); i++) {
+            String operator = lexicalRulesContainer.getOperator(i);
             operator = operator.replace("\\", "");
             String[] operatorCharacters = operator.split("");
             ArrayList<String> characters = NfaUtility.addConcatSymbolToWords(operatorCharacters);

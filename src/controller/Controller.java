@@ -3,46 +3,43 @@ package controller;
 import java.util.ArrayList;
 
 import javafx.util.Pair;
-import model.construction.RulesContainer;
-import model.dfa.DFA;
-import model.dfa.DFAOptimizer;
-import model.graph.Graph;
-import model.nfa.Keyword;
-import model.nfa.NFA;
-import model.nfa.Punctuation;
-import model.nfa.RegularDefinition;
-import model.nfa.RegularExpression;
-import model.tokenization.Tokenizer;
+import model.lexical_analyzer.construction.LexicalRulesContainer;
+import model.lexical_analyzer.dfa.DFA;
+import model.lexical_analyzer.dfa.DFAOptimizer;
+import model.lexical_analyzer.graph.Graph;
+import model.lexical_analyzer.nfa.Keyword;
+import model.lexical_analyzer.nfa.NFA;
+import model.lexical_analyzer.nfa.Punctuation;
+import model.lexical_analyzer.nfa.RegularDefinition;
+import model.lexical_analyzer.nfa.RegularExpression;
+import model.lexical_analyzer.tokenization.Tokenizer;
+import model.parser.construction.ParserRulesContainer;
 import view.CodeAnalysisInfo;
 
 public class Controller {
 
-    private Tokenizer tokenizer = null;
+    private Tokenizer tokenizer = null;//member because it's used with the parser
 
+    //TODO MEMBER VAR. PARSING TABLE
     public Controller() {
 
     }
 
-    public boolean ConstructRules(String file) {
-        RulesContainer rulesCont = new RulesContainer(file);
+    // Lexical Analyzer
+    //-----------------------------------------------------------------------
+    public boolean constructLexicalRules(String file) {
+        LexicalRulesContainer rulesCont = new LexicalRulesContainer(file);
         if (rulesCont.isValid()) { // if No Errors found during rules processing
             Graph NFACombined = getCombinedNFA(rulesCont);
-            // System.out.println(NFACombined);
-            // System.out.println("NFA GRAPH \n\n\n\n");
-            // System.out.println(NFACombined);
             DFA DFA = new DFA(NFACombined);
-            // System.out.println("\n\n\n\nDFA GRAPH \n\n\n\n");
-            // System.out.println(DFA.getDFA());
             DFAOptimizer minimalDFA = new DFAOptimizer(DFA);
-            // System.out.println("\n\n\n\nMINIMIZED GRAPH \n\n\n\n");
-            // System.out.println(minimalDFA.getDFAMinimized());
             tokenizer = new Tokenizer(minimalDFA, rulesCont.getRegularExpressionsKeys());
             return true;
         }
         return false;
     }
 
-    public boolean RunCodeAnalysisOnAction(String file) {
+    public boolean runCodeAnalysisOnAction(String file) {
         if (tokenizer == null)
             return false;
         ArrayList<Pair<String, String>> lexemes = tokenizer.getTokens(file);
@@ -51,7 +48,41 @@ public class Controller {
         return tokenizer.isValidTokenization();
     }
 
-    private Graph getCombinedNFA(RulesContainer rulesCont) {
+    // Parser
+    //-----------------------------------------------------------------------
+    public boolean loadLexemesFromFile(String filePath) {
+        tokenizer = new Tokenizer(filePath);
+        return true;
+    }
+
+    public boolean constructParserRules(String file) {
+        ParserRulesContainer rulesCont = new ParserRulesContainer(file);
+        if (rulesCont.isValid()) { // if No Errors found during rules processing
+
+            System.out.println(rulesCont); // Rules captured
+            tokenizer.getSavedLexems(); // Word , Match for the last code analysis ran by the user.
+            //TODO PASRE THE RULES CAPTURED
+            //TODO ELIMINATE LEFT RECURSION , DO LEFT FACTORING
+            //TODO FIRST FOLLOW SETS
+            //TODO PARSING TABLE
+
+            return true;
+        }
+        return false;
+    }
+
+    public boolean parseInput() {
+        //TODO REMOVE THE NEXT LINE AFTER FINISHING THE PARSER
+        //INITIALIZING TOKENIZER HERE MAKE IT EASIER FOR DEVELOPMENT
+        tokenizer = new Tokenizer("output/lexemes.txt");
+        //
+        if (tokenizer == null)
+            return false;
+        //TODO TRACE OUT USING STACK & PANIC MODE RECOVERY
+        return false;
+    }
+
+    private Graph getCombinedNFA(LexicalRulesContainer rulesCont) {
         RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
         Keyword keyword = new Keyword(rulesCont);
         Punctuation punctuation = new Punctuation(rulesCont);

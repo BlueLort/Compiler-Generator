@@ -1,11 +1,11 @@
-package model.nfa;
+package model.lexical_analyzer.nfa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-import model.construction.RulesContainer;
-import model.graph.Graph;
+import model.lexical_analyzer.construction.LexicalRulesContainer;
+import model.lexical_analyzer.graph.Graph;
 import utilities.Constant;
 import utilities.GraphUtility;
 import utilities.NfaUtility;
@@ -15,21 +15,21 @@ public class RegularExpression {
     private HashMap<String, Graph> definitionNfa;
     private HashMap<String, Graph> regExpressionNfa;
     private ArrayList<String> backlashSymbols;
-    private RulesContainer rulesContainer;
+    private LexicalRulesContainer lexicalRulesContainer;
 
-    public RegularExpression(RulesContainer rulesCont, HashMap<String, Graph> definitionNfa) {
+    public RegularExpression(LexicalRulesContainer rulesCont, HashMap<String, Graph> definitionNfa) {
         regExpressionNfa = new HashMap<String, Graph>();
         this.definitionNfa = definitionNfa;
-        rulesContainer = rulesCont;
+        lexicalRulesContainer = rulesCont;
         backlashSymbols = generateSymbols();
         regexToNfa(rulesCont);
     }
 
-    private void regexToNfa(RulesContainer rulesContainer) {
+    private void regexToNfa(LexicalRulesContainer lexicalRulesContainer) {
 
-        for (int i = 0; i < rulesContainer.getRegularExpressionsKeys().size(); i++) {
-            String definitionKey = rulesContainer.getRegularExpressionsKeys().get(i);
-            String definitionValue = rulesContainer.getRegularExpression(definitionKey);
+        for (int i = 0; i < lexicalRulesContainer.getRegularExpressionsKeys().size(); i++) {
+            String definitionKey = lexicalRulesContainer.getRegularExpressionsKeys().get(i);
+            String definitionValue = lexicalRulesContainer.getRegularExpression(definitionKey);
 
             definitionValue = definitionValue.replace(" ", "");
 
@@ -45,7 +45,7 @@ public class RegularExpression {
     private ArrayList<String> separateRegularExpression(String regex) {
 
         ArrayList<String> result = new ArrayList<String>();
-        ArrayList<String> symbols = rulesContainer.getSymbols();
+        ArrayList<String> symbols = lexicalRulesContainer.getSymbols();
         int i = 0;
         while (i < regex.length()) {
             // To keep track of the last valid definition/operator
@@ -132,14 +132,14 @@ public class RegularExpression {
     public ArrayList<String> generateSymbols() {
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String s : rulesContainer.getOperators()) {
+        for (String s : lexicalRulesContainer.getOperators()) {
             if (s.startsWith("\\")) {
                 result.add(s);
             }
         }
 
-        for (String s : rulesContainer.getRegularExpressionsKeys()) {
-            String regularExpression = rulesContainer.getRegularExpression(s);
+        for (String s : lexicalRulesContainer.getRegularExpressionsKeys()) {
+            String regularExpression = lexicalRulesContainer.getRegularExpression(s);
             int i = 0;
             while (i < regularExpression.length()) {
                 char c = regularExpression.charAt(i);

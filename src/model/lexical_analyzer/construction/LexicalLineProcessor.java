@@ -1,4 +1,4 @@
-package model.construction;
+package model.lexical_analyzer.construction;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -6,23 +6,23 @@ import java.util.regex.Pattern;
 /**
  * static class to process lines of rules file
  **/
-public class LineProcessor {
+public class LexicalLineProcessor {
     public static final String[] REGEX_FORMATS = {RegexFormats.REGULAR_DEFINITION, RegexFormats.REGULAR_EXPRESSION,
             RegexFormats.KEYWORD, RegexFormats.OPERATOR, RegexFormats.SYMBOL};
-    private static LineProcessor instance = null;
+    private static LexicalLineProcessor instance = null;
 
-    public static LineProcessor GetInstance() {
+    public static LexicalLineProcessor getInstance() {
         if (instance == null) {
-            instance = new LineProcessor();
+            instance = new LexicalLineProcessor();
         }
         return instance;
     }
 
-    private LineProcessor() {
+    private LexicalLineProcessor() {
 
     }
 
-    public boolean processLine(String line, RulesContainer container) {
+    public boolean processLine(String line, LexicalRulesContainer container) {
         Rule lineRules = null;
         Pattern reg;
         for (int i = 0; i < REGEX_FORMATS.length; i++) {
@@ -56,7 +56,7 @@ public class LineProcessor {
 
     private abstract class Rule {
 
-        abstract void addRule(RulesContainer container);
+        abstract void addRule(LexicalRulesContainer container);
     }
 
     private class RegularDefinition extends Rule {
@@ -69,7 +69,7 @@ public class LineProcessor {
         }
 
         @Override
-        void addRule(RulesContainer container) {
+        void addRule(LexicalRulesContainer container) {
             container.putRegularDefinition(key, value);
         }
     }
@@ -84,7 +84,7 @@ public class LineProcessor {
         }
 
         @Override
-        void addRule(RulesContainer container) {
+        void addRule(LexicalRulesContainer container) {
             Pattern reg = Pattern.compile(REGEX_FORMATS[4]);
             Matcher mat = reg.matcher(value);
             while (mat.find())
@@ -102,7 +102,7 @@ public class LineProcessor {
         }
 
         @Override
-        void addRule(RulesContainer container) {
+        void addRule(LexicalRulesContainer container) {
             for (int i = 0; i < this.keywords.length; i++) {
                 if (!this.keywords[i].equals(""))
                     container.addKeyword(this.keywords[i]);
@@ -118,7 +118,7 @@ public class LineProcessor {
         }
 
         @Override
-        void addRule(RulesContainer container) {
+        void addRule(LexicalRulesContainer container) {
             for (int i = 0; i < this.operators.length; i++) {
                 if (this.operators[i] != ' ')
                     if (this.operators[i] != '\\') {
@@ -137,19 +137,19 @@ public class LineProcessor {
      */
     private class RegexFormats {
 
-        public static final String REGULAR_DEFINITION = "^(\\w+)(?: )*=(.+)$";
+        public static final String REGULAR_DEFINITION = "^[ \\t]*(\\w+)(?: )*=(.+)$";
         /**
          * match RD
          */
-        public static final String REGULAR_EXPRESSION = "^(\\w+)(?: )*:(.+)$";
+        public static final String REGULAR_EXPRESSION = "^[ \\t]*(\\w+)(?: )*:(.+)$";
         /**
          * match RE
          */
-        public static final String KEYWORD = "^\\{(.+)\\}$";
+        public static final String KEYWORD = "^[ \\t]*\\{(.+)\\}$";
         /**
          * match and split on space
          */
-        public static final String OPERATOR = "^\\[(.+)\\]$";
+        public static final String OPERATOR = "^[ \\t]*\\[(.+)\\]$";
 
         /**
          * match symbols on regex to make it easier to construct NFA for regular

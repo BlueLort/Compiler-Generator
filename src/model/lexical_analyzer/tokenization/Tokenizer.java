@@ -1,12 +1,13 @@
-package model.tokenization;
+package model.lexical_analyzer.tokenization;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import IOManagement.IOManager;
 import javafx.util.Pair;
-import model.dfa.DFAOptimizer;
-import model.graph.Graph;
-import model.graph.Node;
+import model.lexical_analyzer.dfa.DFAOptimizer;
+import model.lexical_analyzer.graph.Graph;
+import model.lexical_analyzer.graph.Node;
 import utilities.Constant;
 
 public class Tokenizer {
@@ -23,6 +24,15 @@ public class Tokenizer {
         this.regularExpressions = regularExpressionsKeys;
         this.validTokenization = true;
     }
+
+    public Tokenizer(String filePath) { // Read lexemes from a file instead of generating one
+        String data = IOManager.getInstance().readFile(filePath);
+        String tokens[] = data.split(System.lineSeparator());
+        savedLexems = new ArrayList<>();
+        for (String token : tokens) savedLexems.add(new Pair<>("", token));
+        validTokenization = true;
+    }
+
 
     public ArrayList<Pair<String, String>> getTokens(String input) {
         savedLexems = new ArrayList<>();

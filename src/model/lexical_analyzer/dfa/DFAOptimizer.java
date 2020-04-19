@@ -1,11 +1,11 @@
-package model.dfa;
+package model.lexical_analyzer.dfa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.util.Pair;
-import model.graph.Graph;
-import model.graph.Node;
+import model.lexical_analyzer.graph.Graph;
+import model.lexical_analyzer.graph.Node;
 import utilities.Constant;
 import utilities.DfaUtility;
 
