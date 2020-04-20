@@ -1,6 +1,9 @@
 package utilities;
 
 public class Constant {
+	/*
+	 * LEXICAL ANALYZER
+	 */
 
 	public static final String EPSILON = "\\L";
 	public static final String CONCATENATE = "`";
@@ -16,8 +19,14 @@ public class Constant {
 	 * Valid Operators : * ( ) \\L Math Operators: \\+ \\* / - Comparison Operators
 	 * : \\= < > Add the \\, To split the regex correctly
 	 */
-	public static final String[] OPERATORS = { "(", ")", "*", "/", "-", "<", ">", "%" };
-
+	
 	public static final String[] REGEX_OPERATOR = { "*", "+", "|", "`", "(", ")" };
+	
+	
+	/*
+	 * PARSER
+	 */
+	
+	public static final String END_SYMBOL = "$";
 
 }

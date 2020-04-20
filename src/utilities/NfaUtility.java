@@ -77,14 +77,6 @@ public class NfaUtility {
 		return false;
 	}
 
-	public static boolean isOperator(String character) {
-		for (String s : Constant.OPERATORS) {
-			if (s.equals(character))
-				return true;
-		}
-		return false;
-	}
-
 	public static ArrayList<String> removeDuplicates(ArrayList<String> input) {
 		ArrayList<String> result = new ArrayList<String>();
 		for (String s : input) {

@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class ParserRulesContainer {
 
 	private HashMap<String, ArrayList<String>> productionRules;
-	private ArrayList<String> productionRulesKeys;
+	private ArrayList<String> nonTerminals;
 
 	private boolean hasErrors;
 
@@ -23,14 +23,14 @@ public class ParserRulesContainer {
 	}
 
 	public ArrayList<String> getProductionRules() {
-		return productionRulesKeys;
+		return nonTerminals;
 	}
 
 	public ParserRulesContainer(String rulesFile) {
-		// init members
+		// Init members
 		productionRules = new HashMap<String, ArrayList<String>>();
-		productionRulesKeys = new ArrayList<String>();
-		// regex search for each one of the elements and save them
+		nonTerminals = new ArrayList<String>();
+		// Regex search for each one of the elements and save them
 		hasErrors = processRules(rulesFile);
 	}
 
@@ -48,8 +48,8 @@ public class ParserRulesContainer {
 
 	@Override
 	public String toString() {
-		return "Parser Rules Container{" + "\nProduction Rules = " + productionRules + "\nProductuion Rules Keys="
-				+ productionRulesKeys + "\n}";
+		return "Parser Rules Container{" + "\nProduction Rules = " + productionRules + "\nNon terminals="
+				+ nonTerminals + "\n}";
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ParserRulesContainer {
 	 */
 	void putProductionRule(String key, ArrayList<String> val) {
 		productionRules.put(key, val);
-		productionRulesKeys.add(key);
+		nonTerminals.add(key);
 	}
 
 }
