@@ -2,11 +2,10 @@ package model.parser.construction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class ParserRulesContainer {
 
-	private LinkedHashMap<String, ArrayList<String>> productionRules;
+	private HashMap<String, ArrayList<String>> productionRules;
 	private ArrayList<String> productionRulesKeys;
 
 	private boolean hasErrors;
@@ -29,7 +28,7 @@ public class ParserRulesContainer {
 
 	public ParserRulesContainer(String rulesFile) {
 		// init members
-		productionRules = new LinkedHashMap<String, ArrayList<String>>();
+		productionRules = new HashMap<String, ArrayList<String>>();
 		productionRulesKeys = new ArrayList<String>();
 		// regex search for each one of the elements and save them
 		hasErrors = processRules(rulesFile);
