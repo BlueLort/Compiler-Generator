@@ -14,3 +14,21 @@
 | IDENTIFIER
 | ( EXPRESSION )
 #INFIX_OPERATOR ::= + | - | * | / | %| < | > | <= | >= | == | !=| | | &&
+
+SOME SIMPLE GRAMMAR TO TRACE:
+# E ::= T R
+# R ::= + T R| \L
+# T ::= F Y
+# Y ::= * F Y | \L
+# F ::= ( E ) | i
+
+# S ::= A B C D E
+# A ::= a | \L
+# B ::= b | \L
+# C ::= c
+# D ::= d | \L
+# E ::= e | \L
+
+# S ::= B b | C d
+# B ::= a B | \L
+# C ::= c C | \L

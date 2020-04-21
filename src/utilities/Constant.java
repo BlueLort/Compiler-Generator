@@ -26,6 +26,6 @@ public class Constant {
 	 * PARSER
 	 */
 
-	public static final String END_SYMBOL = "$";
+	public static final String END_MARKER = "$";
 
 }
