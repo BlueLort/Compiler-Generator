@@ -13,12 +13,15 @@ import model.lexical_analyzer.nfa.Punctuation;
 import model.lexical_analyzer.nfa.RegularDefinition;
 import model.lexical_analyzer.nfa.RegularExpression;
 import model.lexical_analyzer.tokenization.Tokenizer;
+import model.parser.cfg.CFG;
 import model.parser.construction.ParserRulesContainer;
+import model.parser.parser.Parser;
 import view.CodeAnalysisInfo;
 
 public class Controller {
 
 	private Tokenizer tokenizer = null;// member because it's used with the parser
+	private Parser parser = null;
 
 	// TODO MEMBER VAR. PARSING TABLE
 	public Controller() {
@@ -60,11 +63,9 @@ public class Controller {
 		if (rulesCont.isValid()) { // if No Errors found during rules processing
 
 			System.out.println(rulesCont); // Rules captured
-			/*
-			 * for (String s : rulesCont.getProductionRules()) { System.out.println("Here");
-			 * System.out.println(rulesCont.getProductionRule(s)); }
-			 */
-
+			CFG grammar = new CFG(rulesCont);
+			parser = new Parser(grammar);
+			parser.constructParser();
 			// TODO PASRE THE RULES CAPTURED
 			// TODO ELIMINATE LEFT RECURSION , DO LEFT FACTORING
 			// TODO FIRST FOLLOW SETS

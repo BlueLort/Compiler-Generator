@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class ParserRulesContainer {
 
-	private HashMap<String, ArrayList<String>> productionRules;
+	private HashMap<String, ArrayList<ArrayList<String>>> productionRules;
 	private ArrayList<String> nonTerminals;
 
 	private boolean hasErrors;
@@ -18,7 +18,7 @@ public class ParserRulesContainer {
 	 * no access to the private members but public wrapper functions around them is
 	 * defined
 	 */
-	public ArrayList<String> getProductionRule(String key) {
+	public ArrayList<ArrayList<String>> getProductionRule(String key) {
 		return productionRules.get(key);
 	}
 
@@ -28,7 +28,7 @@ public class ParserRulesContainer {
 
 	public ParserRulesContainer(String rulesFile) {
 		// Init members
-		productionRules = new HashMap<String, ArrayList<String>>();
+		productionRules = new HashMap<String, ArrayList<ArrayList<String>>>();
 		nonTerminals = new ArrayList<String>();
 		// Regex search for each one of the elements and save them
 		hasErrors = processRules(rulesFile);
@@ -48,14 +48,14 @@ public class ParserRulesContainer {
 
 	@Override
 	public String toString() {
-		return "Parser Rules Container{" + "\nProduction Rules = " + productionRules + "\nNon terminals="
-				+ nonTerminals + "\n}";
+		return "Parser Rules Container{" + "\nProduction Rules = " + productionRules + "\nNon terminals=" + nonTerminals
+				+ "\n}";
 	}
 
 	/**
 	 * default functions for ParserLineProcessor to use
 	 */
-	void putProductionRule(String key, ArrayList<String> val) {
+	void putProductionRule(String key, ArrayList<ArrayList<String>> val) {
 		productionRules.put(key, val);
 		nonTerminals.add(key);
 	}

@@ -33,8 +33,8 @@ public class ParserLineProcessor {
 		return true;
 	}
 
-	private ArrayList<String> splitLine(String line) {
-		ArrayList<String> output = new ArrayList<String>();
+	private ArrayList<ArrayList<String>> splitLine(String line) {
+		ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
 
 		String[] lineWithoutORs = line.split("\\|");
 
@@ -45,7 +45,13 @@ public class ParserLineProcessor {
 				word = word.replace("’", "");
 				word = word.replace("‘", "");
 			}
-			output.add(word);
+
+			String[] withoutSpaces = word.split(" ");
+			ArrayList<String> temp = new ArrayList<String>();
+			for (String s : withoutSpaces) {
+				temp.add(s);
+			}
+			output.add(temp);
 		}
 
 		return output;
