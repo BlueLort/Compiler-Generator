@@ -201,32 +201,39 @@ public class Parser {
 
 	}
 
-	private void buildTable(){ /* loop for all non terminals to fill the table */
+	private void buildTable(){ /** loop for all non terminals to fill the table */
 		for (String nonTerminalEntry : nonTerminals) {
 			boolean hasEpsilon = false;
+			/** loop through all first(curr non terminal) find it's production rule entry */
 			for (String firstEntry : first.get(nonTerminalEntry)) {
 				if (firstEntry.equals(Constant.EPSILON))
 					hasEpsilon = true;
+				/** loop through all RHS rules for curr(non terminal) */
 				for (ArrayList<String> productionRule : grammar.getRHS(nonTerminalEntry)) {
+					/**check if it contains curr first entry add it in table*/
 					if (first.get(productionRule.get(0)).contains(firstEntry)) {
+						/** if the entry being filled for terminal input char already filled report an
+						 *  ambiguity error and fill it again */
 						if (parsingTable.get(nonTerminalEntry).containsKey(firstEntry)) {
 							parsingTable.get(nonTerminalEntry).get(firstEntry).add(productionRule);
 							isAmbigousGrammer = true;
-						} else {
+						} else { /** create a new entry in table and fill it */
 							ArrayList<ArrayList<String>> productionRulesEntry = new ArrayList<>();
 							productionRulesEntry.add(productionRule);
 							parsingTable.get(nonTerminalEntry).put(firstEntry,productionRulesEntry);
 						}
 					}
-					/* loop for all first of the non terminal
+					/** looped for all first of the non terminal
 					entry to fill it with a production rule */
 				}
 			}
+			/** loop through all follow(curr non terminal) and fill it with epsilon or sync */
 			for (String followEntry : follow.get(nonTerminalEntry)) {
-				if (hasEpsilon) {
+				if (hasEpsilon) { /** if first has epsilon [not terminal,follow] = epsilon */
 					ArrayList<String> epsilonRule = new ArrayList<>();
 					epsilonRule.add(Constant.EPSILON);
-					if(parsingTable.get(nonTerminalEntry).containsKey(followEntry)){
+					/** if entry already exists report ambiguity error and refill it */
+					if(parsingTable.get(nonTerminalEntry).containsKey(followEntry)){ /**/
 						isAmbigousGrammer = true;
 						parsingTable.get(nonTerminalEntry).get(followEntry).add(epsilonRule);
 					} else {
@@ -234,13 +241,14 @@ public class Parser {
 						productionRulesEntry.add(epsilonRule);
 						parsingTable.get(nonTerminalEntry).put(followEntry,productionRulesEntry);
 					}
-				} else {
+				} else { /** if first doesn't has epsilon [non terminal,follow] = epsilon */
 					ArrayList<String> syncRule = new ArrayList<>();
 					syncRule.add(Constant.SYNC_TOK);
+					/** if entry already exists report ambiguity error and refill it */
 					if(parsingTable.get(nonTerminalEntry).containsKey(followEntry)){
 						isAmbigousGrammer = true;
 						parsingTable.get(nonTerminalEntry).get(followEntry).add(syncRule);
-					} else {
+					} else { /** create new entry in table */
 						ArrayList<ArrayList<String>>  productionRulesEntry = new ArrayList<>();
 						productionRulesEntry.add(syncRule);
 						parsingTable.get(nonTerminalEntry).put(followEntry,productionRulesEntry);
@@ -286,6 +294,7 @@ public class Parser {
 		return;
 	}
 
+	/* non terminal: input terminal char-> RHS production of production rule , ...... , ........ */
 	private void printParsingTable() {
 		for (String nonTerminal : parsingTable.keySet()) {
 			System.out.println("=====parse table built:    ============");
