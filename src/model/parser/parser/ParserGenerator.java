@@ -208,8 +208,10 @@ public class ParserGenerator {
 			boolean hasEpsilon = false;
 			/** loop through all first(curr non terminal) find it's production rule entry */
 			for (String firstEntry : first.get(nonTerminalEntry)) {
-				if (firstEntry.equals(Constant.EPSILON))
+				if (firstEntry.equals(Constant.EPSILON)) {
 					hasEpsilon = true;
+					continue;
+				}
 				/** loop through all RHS rules for curr(non terminal) */
 				for (ArrayList<String> productionRule : grammar.getRHS(nonTerminalEntry)) {
 					/**check if it contains curr first entry add it in table*/
