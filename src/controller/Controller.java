@@ -15,13 +15,13 @@ import model.lexical_analyzer.nfa.RegularExpression;
 import model.lexical_analyzer.tokenization.Tokenizer;
 import model.parser.cfg.CFG;
 import model.parser.construction.ParserRulesContainer;
-import model.parser.parser.Parser;
+import model.parser.parser.ParserGenerator;
 import view.CodeAnalysisInfo;
 
 public class Controller {
 
 	private Tokenizer tokenizer = null;// member because it's used with the parser
-	private Parser parser = null;
+	private ParserGenerator parserGenerator = null;
 
 	// TODO MEMBER VAR. PARSING TABLE
 	public Controller() {
@@ -64,8 +64,8 @@ public class Controller {
 
 			System.out.println(rulesCont); // Rules captured
 			CFG grammar = new CFG(rulesCont);
-			parser = new Parser(grammar);
-			parser.constructParser();
+			parserGenerator = new ParserGenerator(grammar);
+			parserGenerator.constructParser();
 			// TODO PASRE THE RULES CAPTURED
 			// TODO ELIMINATE LEFT RECURSION , DO LEFT FACTORING
 			// TODO FIRST FOLLOW SETS
