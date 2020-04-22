@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import model.parser.cfg.CFG;
 import utilities.Constant;
 
+import javax.swing.text.Utilities;
+
 public class Parser {
 
 	/*
@@ -19,17 +21,26 @@ public class Parser {
 	private HashMap<String, HashSet<String>> first;
 	private HashMap<String, HashSet<String>> follow;
 	private ArrayList<String> nonTerminals;
+	private HashMap<String, HashMap<String, ArrayList<ArrayList<String>>>> parsingTable;
+	private boolean	isAmbigousGrammer  = false;
+	/* key of outer hashmap is a non terminal entry  */
+	/* key of inner hashmap is terminal char input */
+	/* ArrayList value of inner hashmap is set of rules (in case of ambiguous) */
+	/* inner ArrayList is the production */
+
 
 	public Parser(CFG grammar) {
 		this.grammar = grammar;
 		this.first = new HashMap<String, HashSet<String>>();
 		this.follow = new HashMap<String, HashSet<String>>();
+		this.parsingTable = new HashMap<>();
 	}
 
 	public void constructParser() {
 		init();
 		first();
 		follow();
+		buildTable();
 		printFirstAndFollow();
 	}
 
@@ -190,11 +201,62 @@ public class Parser {
 
 	}
 
+	private void buildTable(){ /* loop for all non terminals to fill the table */
+		for (String nonTerminalEntry : nonTerminals) {
+			boolean hasEpsilon = false;
+			for (String firstEntry : first.get(nonTerminalEntry)) {
+				if (firstEntry.equals(Constant.EPSILON))
+					hasEpsilon = true;
+				for (ArrayList<String> productionRule : grammar.getRHS(nonTerminalEntry)) {
+					if (first.get(productionRule.get(0)).contains(firstEntry)) {
+						if (parsingTable.get(nonTerminalEntry).containsKey(firstEntry)) {
+							parsingTable.get(nonTerminalEntry).get(firstEntry).add(productionRule);
+							isAmbigousGrammer = true;
+						} else {
+							ArrayList<ArrayList<String>> productionRulesEntry = new ArrayList<>();
+							productionRulesEntry.add(productionRule);
+							parsingTable.get(nonTerminalEntry).put(firstEntry,productionRulesEntry);
+						}
+					}
+					/* loop for all first of the non terminal
+					entry to fill it with a production rule */
+				}
+			}
+			for (String followEntry : follow.get(nonTerminalEntry)) {
+				if (hasEpsilon) {
+					ArrayList<String> epsilonRule = new ArrayList<>();
+					epsilonRule.add(Constant.EPSILON);
+					if(parsingTable.get(nonTerminalEntry).containsKey(followEntry)){
+						isAmbigousGrammer = true;
+						parsingTable.get(nonTerminalEntry).get(followEntry).add(epsilonRule);
+					} else {
+						ArrayList<ArrayList<String>>  productionRulesEntry = new ArrayList<>();
+						productionRulesEntry.add(epsilonRule);
+						parsingTable.get(nonTerminalEntry).put(followEntry,productionRulesEntry);
+					}
+				} else {
+					ArrayList<String> syncRule = new ArrayList<>();
+					syncRule.add(Constant.SYNC_TOK);
+					if(parsingTable.get(nonTerminalEntry).containsKey(followEntry)){
+						isAmbigousGrammer = true;
+						parsingTable.get(nonTerminalEntry).get(followEntry).add(syncRule);
+					} else {
+						ArrayList<ArrayList<String>>  productionRulesEntry = new ArrayList<>();
+						productionRulesEntry.add(syncRule);
+						parsingTable.get(nonTerminalEntry).put(followEntry,productionRulesEntry);
+					}
+				}
+			}
+		}
+	}
+
+
 	private void init() {
 		nonTerminals = grammar.getNonTerminals();
 		for (String nonTerminal : nonTerminals) {
 			first.put(nonTerminal, new HashSet<String>());
 			follow.put(nonTerminal, new HashSet<String>());
+			parsingTable.put(nonTerminal,new HashMap<>());
 		}
 		return;
 	}
@@ -222,6 +284,12 @@ public class Parser {
 		}
 
 		return;
+	}
+
+	private void printParsingTable() {
+		for (String nonTerminal : parsingTable.keySet()) {
+			System.out.println("=====parse table built:    ============");
+		}
 	}
 
 }

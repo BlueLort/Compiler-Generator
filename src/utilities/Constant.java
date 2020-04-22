@@ -27,5 +27,5 @@ public class Constant {
 	 */
 
 	public static final String END_MARKER = "$";
-
+	public static final String SYNC_TOK  = "SYNC_TOK";
 }
