@@ -42,6 +42,7 @@ public class Parser {
 		follow();
 		buildTable();
 		printFirstAndFollow();
+		printParsingTable();
 	}
 
 	private void first() {
@@ -296,8 +297,19 @@ public class Parser {
 
 	/* non terminal: input terminal char-> RHS production of production rule , ...... , ........ */
 	private void printParsingTable() {
+		System.out.println("=====parse table built:    ============");
 		for (String nonTerminal : parsingTable.keySet()) {
-			System.out.println("=====parse table built:    ============");
+			System.out.print(nonTerminal+":\t");
+			for (String terminalChar : parsingTable.get(nonTerminal).keySet()) {
+				System.out.print(terminalChar+"-> ");
+				for (ArrayList<String> productionRule : parsingTable.get(nonTerminal).get(terminalChar)) {
+					for (String grammarSymbol : productionRule) {
+						System.out.print(grammarSymbol);
+					}
+					System.out.print(",");
+				}
+			}
+			System.out.println();
 		}
 	}
 
