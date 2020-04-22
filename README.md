@@ -18,7 +18,7 @@
 
 ---
 ## Phase 2 : Parser generator
-This phase of the project aims to practice techniques for building automatic parser generator tools.
+* This phase of the project aims to practice techniques for building automatic parser generator tools.
 
 #### Objective
-Develop and implement a non recursive predictive parser generator [LL(1) parser]
+* Develop and implement a non recursive predictive parser generator [LL(1) parser]
