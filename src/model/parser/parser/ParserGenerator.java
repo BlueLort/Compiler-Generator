@@ -298,7 +298,7 @@ public class ParserGenerator {
 		return;
 	}
 
-	/* non terminal: input terminal char-> RHS production of production rule , ...... , ........ */
+	/** non terminal: input terminal char-> RHS production of production rule , ...... , ........ */
 	private void printParsingTable() {
 		System.out.println("=====parse table built:    ============");
 		for (String nonTerminal : parsingTable.keySet()) {
@@ -319,4 +319,6 @@ public class ParserGenerator {
 	public HashMap<String, HashMap<String, ArrayList<ArrayList<String>>>> getParsingTable() {
 		return parsingTable;
 	}
+
+	
 }
