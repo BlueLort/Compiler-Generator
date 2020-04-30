@@ -23,12 +23,15 @@
                         <MenuItem mnemonicParsing="false" onAction="#saveAsOnAction" text="Save As..."/>
                     </items>
                 </Menu>
-                <Menu fx:id="load" mnemonicParsing="false" text="Lexical Tool">
+                <Menu fx:id="lexemeTool" mnemonicParsing="false" text="Lexical Tool">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#constructLexicalRulesOnAction"
                                   text="Build Min. DFA"/>
                         <MenuItem mnemonicParsing="false" onAction="#runCodeAnalysisOnAction" text="Run Code Analysis"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
+                    </items>
+                </Menu>
+                <Menu fx:id="parserTool" mnemonicParsing="false" text="Parser Tool">
+                    <items>
                         <MenuItem mnemonicParsing="false" onAction="#loadLexemesOnAction"
                                   text="Load Lexemes Externally"/>
                         <MenuItem mnemonicParsing="false" onAction="#constructParserRulesOnAction"
