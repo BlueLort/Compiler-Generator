@@ -30,5 +30,5 @@ public class Constant {
     public static final String NONTERMINAL_DASH = "_DASH";//TODO 8yr el STRING ya 3mo
     public static final String END_MARKER = "$";
     public static final String SYNC_TOK = "SYNC_TOK";
-
+    public static final String PARSING_TABLE_SEPARATOR = " | ";
 }

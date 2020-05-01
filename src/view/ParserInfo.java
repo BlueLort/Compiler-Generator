@@ -29,6 +29,8 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import model.lexical_analyzer.graph.Node;
 import model.parser.parser.ParserGenerator;
+import utilities.Constant;
+import utilities.Utility;
 
 public class ParserInfo{
     @FXML
@@ -128,9 +130,10 @@ public class ParserInfo{
                     int colLoc = terminalLocation.get(terminal);
                     String locValue = "";
                     for (ArrayList<String> production : parsingTable.get(set.getKey()).get(terminal)) {
-                        locValue += getStringFromArrayList(production);
-                        locValue += " ";
+                        locValue += Utility.getStringFromArrayList(production);
+                        locValue += Constant.PARSING_TABLE_SEPARATOR;
                     }
+                    locValue = locValue.substring(0,locValue.length()-Constant.PARSING_TABLE_SEPARATOR.length()); // remove the separator
                     data.get(rowLoc).get(colLoc).setStyle("");//remove styling
                     data.get(rowLoc).get(colLoc).setText(locValue);
                 }
@@ -176,24 +179,7 @@ public class ParserInfo{
     private ArrayList<Pair<String,Pair<String,String>>> getParsingFirstFollow(ArrayList<String> nonterminals, HashMap<String,HashSet<String>> firstSet,HashMap<String,HashSet<String>> followSet){
         ArrayList<Pair<String,Pair<String,String>>> out = new ArrayList<>();
         for(String nonterminal : nonterminals){
-            out.add(new Pair<>(nonterminal,new Pair<>(getStringFromHashSet(firstSet.get(nonterminal)),getStringFromHashSet(followSet.get(nonterminal)))));
-        }
-        return out;
-    }
-    //TODO FIX THIS MESS WHICH OBJECT IS PARENT TO HashSet & ArrayList
-    private String getStringFromHashSet(HashSet<String> set){
-        String out = "";
-        for(String val : set){
-            out+= val;
-            out+= " ";
-        }
-        return out;
-    }
-    private String getStringFromArrayList(ArrayList<String> arr){
-        String out = "";
-        for(String val : arr){
-            out+= val;
-            out+= " ";
+            out.add(new Pair<>(nonterminal,new Pair<>(Utility.getStringFromHashSet(firstSet.get(nonterminal)),Utility.getStringFromHashSet(followSet.get(nonterminal)))));
         }
         return out;
     }

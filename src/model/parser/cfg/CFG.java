@@ -3,10 +3,12 @@ package model.parser.cfg;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import javafx.util.Pair;
 import model.parser.construction.ParserLineProcessor;
 import model.parser.construction.ParserRulesContainer;
 import model.parser.parser.Parser;
 import utilities.Constant;
+import utilities.TrieNode;
 
 public class CFG {
 
@@ -47,13 +49,51 @@ public class CFG {
         eliminateImmediateLeftRecursion();
     }
 
+
+
+    private void eliminateIndirectLeftRecursion() {
+        ArrayList<String> nontermnials = rulesCont.getProductionRules();
+        for (int i = 0; i < nontermnials.size(); i++) {
+            String currentNonterminal = nontermnials.get(i); // Ai
+            for (int j = 0; j < i; j++) {
+                String subNonterminal = nontermnials.get(j);//Aj
+                //for each Ai -> Aj b  replace Aj by Ai -> a b | b b | c b as Aj -> a | b | c
+                replaceNonterminal(currentNonterminal, subNonterminal);
+            }
+        }
+    }
+
+    private void replaceNonterminal(String nonterminal, String subNonterminal) {
+        ArrayList<ArrayList<String>> modifiedProduction = new ArrayList<>();
+        ArrayList<ArrayList<String>> nonterminalProductions = this.rulesCont.getProductionRule(nonterminal);
+        ArrayList<ArrayList<String>> subNonterminalProductions = this.rulesCont.getProductionRule(subNonterminal);
+        for (ArrayList<String> nonterminalProduction : nonterminalProductions) {
+            if (subNonterminal.equals(nonterminalProduction.get(0))) {
+                ArrayList<ArrayList<String>> currentProductions = new ArrayList<>();
+                nonterminalProduction.remove(0);
+                for (ArrayList<String> subNonterminalProduction : subNonterminalProductions) {
+                    ArrayList<String> currentProduction = new ArrayList<>();
+                    currentProduction.addAll(subNonterminalProduction);
+                    currentProduction.addAll(nonterminalProduction);
+                    currentProductions.add(currentProduction);
+                }
+                modifiedProduction.addAll(currentProductions);
+            } else {
+                ArrayList<String> currentProduction = new ArrayList<>();
+                currentProduction.addAll(nonterminalProduction);
+                modifiedProduction.add(currentProduction);
+            }
+        }
+        this.rulesCont.changeProductionEntry(nonterminal, modifiedProduction);
+
+    }
+
     private void eliminateImmediateLeftRecursion() {
         ArrayList<String> nontermnials = rulesCont.getProductionRules();
         ArrayList<String> addedRules = new ArrayList<>();
         for (String nonterminal : nontermnials) {
             //preprocessing if new nonterminal is needed
-            String newNonTerminal = nonterminal + Constant.NONTERMINAL_DASH;
-            while (rulesCont.getProductionRules().contains(newNonTerminal)) newNonTerminal += Constant.NONTERMINAL_DASH;
+            String newNonTerminal = getNewNonTerminal(nonterminal);
             String immediateRecursiveProductions = getImmediateLeftRecursiveProductions(nonterminal, newNonTerminal);
             if (!immediateRecursiveProductions.equals("")) {
                 //adding Epsilon
@@ -95,48 +135,61 @@ public class CFG {
         }
         this.rulesCont.changeProductionEntry(nonterminal, modifiedProduction);
     }
-
-    private void eliminateIndirectLeftRecursion() {
-        ArrayList<String> nontermnials = rulesCont.getProductionRules();
-        for (int i = 0; i < nontermnials.size(); i++) {
-            String currentNonterminal = nontermnials.get(i); // Ai
-            for (int j = 0; j < i; j++) {
-                String subNonterminal = nontermnials.get(j);//Aj
-                //for each Ai -> Aj b  replace Aj by Ai -> a b | b b | c b as Aj -> a | b | c
-                replaceNonterminal(currentNonterminal, subNonterminal);
-            }
-        }
-    }
-
-    private void replaceNonterminal(String nonterminal, String subNonterminal) {
-        ArrayList<ArrayList<String>> modifiedProduction = new ArrayList<>();
-        ArrayList<ArrayList<String>> nonterminalProductions = this.rulesCont.getProductionRule(nonterminal);
-        ArrayList<ArrayList<String>> subNonterminalProductions = this.rulesCont.getProductionRule(subNonterminal);
-        for (ArrayList<String> nonterminalProduction : nonterminalProductions) {
-            if (subNonterminal.equals(nonterminalProduction.get(0))) {
-                ArrayList<ArrayList<String>> currentProductions = new ArrayList<>();
-                nonterminalProduction.remove(0);
-                for (ArrayList<String> subNonterminalProduction : subNonterminalProductions) {
-                    ArrayList<String> currentProduction = new ArrayList<>();
-                    currentProduction.addAll(subNonterminalProduction);
-                    currentProduction.addAll(nonterminalProduction);
-                    currentProductions.add(currentProduction);
-                }
-                modifiedProduction.addAll(currentProductions);
-            } else {
-                ArrayList<String> currentProduction = new ArrayList<>();
-                currentProduction.addAll(nonterminalProduction);
-                modifiedProduction.add(currentProduction);
-            }
-        }
-        this.rulesCont.changeProductionEntry(nonterminal, modifiedProduction);
-
-    }
-
     private void leftFactoring() {
+        ArrayList<String> nontermnials = rulesCont.getProductionRules();
+        for (int i = 0 ; i < nontermnials.size() ; i++) {
+            String nonterminal = nontermnials.get(i);
+            TrieNode root = new TrieNode();
+            ArrayList<ArrayList<String>> productions = rulesCont.getProductionRule(nonterminal);
+            for(ArrayList<String> production : productions){
+                root.addString(production,0);
+            }
+            constructLeftFactoredRule(root,nonterminal);
+
+        }
 
     }
+    private void constructLeftFactoredRule(TrieNode currentNode,String nonterminal){
+        ArrayList<String> currentWords = currentNode.getNodeKeys();
+        for(String word:currentWords){
+            Pair<TrieNode,Integer> nextNode = currentNode.getNode(word);
+            if(nextNode.getValue() > 1){
+                String newNonTerminal = getNewNonTerminal(nonterminal);
+                String newRule = newNonTerminal + Constant.PRODUCTION_RULE_ASSIGNMENT;
+                ArrayList<ArrayList<String>> productions = rulesCont.getProductionRule(nonterminal);
+                for(ArrayList<String> production : productions){
+                    if(production.get(0).equals(word)){
+                        for (int i = 1; i < production.size(); i++) newRule += production.get(i) + " ";
+                        newRule += "|";
+                        production.clear();
+                        production.add(word);
+                        production.add(newNonTerminal);
+                    }
+                }
+                //Remove duplicates after left factoring
+                for(int i = 0 ; i < productions.size(); i++){
+                    ArrayList<String> production = productions.get(i);
+                    for(int j = i + 1; j < productions.size();j++){
+                        ArrayList<String> otherProduction = productions.get(i);
+                        if(production.equals(otherProduction)){
+                            productions.remove(j);
+                        }
+                        j--;
+                    }
+                }
+                newRule = newRule.substring(0,newRule.length()-1);//remove last '|'
+                ParserLineProcessor.getInstance().processLine(newRule, rulesCont);
+                constructLeftFactoredRule(nextNode.getKey(),newNonTerminal);
+            }
 
+        }
+
+    }
+    private String getNewNonTerminal(String nonterminal){
+        String newNonTerminal = nonterminal + Constant.NONTERMINAL_DASH;
+        while (rulesCont.getProductionRules().contains(newNonTerminal)) newNonTerminal += Constant.NONTERMINAL_DASH;
+        return newNonTerminal;
+    }
     @Override
     public String toString() {
         return rulesCont.toString();
