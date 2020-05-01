@@ -4,31 +4,16 @@
 | IF
 | WHILE
 | ASSIGNMENT
-#DECLARATION ::= PRIMITIVE_TYPE IDENTIFIER;
+#DECLARATION ::= PRIMITIVE_TYPE IDENTIFIER ;
 #PRIMITIVE_TYPE ::= int | float
 #IF ::= if ( EXPRESSION ) { STATEMENT} else { STATEMENT }
 #WHILE ::= while ( EXPRESSION ) { STATEMENT }
-#ASSIGNMENT ::= IDENTIFIER = EXPRESSION;
+#ASSIGNMENT ::= IDENTIFIER = EXPRESSION ;
 #EXPRESSION ::= NUMBER
 | EXPRESSION INFIX_OPERATOR EXPRESSION
 | IDENTIFIER
 | ( EXPRESSION )
-#INFIX_OPERATOR ::= + | - | * | / | %| < | > | <= | >= | == | !=| | | &&
-
-SOME SIMPLE GRAMMAR TO TRACE:
-# E ::= T R
-# R ::= + T R| \L
-# T ::= F Y
-# Y ::= * F Y | \L
-# F ::= ( E ) | i
-
-# S ::= A B C D E
-# A ::= a | \L
-# B ::= b | \L
-# C ::= c
-# D ::= d | \L
-# E ::= e | \L
-
-# S ::= B b | C d
-# B ::= a B | \L
-# C ::= c C | \L
+#INFIX_OPERATOR ::= + | - | * | / | %| < | > | < = | > = | = = | ! = | | | & &
+# E ::= E + T | T
+# T ::= T * F | F
+# F ::= ( E ) | id

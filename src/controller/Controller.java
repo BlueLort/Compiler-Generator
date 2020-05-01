@@ -1,6 +1,6 @@
 package controller;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import javafx.util.Pair;
 import model.lexical_analyzer.construction.LexicalRulesContainer;
@@ -16,7 +16,9 @@ import model.lexical_analyzer.tokenization.Tokenizer;
 import model.parser.cfg.CFG;
 import model.parser.construction.ParserRulesContainer;
 import model.parser.parser.ParserGenerator;
+import utilities.Constant;
 import view.CodeAnalysisInfo;
+import view.ParserInfo;
 
 public class Controller {
 
@@ -67,11 +69,9 @@ public class Controller {
             System.out.println(grammar); // Rules with left factoring  & eliminated left recursion
             parserGenerator = new ParserGenerator(grammar);
             parserGenerator.constructParser();
-            // TODO PASRE THE RULES CAPTURED
-            // TODO ELIMINATE LEFT RECURSION , DO LEFT FACTORING
-            // TODO FIRST FOLLOW SETS
-            // TODO PARSING TABLE
-
+            ParserInfo infoViewer = new ParserInfo();
+            infoViewer.initialize(parserGenerator,getTerminals(grammar));
+            // TODO DO LEFT FACTORING
             return true;
         }
         return false;
@@ -89,7 +89,6 @@ public class Controller {
         return false;
     }
 
-
     private Graph getCombinedNFA(LexicalRulesContainer rulesCont) {
         RegularDefinition regularDefinition = new RegularDefinition(rulesCont);
         Keyword keyword = new Keyword(rulesCont);
@@ -98,6 +97,26 @@ public class Controller {
         NFA NFACombined = new NFA(regularDefinition, keyword, punctuation, regex);
         Graph combinedNFAs = NFACombined.getCombinedGraph();
         return combinedNFAs;
+    }
+
+    private ArrayList<String> getTerminals(CFG grammar){
+        HashSet<String> terminals = new HashSet<>();
+        ArrayList<String> out = new ArrayList<>();
+        ArrayList<String> nonterminals = grammar.getNonTerminals();
+        for(String nonterminal : nonterminals){
+            ArrayList<ArrayList<String>> productions = grammar.getRHS(nonterminal);
+            for (ArrayList<String> production : productions){
+                for (String token:production){
+                    if(!token.equals(Constant.EPSILON)&&!grammar.isNonTerminal(token)&&!terminals.contains(token)){
+                        terminals.add(token);
+                        out.add(token);
+                    }
+                }
+
+            }
+        }
+        out.add(Constant.END_MARKER);
+        return out;
     }
 
     public Tokenizer getTokenizer() {

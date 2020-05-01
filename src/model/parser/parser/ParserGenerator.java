@@ -322,5 +322,19 @@ public class ParserGenerator {
         return parsingTable;
     }
 
+    public HashMap<String, HashSet<String>> getFirstSet() {
+        return first;
+    }
 
+    public HashMap<String, HashSet<String>> getFollowSet() {
+        return follow;
+    }
+
+    public ArrayList<String> getNonTerminals() {
+        return nonTerminals;
+    }
+
+    public boolean isAmbigousGrammer() {
+        return isAmbigousGrammer;
+    }
 }
