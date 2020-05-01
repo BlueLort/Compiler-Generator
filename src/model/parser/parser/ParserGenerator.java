@@ -8,11 +8,9 @@ import java.util.Map.Entry;
 import model.parser.cfg.CFG;
 import utilities.Constant;
 
-import javax.swing.text.Utilities;
-
 public class ParserGenerator {
 
-    /*
+    /**
      * NON RECURSIVE PREDICTIVE PARSER
      * FIRST, FOLLOW, BUILD PARSING TABLE
      */
@@ -22,12 +20,14 @@ public class ParserGenerator {
     private HashMap<String, HashSet<String>> follow;
     private ArrayList<String> nonTerminals;
     private HashMap<String, HashMap<String, ArrayList<ArrayList<String>>>> parsingTable;
-    /* key of outer hashmap is a non terminal entry  */
-    /* key of inner hashmap is terminal char input */
-    /* ArrayList value of inner hashmap is set of rules (in case of ambiguous) */
-    /* inner ArrayList is the production */
+    /** key of outer hashmap is a non terminal entry
+    *   key of inner hashmap is terminal char input
+    *   ArrayList value of inner hashmap is set of rules (in case of ambiguous)
+    *   inner ArrayList is the production
+    */
 
-    private boolean isAmbigousGrammer = false;
+
+    private boolean isAmbiguousGrammar = false;
 
 
     public ParserGenerator(CFG grammar) {
@@ -35,6 +35,7 @@ public class ParserGenerator {
         this.first = new HashMap<String, HashSet<String>>();
         this.follow = new HashMap<String, HashSet<String>>();
         this.parsingTable = new HashMap<>();
+        constructParser();
     }
 
     public void constructParser() {
@@ -57,7 +58,7 @@ public class ParserGenerator {
             }
         }
 
-        /*
+        /**
          * Iterator<Entry<String, HashSet<String>>> iterator =
          * first.entrySet().iterator(); while (iterator.hasNext()) { Entry<String,
          * HashSet<String>> entry = iterator.next(); if
@@ -69,7 +70,7 @@ public class ParserGenerator {
 
     private void firstRecursive(String start, ArrayList<String> visited) {
 
-        /*
+        /**
          * If x is a terminal, then FIRST(x) = { ‘x’ }
          * If x-> Є, is a production rule, then add Є to FIRST(x).
          * If X->Y1 Y2 Y3….Yn is a production, FIRST(X) = FIRST(Y1).
@@ -114,7 +115,7 @@ public class ParserGenerator {
 
     private void follow() {
 
-        /*
+        /**
          * 1) FOLLOW(S) = { $ } // where S is the starting Non-Terminal
          * 2) If A -> pBq is a production, where p, B and q are any grammar symbols,
          * then everything in FIRST(q) except Є is in FOLLOW(B).
@@ -220,7 +221,7 @@ public class ParserGenerator {
                          *  ambiguity error and fill it again */
                         if (parsingTable.get(nonTerminalEntry).containsKey(firstEntry)) {
                             parsingTable.get(nonTerminalEntry).get(firstEntry).add(productionRule);
-                            isAmbigousGrammer = true;
+                            isAmbiguousGrammar = true;
                         } else { /** create a new entry in table and fill it */
                             ArrayList<ArrayList<String>> productionRulesEntry = new ArrayList<>();
                             productionRulesEntry.add(productionRule);
@@ -238,7 +239,7 @@ public class ParserGenerator {
                     epsilonRule.add(Constant.EPSILON);
                     /** if entry already exists report ambiguity error and refill it */
                     if (parsingTable.get(nonTerminalEntry).containsKey(followEntry)) { /**/
-                        isAmbigousGrammer = true;
+                        isAmbiguousGrammar = true;
                         parsingTable.get(nonTerminalEntry).get(followEntry).add(epsilonRule);
                     } else {
                         ArrayList<ArrayList<String>> productionRulesEntry = new ArrayList<>();
@@ -250,7 +251,7 @@ public class ParserGenerator {
                     syncRule.add(Constant.SYNC_TOK);
                     /** if entry already exists report ambiguity error and refill it */
                     if (parsingTable.get(nonTerminalEntry).containsKey(followEntry)) {
-                        isAmbigousGrammer = true;
+                        isAmbiguousGrammar = true;
                         parsingTable.get(nonTerminalEntry).get(followEntry).add(syncRule);
                     } else { /** create new entry in table */
                         ArrayList<ArrayList<String>> productionRulesEntry = new ArrayList<>();
@@ -334,7 +335,11 @@ public class ParserGenerator {
         return nonTerminals;
     }
 
-    public boolean isAmbigousGrammer() {
-        return isAmbigousGrammer;
+    public boolean isAmbiguousGrammar() {
+        return isAmbiguousGrammar;
+    }
+
+    public CFG getGrammar() {
+        return grammar;
     }
 }
