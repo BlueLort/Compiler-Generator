@@ -19,11 +19,15 @@ public class Parser {
 
     private ArrayList<Pair<String, String>>  inputTokens;
     private HashMap<Integer, String>  errors;
+    private ArrayList<Stack<String>>  outStacks;
+
     public Parser(  ParserGenerator parserGenerator,
                     ArrayList<Pair<String, String>> inputTokens) {
         this.parsingTable = parserGenerator.getParsingTable();
         this.inputTokens = inputTokens;
         this.grammar = parserGenerator.getGrammar();
+        errors = new HashMap<>();
+        outStacks = new ArrayList<>();
     }
 
     public void parse() {
@@ -32,11 +36,44 @@ public class Parser {
         stack.push(Constant.END_MARKER);
         stack.push(grammar.getStartingNonTerminal());
         while (!stack.empty() && inputTokenIndex != inputTokens.size()){
+            outStacks.add((Stack) stack.clone());
             String TOS = stack.pop();
-            if (grammar.isNonTerminal(TOS)){ /** if top of stack is non terminal */
-            
-            } else {    /** if top of stack is terminal */
 
+            if (grammar.isNonTerminal(TOS)){ /** if top of stack is non terminal */
+                /** if top of stack leads to empty entry */
+                if (!parsingTable.get(TOS).containsKey(inputTokens.get(inputTokenIndex))) {
+                    errors.put(inputTokenIndex,inputTokens.get(inputTokenIndex).getValue());
+                    inputTokenIndex++;
+                    stack.push(TOS);
+                    continue;
+                }
+                /** if top of stack leads to epsilon */
+                if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.EPSILON)) {
+                    continue;
+                }
+                /** if top of stack is production rule */
+                if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.SYNC_TOK)) {
+                    errors.put(inputTokenIndex,inputTokens.get(inputTokenIndex).getValue());
+                    inputTokenIndex++;
+                    stack.push(TOS);
+                    continue;
+                }
+
+                /** a production rule needs to be pushed to stack */
+                int lengthOfArray = parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex).getValue()).get(0).size();
+                for (int i = lengthOfArray-1 ; i >= 0 ; i++) {
+                    stack.push(parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex).getValue()).get(0).get(i));
+                }
+                continue;
+            } else {    /** if top of stack is terminal */
+                if (TOS.equals(inputTokens.get(inputTokenIndex).getValue())) {
+                    inputTokenIndex++;
+                    continue;
+                }
+                else {
+                    errors.put(inputTokenIndex,inputTokens.get(inputTokenIndex).getValue());
+                    inputTokenIndex++;
+                }
             }
         }
     }
