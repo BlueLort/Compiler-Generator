@@ -93,7 +93,7 @@ public class CFG {
         ArrayList<String> addedRules = new ArrayList<>();
         for (String nonterminal : nontermnials) {
             //preprocessing if new nonterminal is needed
-            String newNonTerminal = getNewNonTerminal(nonterminal);
+            String newNonTerminal = getNewNonTerminal(nonterminal,Constant.NONTERMINAL_LEFT_RECURSION_DASH);
             String immediateRecursiveProductions = getImmediateLeftRecursiveProductions(nonterminal, newNonTerminal);
             if (!immediateRecursiveProductions.equals("")) {
                 //adding Epsilon
@@ -154,7 +154,7 @@ public class CFG {
         for(String word:currentWords){
             Pair<TrieNode,Integer> nextNode = currentNode.getNode(word);
             if(nextNode.getValue() > 1){
-                String newNonTerminal = getNewNonTerminal(nonterminal);
+                String newNonTerminal = getNewNonTerminal(nonterminal,Constant.NONTERMINAL_LEFT_FACTOR_DASH);
                 String newRule = newNonTerminal + Constant.PRODUCTION_RULE_ASSIGNMENT;
                 ArrayList<ArrayList<String>> productions = rulesCont.getProductionRule(nonterminal);
                 for(ArrayList<String> production : productions){
@@ -185,9 +185,9 @@ public class CFG {
         }
 
     }
-    private String getNewNonTerminal(String nonterminal){
-        String newNonTerminal = nonterminal + Constant.NONTERMINAL_DASH;
-        while (rulesCont.getProductionRules().contains(newNonTerminal)) newNonTerminal += Constant.NONTERMINAL_DASH;
+    private String getNewNonTerminal(String nonterminal,String concatString){
+        String newNonTerminal = nonterminal + concatString;
+        while (rulesCont.getProductionRules().contains(newNonTerminal)) newNonTerminal += concatString;
         return newNonTerminal;
     }
     @Override
