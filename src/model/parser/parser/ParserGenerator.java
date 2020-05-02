@@ -20,11 +20,12 @@ public class ParserGenerator {
     private HashMap<String, HashSet<String>> follow;
     private ArrayList<String> nonTerminals;
     private HashMap<String, HashMap<String, ArrayList<ArrayList<String>>>> parsingTable;
-    /** key of outer hashmap is a non terminal entry
-    *   key of inner hashmap is terminal char input
-    *   ArrayList value of inner hashmap is set of rules (in case of ambiguous)
-    *   inner ArrayList is the production
-    */
+    /**
+     * key of outer hashmap is a non terminal entry
+     * key of inner hashmap is terminal char input
+     * ArrayList value of inner hashmap is set of rules (in case of ambiguous)
+     * inner ArrayList is the production
+     */
 
 
     private boolean isAmbiguousGrammar = false;
@@ -38,7 +39,7 @@ public class ParserGenerator {
         constructParser();
     }
 
-    public void constructParser() {
+    private void constructParser() {
         init();
         first();
         follow();

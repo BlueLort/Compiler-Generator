@@ -15,6 +15,7 @@ import model.lexical_analyzer.nfa.RegularExpression;
 import model.lexical_analyzer.tokenization.Tokenizer;
 import model.parser.cfg.CFG;
 import model.parser.construction.ParserRulesContainer;
+import model.parser.parser.Parser;
 import model.parser.parser.ParserGenerator;
 import utilities.Constant;
 import view.CodeAnalysisInfo;
@@ -24,6 +25,7 @@ public class Controller {
 
     private Tokenizer tokenizer = null;// member because it's used with the parser
     private ParserGenerator parserGenerator = null;
+    private Parser parser = null;
 
     // TODO MEMBER VAR. PARSING TABLE
     public Controller() {
@@ -68,7 +70,6 @@ public class Controller {
             CFG grammar = new CFG(rulesCont);
             System.out.println(grammar); // Rules with left factoring  & eliminated left recursion
             parserGenerator = new ParserGenerator(grammar);
-            parserGenerator.constructParser();
             ParserInfo infoViewer = new ParserInfo();
             infoViewer.initialize(parserGenerator,getTerminals(grammar));
             // TODO DO LEFT FACTORING
@@ -81,12 +82,27 @@ public class Controller {
         // TODO REMOVE THE NEXT LINE AFTER FINISHING THE PARSER
         // INITIALIZING TOKENIZER HERE MAKE IT EASIER FOR DEVELOPMENT
         tokenizer = new Tokenizer("output/lexemes.txt");
-        // tokenizer.getSavedLexems(); // Word , Match for the last code analysis ran by
+        // tokenizer.getSavedLexemes(); // Word , Match for the last code analysis ran by
         // the user.
         if (tokenizer == null)
             return false;
         // TODO TRACE OUT USING STACK & PANIC MODE RECOVERY
-        return false;
+        parser = new Parser(parserGenerator,tokenizer.getSavedLexems());
+        int length = parser.getOutStacks().size();
+
+        System.out.println("output of parser:");
+        for (int i = 0; i < length ; i++) {
+            Stack<String> temp = (Stack)parser.getOutStacks().get(i).clone();
+            Queue<String> outQueue = new LinkedList<>();
+            while (!temp.empty()) {
+                outQueue.add(temp.pop());
+            }
+            while (!outQueue.isEmpty()) {
+                System.out.print(outQueue.poll()+"\t");
+            }
+            System.out.println();
+        }
+        return true;
     }
 
     private Graph getCombinedNFA(LexicalRulesContainer rulesCont) {
@@ -102,12 +118,12 @@ public class Controller {
     private ArrayList<String> getTerminals(CFG grammar){
         HashSet<String> terminals = new HashSet<>();
         ArrayList<String> out = new ArrayList<>();
-        ArrayList<String> nonterminals = grammar.getNonTerminals();
-        for(String nonterminal : nonterminals){
-            ArrayList<ArrayList<String>> productions = grammar.getRHS(nonterminal);
+        ArrayList<String> nonTerminals = grammar.getNonTerminals();
+        for(String nonTerminal : nonTerminals){
+            ArrayList<ArrayList<String>> productions = grammar.getRHS(nonTerminal);
             for (ArrayList<String> production : productions){
                 for (String token:production){
-                    if(!token.equals(Constant.EPSILON)&&!grammar.isNonTerminal(token)&&!terminals.contains(token)){
+                    if(!token.equals(Constant.EPSILON) && !grammar.isNonTerminal(token)&&!terminals.contains(token)){
                         terminals.add(token);
                         out.add(token);
                     }
