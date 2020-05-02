@@ -65,15 +65,16 @@ public class Controller {
     public boolean constructParserRules(String file) {
         ParserRulesContainer rulesCont = new ParserRulesContainer(file);
         if (rulesCont.isValid()) { // if No Errors found during rules processing
-
+            boolean ambiguousGrammar ;
             System.out.println(rulesCont); // Rules captured
             CFG grammar = new CFG(rulesCont);
             System.out.println(grammar); // Rules with left factoring  & eliminated left recursion
             parserGenerator = new ParserGenerator(grammar);
+            ambiguousGrammar = parserGenerator.isAmbiguousGrammar();
             ParserInfo infoViewer = new ParserInfo();
             infoViewer.initialize(parserGenerator,getTerminals(grammar));
             // TODO DO LEFT FACTORING
-            return true;
+            return !ambiguousGrammar;
         }
         return false;
     }
