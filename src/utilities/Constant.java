@@ -26,8 +26,9 @@ public class Constant {
      * PARSER
      */
 
-    public static final String PRODUCTION_RULE_ASSIGNMENT = "::=";//TODO 8yr el STRING ya 3mo
-    public static final String NONTERMINAL_DASH = "_DASH";//TODO 8yr el STRING ya 3mo
+    public static final String PRODUCTION_RULE_ASSIGNMENT = "::=";
+    public static final String NONTERMINAL_LEFT_RECURSION_DASH = "_DASH";
+    public static final String NONTERMINAL_LEFT_FACTOR_DASH = "_HASH";
     public static final String END_MARKER = "$";
     public static final String SYNC_TOK = "SYNC_TOK";
     public static final String PARSING_TABLE_SEPARATOR = " | ";
