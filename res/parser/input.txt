@@ -8,7 +8,7 @@
 # PRIMITIVE_TYPE ::= ‘int’ | ‘float’
 # IF ::= ‘if’ ‘(‘ EXPRESSION ‘)’ ‘{‘ STATEMENT ’}’ ‘else’ ‘{’ STATEMENT ‘}’
 # WHILE ::= ‘while’ ‘(‘ EXPRESSION ‘)’ ‘{‘ STATEMENT ‘}’
-# ASSIGNMENT ::= ‘id’ ‘=’ EXPRESSION ‘;’
+# ASSIGNMENT ::= ‘id’ ‘assign’ EXPRESSION ‘;’
 # EXPRESSION ::= SIMPLE_EXPRESSION | SIMPLE_EXPRESSION ‘relop’ SIMPLE_EXPRESSION
 # SIMPLE_EXPRESSION ::= TERM | SIGN TERM | SIMPLE_EXPRESSION ‘addop’ TERM
 # TERM ::= FACTOR | TERM ‘mulop’ FACTOR

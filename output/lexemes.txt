@@ -13,3 +13,10 @@ assign
 num
 ;
 }
+else
+{
+id
+assign
+num
+;
+}
