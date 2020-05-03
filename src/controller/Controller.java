@@ -89,20 +89,7 @@ public class Controller {
 			return false;
 		// TODO TRACE OUT USING STACK & PANIC MODE RECOVERY
 		parser = new Parser(parserGenerator, tokenizer.getSavedLexems());
-		int length = parser.getOutStacks().size();
 
-		System.out.println("output of parser:");
-		for (int i = 0; i < length; i++) {
-			Stack<String> temp = (Stack<String>) parser.getOutStacks().get(i).clone();
-			Queue<String> outQueue = new LinkedList<>();
-			while (!temp.empty()) {
-				outQueue.add(temp.pop());
-			}
-			while (!outQueue.isEmpty()) {
-				System.out.print(outQueue.poll() + "\t");
-			}
-			System.out.println();
-		}
 		return true;
 	}
 

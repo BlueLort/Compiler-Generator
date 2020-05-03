@@ -41,8 +41,8 @@ public class ParserGenerator {
 		first();
 		follow();
 		buildTable();
-		printFirst();
-		printFollow();
+		//printFirst();
+		//printFollow();
 		// printParsingTable();
 	}
 
