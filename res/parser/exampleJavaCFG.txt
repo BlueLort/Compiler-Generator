@@ -17,3 +17,10 @@
 # E ::= E + T | T
 # T ::= T * F | F
 # F ::= ( E ) | id
+
+
+S = AB
+first (S) = a ,e
+A = a | e
+B = X | e
+X = e
