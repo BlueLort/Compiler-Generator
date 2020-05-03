@@ -104,6 +104,7 @@ public class Parser {
                 /** if input token doesn't match top of stack */
                 else {
                     actionLog = "no match action: skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
+                    stack.push(TOS);
                 }
                 logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(), actionLog));
                 inputTokenIndex++;
