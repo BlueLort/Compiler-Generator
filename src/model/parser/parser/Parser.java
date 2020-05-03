@@ -57,12 +57,12 @@ public class Parser {
 
             StringBuilder stackContent = new StringBuilder();
             for (String string : stack) {
-                stackContent.append(string + "\t\t");
+                stackContent.append(string + " ");
             }
 
             StringBuilder inputContents = new StringBuilder();
             for (int j = inputTokenIndex; j < inputTokens.size(); j++) {
-                inputContents.append(inputTokens.get(j) + "\t\t");
+                inputContents.append(inputTokens.get(j) + " ");
             }
 
 
@@ -73,39 +73,39 @@ public class Parser {
             if (grammar.isNonTerminal(TOS)) { /** if top of stack is non terminal */
                 /** if top of stack leads to empty entry */
                 if (!parsingTable.get(TOS).containsKey(inputTokens.get(inputTokenIndex))) {
-                    logEntry = new Pair(stackContent, new Pair<>(inputContents,
-                            "event: empty entry action: skip this token (" + inputTokens.get(inputTokenIndex) + ")"));
+                    logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
+                            "empty entry action: skip this token \'" + inputTokens.get(inputTokenIndex) + "\'"));
                     inputTokenIndex++;
                     stack.push(TOS);
                 }
                 /** if top of stack leads to epsilon */
                 else if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.EPSILON)) {
-                    logEntry = new Pair(stackContent, new Pair<>(inputContents,
-                            "event: epsilon action: pop stack (" + TOS + ")"));
+                    logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
+                            "epsilon action: pop stack \'" + TOS + "\'"));
                 }
                 /** if top of stack is SYNC_TOK */
                 else if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.SYNC_TOK)) {
-                    logEntry = new Pair(stackContent, new Pair<>(inputContents,
-                            "event: SYNC action: pop stack (" + TOS + ")"));
+                    logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
+                            "SYNC action: pop stack \'" + TOS + "\'"));
                 } else {/** a production rule needs to be pushed to stack */
                     int lengthOfArray = parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).size();
                     for (int i = lengthOfArray - 1; i >= 0; i--) {
                         stack.push(parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(i));
                     }
-                    logEntry = new Pair(stackContent, new Pair<>(inputContents,
-                            "event: production rule pushed to stack"));
+                    logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
+                            "production rule pushed to stack"));
                 }
             } else { /** if top of stack is terminal */
-                String actionLog ;
+                String actionLog;
                 /** if input token match top of stack */
                 if (TOS.equals(inputTokens.get(inputTokenIndex))) {
-                    actionLog = "event: match action: skip this token (" + inputTokens.get(inputTokenIndex) + ")";
+                    actionLog = "match action: skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
                 }
                 /** if input token doesn't match top of stack */
                 else {
-                    actionLog = "event: no match action: skip this token (" + inputTokens.get(inputTokenIndex) + ")";
+                    actionLog = "no match action: skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
                 }
-                logEntry = new Pair(stackContent, new Pair<>(inputContents, actionLog));
+                logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(), actionLog));
                 inputTokenIndex++;
             }
             log.add(logEntry);

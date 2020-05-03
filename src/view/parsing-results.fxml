@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="view.ParsingResultsInfo">
+    <children>
+        <TableView fx:id="dataParserResultsTable" prefHeight="350.0" prefWidth="500.0" AnchorPane.bottomAnchor="32.0"
+                   AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="47.0">
+            <columns>
+                <TableColumn fx:id="stackCol" editable="false" prefWidth="230.0" sortable="false" styleClass="coltext"
+                             text="Stack"/>
+                <TableColumn fx:id="inputCol" editable="false" prefWidth="230.0" sortable="false" styleClass="coltext"
+                             text="Input"/>
+                <TableColumn fx:id="actionCol" editable="false" prefWidth="230.0" sortable="false" styleClass="coltext"
+                             text="Action"/>
+            </columns>
+        </TableView>
+        <Label fx:id="messageLabel" prefHeight="21.0" prefWidth="677.0" AnchorPane.leftAnchor="60.0"
+               AnchorPane.topAnchor="14.0">
+            <font>
+                <Font name="System Bold" size="15.0"/>
+            </font>
+        </Label>
+    </children>
+    <stylesheets>
+        <URL value="@darkTheme.css"/>
+    </stylesheets>
+</AnchorPane>

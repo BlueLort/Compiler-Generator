@@ -41,9 +41,6 @@ public class ParserGenerator {
         first();
         follow();
         buildTable();
-        //printFirst();
-        //printFollow();
-        // printParsingTable();
     }
 
     private void first() {
@@ -180,7 +177,6 @@ public class ParserGenerator {
                 }
             }
         }
-        System.out.println(follow);
         // Loop until no updates are done
         while (true) {
             boolean updates = false;
@@ -191,7 +187,6 @@ public class ParserGenerator {
                 ArrayList<String> dependency = entry.getValue();
                 // Save old follow of the current non terminal
                 HashSet<String> oldFollow = follow.get(nonTerminal);
-                System.out.println(nonTerminal + dependency);
                 // Loop over the current non terminals dependency and update the follow
                 for (int i = 0; i < dependency.size(); i++) {
                     for (String s : follow.get(dependency.get(i)))
@@ -257,7 +252,7 @@ public class ParserGenerator {
                         productionRulesEntry.add(epsilonRule);
                         parsingTable.get(nonTerminalEntry).put(followEntry, productionRulesEntry);
                     }
-                } else if (!first.get(nonTerminalEntry).contains(followEntry)){ /** if first doesn't has epsilon [non terminal,follow] = epsilon */
+                } else if (!first.get(nonTerminalEntry).contains(followEntry)) { /** if first doesn't has epsilon [non terminal,follow] = epsilon */
                     ArrayList<String> syncRule = new ArrayList<>();
                     syncRule.add(Constant.SYNC_TOK);
                     /** if entry already exists report ambiguity error and refill it */
