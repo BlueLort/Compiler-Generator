@@ -47,6 +47,9 @@ public class CFG {
     }
 
     private void eliminateIndirectLeftRecursion() {
+        //first we have some ordering of nonterminals
+        //replace all nonterminals that precede me with their production
+        //so i can easily remove the immediate left recursion later
         ArrayList<String> nontermnials = rulesCont.getProductionRules();
         for (int i = 0; i < nontermnials.size(); i++) {
             String currentNonterminal = nontermnials.get(i); // Ai
@@ -59,6 +62,7 @@ public class CFG {
     }
 
     private void replaceNonterminal(String nonterminal, String subNonterminal) {
+        //helper function takes care of this " each Ai -> Aj b replace Aj by Ai -> a b | b b | c b as Aj -> a | b | c "
         ArrayList<ArrayList<String>> modifiedProduction = new ArrayList<>();
         ArrayList<ArrayList<String>> nonterminalProductions = this.rulesCont.getProductionRule(nonterminal);
         ArrayList<ArrayList<String>> subNonterminalProductions = this.rulesCont.getProductionRule(subNonterminal);
@@ -84,6 +88,9 @@ public class CFG {
     }
 
     private void eliminateImmediateLeftRecursion() {
+        // i search for immediate left recursion and eliminate them by adding them to another nonterminal
+        // also because that i don't sanitize the original nonterminal while making the new nonterminal in the end of each nonterminal processing
+        // i should sanitize the nonterminal as to remove the old productions from this rule as they have been added to to the other newNonterminal
         ArrayList<String> nontermnials = rulesCont.getProductionRules();
         ArrayList<String> addedRules = new ArrayList<>();
         for (String nonterminal : nontermnials) {
@@ -120,6 +127,7 @@ public class CFG {
     }
 
     private void sanitizeNonterminal(String nonterminal, String newNonterminalName) {
+
         ArrayList<ArrayList<String>> modifiedProduction = new ArrayList<>();
         ArrayList<ArrayList<String>> productions = this.rulesCont.getProductionRule(nonterminal);
         for (ArrayList<String> production : productions) {
@@ -134,6 +142,11 @@ public class CFG {
     }
 
     private void leftFactoring() {
+        //left factoring elimination that relies on using Trie data structure
+        // for each nonterminal i make a trie out of it's production
+        // the trie has a hashmap<key:string,value:pair<key:next node,value: frequency of that string>>
+        //if frequency of that string in the trie more than 1 then i need to make new non terminal and productions to it
+        // then i recurse again on the new nonterminal until no more new nonterminals are needed
         ArrayList<String> nontermnials = rulesCont.getProductionRules();
         for (int i = 0; i < nontermnials.size(); i++) {
             String nonterminal = nontermnials.get(i);
@@ -158,6 +171,7 @@ public class CFG {
                 ArrayList<ArrayList<String>> productions = rulesCont.getProductionRule(nonterminal);
                 for (ArrayList<String> production : productions) {
                     if (production.get(0).equals(word)) {
+                        // if rule is completely factored and nothing left then i need to add epsilon
                         if (production.size() == 1) {
                             newRule += Constant.EPSILON;
                         } else {
