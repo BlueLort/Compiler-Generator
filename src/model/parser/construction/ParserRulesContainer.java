@@ -2,6 +2,7 @@ package model.parser.construction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ParserRulesContainer {
 
@@ -28,7 +29,7 @@ public class ParserRulesContainer {
 
 	public ParserRulesContainer(String rulesFile) {
 		// Init members
-		productionRules = new HashMap<String, ArrayList<ArrayList<String>>>();
+		productionRules = new LinkedHashMap<String, ArrayList<ArrayList<String>>>();
 		nonTerminals = new ArrayList<String>();
 		// Regex search for each one of the elements and save them
 		hasErrors = processRules(rulesFile);
@@ -36,7 +37,7 @@ public class ParserRulesContainer {
 
 	public ParserRulesContainer(ParserRulesContainer rulesContainer) {
 		// Init members
-		this.productionRules = new HashMap<String, ArrayList<ArrayList<String>>>();
+		this.productionRules = new LinkedHashMap<String, ArrayList<ArrayList<String>>>();
 		this.nonTerminals = new ArrayList<String>();
 		// Regex search for each one of the elements and save them
 		hasErrors = rulesContainer.hasErrors;

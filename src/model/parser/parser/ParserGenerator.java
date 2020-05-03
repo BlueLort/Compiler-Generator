@@ -3,6 +3,7 @@ package model.parser.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import model.parser.cfg.CFG;
@@ -42,7 +43,7 @@ public class ParserGenerator {
 		buildTable();
 		printFirst();
 		printFollow();
-		printParsingTable();
+		// printParsingTable();
 	}
 
 	private void first() {
@@ -123,7 +124,7 @@ public class ParserGenerator {
 		 * FIRST(q) contains Є, then FOLLOW(B) contains { FIRST(q) – Є } U FOLLOW(A)
 		 */
 
-		HashMap<String, ArrayList<String>> followDependency = new HashMap<String, ArrayList<String>>();
+		HashMap<String, ArrayList<String>> followDependency = new LinkedHashMap<String, ArrayList<String>>();
 		for (int i = 0; i < nonTerminals.size(); i++) {
 			followDependency.put(nonTerminals.get(i), new ArrayList<>());
 		}
@@ -138,7 +139,6 @@ public class ParserGenerator {
 			ArrayList<ArrayList<String>> rhs = grammar.getRHS(nonTerminal);
 			for (ArrayList<String> temp : rhs) {
 				for (int j = 0; j < temp.size(); j++) {
-					// GET current symbol
 					String current = temp.get(j);
 					// If its a non terminal
 					if (grammar.isNonTerminal(current)) {
@@ -146,9 +146,9 @@ public class ParserGenerator {
 						 * If J == last Index then the follow of the current depends on the follow of
 						 * the original non terminal
 						 */
-						if (j == temp.size() - 1)
+						if (j == temp.size() - 1) {
 							followDependency.get(current).add(nonTerminal);
-						else {
+						} else {
 							// Loop over the rest of the rhs
 							for (int k = j + 1; k < temp.size(); k++) {
 								String following = temp.get(k);
@@ -170,14 +170,17 @@ public class ParserGenerator {
 									// Else break the loop and DONE
 									else
 										break;
-								} else
+								} else {
 									this.follow.get(current).add(following);
+									break;
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+		System.out.println(follow);
 		// Loop until no updates are done
 		while (true) {
 			boolean updates = false;
@@ -188,13 +191,15 @@ public class ParserGenerator {
 				ArrayList<String> dependency = entry.getValue();
 				// Save old follow of the current non terminal
 				HashSet<String> oldFollow = follow.get(nonTerminal);
-				// Loop over the current non terminals dependency and updates the follow
+				System.out.println(nonTerminal + dependency);
+				// Loop over the current non terminals dependency and update the follow
 				for (int i = 0; i < dependency.size(); i++) {
 					for (String s : follow.get(dependency.get(i)))
 						follow.get(nonTerminal).add(s);
 					// If the old follow is not the same as the updated follow, set the flag
-					if (!compareHashSets(oldFollow, follow.get(nonTerminal)))
+					if (!follow.get(nonTerminal).equals(oldFollow)) {
 						updates = true;
+					}
 				}
 			}
 			// If no more updates are done, terminate loop
@@ -277,13 +282,6 @@ public class ParserGenerator {
 			parsingTable.put(nonTerminal, new HashMap<>());
 		}
 		return;
-	}
-
-	private boolean compareHashSets(HashSet<String> firstSet, HashSet<String> secondSet) {
-		if (firstSet.size() != secondSet.size()) {
-			return false;
-		}
-		return secondSet.containsAll(firstSet);
 	}
 
 	private void printFirst() {
