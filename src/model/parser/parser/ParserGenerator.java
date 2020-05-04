@@ -201,7 +201,6 @@ public class ParserGenerator {
             if (!updates)
                 break;
         }
-
     }
 
     private void buildTable() { /** loop for all non terminals to fill the table */

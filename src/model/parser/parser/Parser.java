@@ -1,14 +1,12 @@
 package model.parser.parser;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
+
 import javafx.util.Pair;
 import model.parser.cfg.CFG;
 import utilities.Constant;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
 public class Parser {
     private HashMap<String, HashMap<String, ArrayList<ArrayList<String>>>> parsingTable;
@@ -74,36 +72,36 @@ public class Parser {
                 /** if top of stack leads to empty entry */
                 if (!parsingTable.get(TOS).containsKey(inputTokens.get(inputTokenIndex))) {
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
-                            "empty entry action: skip this token \'" + inputTokens.get(inputTokenIndex) + "\'"));
+                            "Empty entry action: Skip this token \'" + inputTokens.get(inputTokenIndex) + "\'"));
                     inputTokenIndex++;
                     stack.push(TOS);
                 }
                 /** if top of stack leads to epsilon */
                 else if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.EPSILON)) {
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
-                            "epsilon action: pop stack \'" + TOS + "\'"));
+                            "Epsilon action: Pop stack \'" + TOS + "\'"));
                 }
                 /** if top of stack is SYNC_TOK */
                 else if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.SYNC_TOK)) {
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
-                            "SYNC action: pop stack \'" + TOS + "\'"));
+                            "SYNC action: Pop stack \'" + TOS + "\'"));
                 } else {/** a production rule needs to be pushed to stack */
                     int lengthOfArray = parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).size();
                     for (int i = lengthOfArray - 1; i >= 0; i--) {
                         stack.push(parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(i));
                     }
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
-                            "production rule pushed to stack"));
+                            "Production rule pushed to stack"));
                 }
             } else { /** if top of stack is terminal */
                 String actionLog;
                 /** if input token match top of stack */
                 if (TOS.equals(inputTokens.get(inputTokenIndex))) {
-                    actionLog = "match action: skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
+                    actionLog = "Match action: Skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
                 }
                 /** if input token doesn't match top of stack */
                 else {
-                    actionLog = "no match action: skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
+                    actionLog = "No match action: Skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
                     stack.push(TOS);
                 }
                 logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(), actionLog));

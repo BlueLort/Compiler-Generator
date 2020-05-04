@@ -200,9 +200,7 @@ public class CFG {
                 ParserLineProcessor.getInstance().processLine(newRule, rulesCont);
                 constructLeftFactoredRule(nextNode.getKey(), newNonTerminal);
             }
-
         }
-
     }
 
     private String getNewNonTerminal(String nonterminal, String concatString) {
