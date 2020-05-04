@@ -66,7 +66,6 @@ public class Parser {
 
             String TOS = stack.pop();
 
-            /** TODO put strings in constant strings */
 
             if (grammar.isNonTerminal(TOS)) { /** if top of stack is non terminal */
                 /** if top of stack leads to empty entry */
