@@ -4,13 +4,13 @@
 | IF
 | WHILE
 | ASSIGNMENT
-# DECLARATION ::= PRIMITIVE_TYPE â€˜idâ€™ â€˜;â€™
-# PRIMITIVE_TYPE ::= â€˜intâ€™ | â€˜floatâ€™
-# IF ::= â€˜ifâ€™ â€˜(â€˜ EXPRESSION â€˜)â€™ â€˜{â€˜ STATEMENT â€™}â€™ â€˜elseâ€™ â€˜{â€™ STATEMENT â€˜}â€™
-# WHILE ::= â€˜whileâ€™ â€˜(â€˜ EXPRESSION â€˜)â€™ â€˜{â€˜ STATEMENT â€˜}â€™
-# ASSIGNMENT ::= â€˜idâ€™ â€˜assignâ€™ EXPRESSION â€˜;â€™
-# EXPRESSION ::= SIMPLE_EXPRESSION | SIMPLE_EXPRESSION â€˜relopâ€™ SIMPLE_EXPRESSION
-# SIMPLE_EXPRESSION ::= TERM | SIGN TERM | SIMPLE_EXPRESSION â€˜addopâ€™ TERM
-# TERM ::= FACTOR | TERM â€˜mulopâ€™ FACTOR
-# FACTOR ::= â€˜idâ€™ | â€˜numâ€™ | â€˜(â€˜ EXPRESSION â€˜)â€™
-# SIGN ::= â€˜+â€™ | â€˜-â€˜
+# DECLARATION ::= PRIMITIVE_TYPE ‘id’ ‘;’
+# PRIMITIVE_TYPE ::= ‘int’ | ‘float’
+# IF ::= ‘if’ ‘(‘ EXPRESSION ‘)’ ‘{‘ STATEMENT ’}’ ‘else’ ‘{’ STATEMENT ‘}’
+# WHILE ::= ‘while’ ‘(‘ EXPRESSION ‘)’ ‘{‘ STATEMENT ‘}’
+# ASSIGNMENT ::= ‘id’ ‘assign’ EXPRESSION ‘;’
+# EXPRESSION ::= SIMPLE_EXPRESSION | SIMPLE_EXPRESSION ‘relop’ SIMPLE_EXPRESSION
+# SIMPLE_EXPRESSION ::= TERM | SIGN TERM | SIMPLE_EXPRESSION ‘addop’ TERM
+# TERM ::= FACTOR | TERM ‘mulop’ FACTOR
+# FACTOR ::= ‘id’ | ‘num’ | ‘(‘ EXPRESSION ‘)’
+# SIGN ::= ‘+’ | ‘-‘

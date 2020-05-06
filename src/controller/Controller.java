@@ -26,8 +26,6 @@ public class Controller {
 
     private Tokenizer tokenizer = null;// member because it's used with the parser
     private ParserGenerator parserGenerator = null;
-
-    // TODO MEMBER VAR. PARSING TABLE
     public Controller() {
 
     }
@@ -75,11 +73,8 @@ public class Controller {
     }
 
     public boolean parseInput() {
-        // TODO REMOVE THE NEXT LINE AFTER FINISHING THE PARSER
-        //tokenizer = new Tokenizer("output/lexemes.txt");
         if (tokenizer == null || parserGenerator == null)
             return false;
-        // TODO TRACE OUT USING STACK & PANIC MODE RECOVERY
         Parser parser = new Parser(parserGenerator, tokenizer.getSavedLexems());
         ParsingResultsInfo resultsViewer = new ParsingResultsInfo();
         resultsViewer.initialize(parser.getLog());
