@@ -16,6 +16,8 @@ public class ParsingTreeNode {
     }
 
     public ParsingTreeNode(String name) {
+        this.children = new ArrayList<>();
+        this.attributes = new ArrayList<>();
         this.name = name;
     }
 

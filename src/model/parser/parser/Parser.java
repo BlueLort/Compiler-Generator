@@ -79,23 +79,23 @@ public class Parser {
 
             if (grammar.isNonTerminal(TOS.getName())) { /** if top of stack is non terminal */
                 /** if top of stack leads to empty entry */
-                if (!parsingTable.get(TOS).containsKey(inputTokens.get(inputTokenIndex))) {
+                if (!parsingTable.get(TOS.getName()).containsKey(inputTokens.get(inputTokenIndex))) {
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
                             "Empty entry action: Skip this token \'" + inputTokens.get(inputTokenIndex) + "\'"));
                     inputTokenIndex++;
                     stack.push(TOS);
                 }
                 /** if top of stack leads to epsilon */
-                else if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.EPSILON)) {
+                else if (parsingTable.get(TOS.getName()).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.EPSILON)) {
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
-                            "Epsilon action: Pop stack \'" + TOS + "\'"));
+                            "Epsilon action: Pop stack \'" + TOS.getName() + "\'"));
                 }
                 /** if top of stack is SYNC_TOK */
-                else if (parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.SYNC_TOK)) {
+                else if (parsingTable.get(TOS.getName()).get(inputTokens.get(inputTokenIndex)).get(0).get(0).equals(Constant.SYNC_TOK)) {
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
-                            "SYNC action: Pop stack \'" + TOS + "\'"));
+                            "SYNC action: Pop stack \'" + TOS.getName() + "\'"));
                 } else {/** a production rule needs to be pushed to stack */
-                    int lengthOfArray = parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).size();
+                    int lengthOfArray = parsingTable.get(TOS.getName()).get(inputTokens.get(inputTokenIndex)).get(0).size();
                     for (int i = lengthOfArray - 1; i >= 0; i--) {
                         ParsingTreeNode newNode = new ParsingTreeNode(parsingTable.get(TOS.getName()).
                                 get(inputTokens.get(inputTokenIndex)).get(0).get(i));
@@ -110,7 +110,7 @@ public class Parser {
             } else { /** if top of stack is terminal */
                 String actionLog;
                 /** if input token match top of stack */
-                if (TOS.equals(inputTokens.get(inputTokenIndex))) {
+                if (TOS.getName().equals(inputTokens.get(inputTokenIndex))) {
                     actionLog = "Match action: Skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
                     if (errorFree) {
                         /* val of Node TOS = savedLexemes.getKey() */
