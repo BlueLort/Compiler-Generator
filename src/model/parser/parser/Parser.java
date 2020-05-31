@@ -127,6 +127,7 @@ public class Parser {
             }
             log.add(logEntry);
         }
+        System.out.println(parsingTree);
     }
 
 
