@@ -57,7 +57,7 @@ public class Parser {
         parsingTree.setName(grammar.getStartingNonTerminal());
         ParsingTreeNode currNode = new ParsingTreeNode();
 
-        stack.push(new ParsingTreeNode(grammar.getStartingNonTerminal()));
+        stack.push(parsingTree);
         while (!stack.empty() && inputTokenIndex != inputTokens.size()) {
 
             Pair<String, Pair<String, String>> logEntry;
