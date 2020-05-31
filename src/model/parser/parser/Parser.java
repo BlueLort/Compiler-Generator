@@ -18,6 +18,10 @@ public class Parser {
 
     private CFG grammar;
 
+    private boolean errorFree = true;
+
+    private ParsingTreeNode parsingTree;
+
     private ArrayList<String> inputTokens;
 
 
@@ -28,6 +32,7 @@ public class Parser {
      */
 
     public Parser(ParserGenerator parserGenerator, ArrayList<Pair<String, String>> inputTokens) {
+        this.parsingTree = new ParsingTreeNode();
         this.parsingTable = parserGenerator.getParsingTable();
         this.inputTokens = getInputTokens(inputTokens);
         this.grammar = parserGenerator.getGrammar();
@@ -46,16 +51,20 @@ public class Parser {
 
     public void parse() {
         int inputTokenIndex = 0;
-        Stack<String> stack = new Stack<>();
-        stack.push(Constant.END_MARKER);
-        stack.push(grammar.getStartingNonTerminal());
+        Stack<ParsingTreeNode> stack = new Stack<>();
+        stack.push(new ParsingTreeNode(Constant.END_MARKER));
+
+        parsingTree.setName(grammar.getStartingNonTerminal());
+        ParsingTreeNode currNode = new ParsingTreeNode();
+
+        stack.push(new ParsingTreeNode(grammar.getStartingNonTerminal()));
         while (!stack.empty() && inputTokenIndex != inputTokens.size()) {
 
             Pair<String, Pair<String, String>> logEntry;
 
             StringBuilder stackContent = new StringBuilder();
-            for (String string : stack) {
-                stackContent.append(string + " ");
+            for (ParsingTreeNode node : stack) {
+                stackContent.append(node.getName() + " ");
             }
 
             StringBuilder inputContents = new StringBuilder();
@@ -64,10 +73,11 @@ public class Parser {
             }
 
 
-            String TOS = stack.pop();
+            ParsingTreeNode TOS = stack.pop();
 
+            currNode = TOS;
 
-            if (grammar.isNonTerminal(TOS)) { /** if top of stack is non terminal */
+            if (grammar.isNonTerminal(TOS.getName())) { /** if top of stack is non terminal */
                 /** if top of stack leads to empty entry */
                 if (!parsingTable.get(TOS).containsKey(inputTokens.get(inputTokenIndex))) {
                     logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
@@ -87,20 +97,29 @@ public class Parser {
                 } else {/** a production rule needs to be pushed to stack */
                     int lengthOfArray = parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).size();
                     for (int i = lengthOfArray - 1; i >= 0; i--) {
-                        stack.push(parsingTable.get(TOS).get(inputTokens.get(inputTokenIndex)).get(0).get(i));
+                        ParsingTreeNode newNode = new ParsingTreeNode(parsingTable.get(TOS.getName()).
+                                get(inputTokens.get(inputTokenIndex)).get(0).get(i));
+                        if (errorFree) {
+                            TOS.getChildren().add(newNode);
+                        }
+                        stack.push(newNode);
                     }
-                    logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(),
-                            "Production rule pushed to stack"));
+                    logEntry = new Pair(stackContent.toString(),
+                            new Pair<>(inputContents.toString(), "Production rule pushed to stack"));
                 }
             } else { /** if top of stack is terminal */
                 String actionLog;
                 /** if input token match top of stack */
                 if (TOS.equals(inputTokens.get(inputTokenIndex))) {
                     actionLog = "Match action: Skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
+                    if (errorFree) {
+                        /* val of Node TOS = savedLexemes.getKey() */
+                    }
                 }
                 /** if input token doesn't match top of stack */
                 else {
                     actionLog = "No match action: Skip this token \'" + inputTokens.get(inputTokenIndex) + "\'";
+                    errorFree = false;
                     stack.push(TOS);
                 }
                 logEntry = new Pair(stackContent.toString(), new Pair<>(inputContents.toString(), actionLog));
@@ -109,6 +128,8 @@ public class Parser {
             log.add(logEntry);
         }
     }
+
+
 
     public ArrayList<Pair<String, Pair<String, String>>> getLog() {
         return log;
