@@ -96,14 +96,20 @@ public class Parser {
                             "SYNC action: Pop stack \'" + TOS.getName() + "\'"));
                 } else {/** a production rule needs to be pushed to stack */
                     int lengthOfArray = parsingTable.get(TOS.getName()).get(inputTokens.get(inputTokenIndex)).get(0).size();
+                    Stack<ParsingTreeNode> tempStack = new Stack<>();
                     for (int i = lengthOfArray - 1; i >= 0; i--) {
                         ParsingTreeNode newNode = new ParsingTreeNode(parsingTable.get(TOS.getName()).
                                 get(inputTokens.get(inputTokenIndex)).get(0).get(i));
                         if (errorFree) {
-                            TOS.getChildren().add(newNode);
+                            tempStack.add(newNode);
                         }
                         stack.push(newNode);
                     }
+                    while(!tempStack.empty()){
+                        TOS.getChildren().add(tempStack.pop());
+                    }
+
+
                     logEntry = new Pair(stackContent.toString(),
                             new Pair<>(inputContents.toString(), "Production rule pushed to stack"));
                 }
@@ -127,6 +133,8 @@ public class Parser {
             }
             log.add(logEntry);
         }
+
+        //TODO REMOVE
         System.out.println(parsingTree);
     }
 
