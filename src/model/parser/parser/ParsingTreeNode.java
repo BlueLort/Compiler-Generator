@@ -12,19 +12,19 @@ public class ParsingTreeNode {
     private String name;
     private int ID;
     private ArrayList<ParsingTreeNode> children;
-    private ArrayList<Pair<String, String>> attributes;
+    private HashMap<String, String> attributes;
 
     public ParsingTreeNode() {
 
         this.children = new ArrayList<>();
-        this.attributes = new ArrayList<>();
+        this.attributes = new HashMap<>();
         this.ID = STATIC_ID;
         STATIC_ID++;
     }
 
     public ParsingTreeNode(String name) {
         this.children = new ArrayList<>();
-        this.attributes = new ArrayList<>();
+        this.attributes = new HashMap<>();
         this.name = name;
         this.ID = STATIC_ID;
         STATIC_ID++;
@@ -46,12 +46,12 @@ public class ParsingTreeNode {
         this.children = children;
     }
 
-    public ArrayList<Pair<String, String>> getAttributes() {
-        return attributes;
+    public String getAttribute(String attribute) {
+        return attributes.get(attribute);
     }
 
-    public void setAttributes(ArrayList<Pair<String, String>> attributes) {
-        this.attributes = attributes;
+    public void addAttribute(String attribute,String val) {
+        this.attributes.put(attribute, val);
     }
 
     @Override
