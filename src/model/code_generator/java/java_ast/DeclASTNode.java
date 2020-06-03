@@ -14,8 +14,9 @@ public class DeclASTNode extends ASTNode {
      *
      */
     public DeclASTNode(ParsingTreeNode node, ASTNode parent){
-            type = node.getChildren().get(0).getAttribute("value");
-            id = node.getChildren().get(1).getAttribute("value");
+            this.nodeType = NodeType.DECLARATION_TYPE_NODE;
+            this.type = node.getChildren().get(0).getAttribute("value");
+            this.id = node.getChildren().get(1).getAttribute("value");
             //TODO MAINTAIN SYM TABLE
     }
     public void action(){

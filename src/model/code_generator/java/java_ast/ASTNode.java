@@ -3,13 +3,22 @@ package model.code_generator.java.java_ast;
 import java.util.ArrayList;
 
 public abstract class ASTNode {
-    public static final int DECLARATION_TYPE_NODE = 1;
-    public static final int IF_TYPE_NODE = 2;
-    public static final int WHILE_TYPE_NODE = 3;
-    public static final int ASSIGNMENT_TYPE_NODE = 4;
-    public static final int EXPRESSION_TYPE_NODE = 5;
-    public static final int SIMPLE_EXPRESSION_TYPE_NODE = 6;
-    protected int  type;
+    public enum NodeType {
+        DECLARATION_TYPE_NODE,
+        IF_TYPE_NODE,
+        WHILE_TYPE_NODE,
+        ASSIGNMENT_TYPE_NODE,
+        EXPRESSION_TYPE_NODE,
+        SIMPLE_EXPRESSION_TYPE_NODE
+    }
+    public enum OPType{
+        NONE,
+        ADD,
+        MIN,
+        DIV,
+        MUL
+    };
+    protected NodeType nodeType;
     protected ASTNode parent;
     protected ArrayList<ASTNode> children;
 
