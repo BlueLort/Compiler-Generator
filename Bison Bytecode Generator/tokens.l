@@ -33,15 +33,14 @@ binary              "true"|"false"
 "else"                {return ELSE_TOK;}
 "while"               {return WHILE_TOK;}
 "for"                 {return FOR_TOK;}
-{num}	                {yylval.intValue = atoi(yytext); return INTEGER_NUMBER;}
+{num}	              {yylval.intValue = atoi(yytext); return INTEGER_NUMBER;}
 {fnum}	              {yylval.floatValue = atof(yytext); return FLOAT_NUMBER;}
 {string}              {yylval.stringValue = strdup(yytext); return STRING; } // nothing fancy used in printing only
 {relop}               {yylval.operationValue = strdup(yytext);  return RELOP;}
 {operation}           {yylval.operationValue = strdup(yytext);  return OPERATION;}
 {booloperation}       {yylval.operationValue = strdup(yytext);  return BOOLOP;}
 {binary}              {if(strcmp(yytext,"true") == 0){ yylval.booleanValue = true;} else { yylval.booleanValue = false;} return BOOLEAN;}
-{id}	                {yylval.varName = strdup(yytext); return IDENTIFIER;}
-
+{id}	              {yylval.varName = strdup(yytext); return IDENTIFIER;}
 "="                   {return ASSIGNMENT_OPERATOR;}
 ";"                   {return SEMI_COLON;}
 "("                   {return LEFT_BRACKET;}
@@ -51,7 +50,7 @@ binary              "true"|"false"
 ","                   {return COMMA_TOK;}
 "System.out.println"  {return PRINTLN_TOK;}
 [ \t]               ;  // ignore all whitespace
-\n                  { ++lineNum; }
+\n                    { ++lineNum; }
 %%
 // main is defined for the parser
 /*
