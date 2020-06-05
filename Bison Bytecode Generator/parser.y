@@ -77,12 +77,13 @@
     struct instruction {
         std::string code;
         INSTTYPE type;
+        /* Constructor */
         instruction(const std::string& instCode, INSTTYPE instType):
             code(instCode.c_str()), type(instType){}
     };
 
-    std::vector<instruction> instructions; // bytecode instructions
-    std::string outputfileName; // file name of the output fie
+    std::vector<instruction> instructions; // Bytecode instructions
+    std::string outputfileName; // File name of the output fie
 
     std::unordered_map<std::string, std::string> opInstructions =
     {
@@ -128,8 +129,8 @@
     /* For the backpatching algorithm explained in the dragon book */
     void backpatch(std::vector<int32_t> *, int32_t); 
     std::vector<int32_t> *mergeLists(std::vector<int32_t> *, std::vector<int32_t>*);
-    void typeCast(std::string, int32_t);//TODO
-    void operationCast(const std::string&, int32_t, int32_t);//TODO
+    // void typeCast(std::string, int32_t);
+    void operationCast(const std::string&, int32_t, int32_t);
 
     /* Helper functions */
     void outBytecode();
@@ -162,6 +163,7 @@
     int32_t                  primType;
     int32_t                  expressionType;
 }
+
 /*
 * By convention, Every non terminal is lower case, and every terminal is upper case
 */
@@ -291,11 +293,11 @@ print_func:
     PRINTLN_TOK LEFT_BRACKET STRING RIGHT_BRACKET SEMI_COLON
     {
         /* push System.out onto the stack */
-        addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;",INSTTYPE::INST_NORMAL});
+        addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;",INSTTYPE::INST_FUNC});
         /* push a string onto the stack */
         addInstruction({"\tldc " + std::string($3), INSTTYPE::INST_NORMAL});
         /* call the PrintStream.println() method. */
-        addInstruction({"\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V",INSTTYPE::INST_NORMAL});
+        addInstruction({"\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V",INSTTYPE::INST_FUNC});
     }
     |
  	PRINTLN_TOK LEFT_BRACKET expression RIGHT_BRACKET SEMI_COLON
@@ -304,18 +306,18 @@ print_func:
          * onto the stack and invoke 
          * but we need to store the expression first in a temp var so we can load it *- * again before calling 
          */
-        if($3 == VARTYPE::TYINTEGER) {
+        if ($3 == VARTYPE::TYINTEGER) {
             std::string tempVarName = std::to_string(SYSO_INT_VARID);
             addInstruction({"\tistore " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_NORMAL});
+            addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_FUNC});
             addInstruction({"\tiload " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tinvokevirtual java/io/PrintStream/println(I)V", INSTTYPE::INST_NORMAL});
+            addInstruction({"\tinvokevirtual java/io/PrintStream/println(I)V", INSTTYPE::INST_FUNC});
         } else if ($3 == VARTYPE::TYFLOAT) {
             std::string tempVarName = std::to_string(SYSO_FLOAT_VARID);
             addInstruction({"\tfstore " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_NORMAL});
+            addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_FUNC});
             addInstruction({"\tfload " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tinvokevirtual java/io/PrintStream/println(F)V", INSTTYPE::INST_NORMAL});
+            addInstruction({"\tinvokevirtual java/io/PrintStream/println(F)V", INSTTYPE::INST_FUNC});
         }
  	}
    
@@ -385,7 +387,7 @@ for_assignment:
 				}
 			}
 			else {
-				typeCast(varName, $3);
+		        yyerror("Invalid assignment, Two different datatypes.");
 			}
 		}
     }
@@ -396,7 +398,7 @@ assignment:
     {
         /* Expression result on top of the stack */
         std::string varName($1);
-		if(checkVariableExists(varName)) {
+		if (checkVariableExists(varName)) {
             std::string varID = std::to_string(symbolTable[varName].first);
 			if ($3 == symbolTable[varName].second) {
                 std::string varID = std::to_string(symbolTable[varName].first);
@@ -407,7 +409,7 @@ assignment:
 				}
 			}
 			else {
-				typeCast(varName, $3);
+		        yyerror("Invalid assignment, Two different datatypes.");
 			}
 		}
     }
@@ -427,7 +429,7 @@ expression:
     {
         /* Make sure the id exists first then load it */
 		std::string varName($1);
-		if(checkVariableExists(varName)) {
+		if (checkVariableExists(varName)) {
 			$$ = symbolTable[varName].second;
             std::string varID = std::to_string(symbolTable[varName].first);
 
@@ -484,6 +486,7 @@ boolean_expression:
 		}
     }
 	;
+
 %%
 
 
@@ -508,6 +511,10 @@ int main (int argv, char * argc[])
     return 0;
 }
 
+/*------------------------------------------------------------------------
+ * yyerror  - Prints syntax errors in the input files
+ *------------------------------------------------------------------------
+ */
 
 void yyerror(const char * errorString)
 {
@@ -560,7 +567,7 @@ void addInstruction(const instruction& instr)
     //         instructions.back().type = INSTTYPE::INST_NONE;
     //     }
     // }else{
-        instructions.push_back(instr);
+    instructions.push_back(instr);
     //}
 	
 }
@@ -571,9 +578,9 @@ void addInstruction(const instruction& instr)
  */
 std::string getOp(const std::string& op) 
 {
-    auto ite = opInstructions.find(op);
-    if (ite != opInstructions.end()) {
-		return ite->second;
+    auto iterator = opInstructions.find(op);
+    if (iterator != opInstructions.end()) {
+		return iterator->second;
 	}
 	return "";
 }
@@ -586,7 +593,7 @@ void addVariable(const std::string& name,VARTYPE type)
 {
 
     if (symbolTable.find(name) != symbolTable.end()) {
-		std::string error = name +" was declared before.";
+		std::string error = name + " was declared before.";
 		yyerror(error.c_str());
 	} else {
         std::string currVariableID = std::to_string(varID); // get new id
@@ -612,7 +619,7 @@ void addVariable(const std::string& name,VARTYPE type)
     if (symbolTable.find(varName) != symbolTable.end())
         return true;
     else {
-        std::string error = varName +" wasn't declared.";
+        std::string error = varName + " wasn't declared.";
         yyerror(error.c_str());
         return false;
     }
@@ -663,10 +670,10 @@ std::vector<int32_t> *mergeLists(std::vector<int32_t> *list1, std::vector<int32_
  * typeCast  -  Performs type casting
  *------------------------------------------------------------------------
  */
-void typeCast(std::string id, int32_t newType) 
+/* void typeCast(std::string id, int32_t newType) 
 {
     yyerror("casting not implemented yet"); //TODO
-}
+} */
 
  /*------------------------------------------------------------------------
  * operationCast  -  Check if 2 variables are equal type otherwise not handled ?
@@ -682,7 +689,7 @@ void operationCast(const std::string& operation,int32_t varType1, int32_t varTyp
 		}
 	}
 	else {
-		yyerror("cast not implemented yet");//TODO
+		yyerror("The two expressions are not the same datatype");//TODO
 	}
 }
 

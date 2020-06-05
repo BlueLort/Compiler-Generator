@@ -17,6 +17,7 @@ letter              [a-zA-Z]
 digits              {digit}+
 string              \"(\\.|[^"\\])*\"
 id                  {letter}({letter}|{digit})*
+
 num                 "-"?{digits}
 fnum                "-"?{digits}.{digits}("E"{digits}+)?
 
@@ -52,6 +53,7 @@ binary              "true"|"false"
 [ \t]               ;  // ignore all whitespace
 \n                    { ++lineNum; }
 %%
+
 // main is defined for the parser
 /*
 int main(int, char**) {
