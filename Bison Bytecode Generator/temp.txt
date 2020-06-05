@@ -1,0 +1,24 @@
+int x,y,z;
+x = 5;
+y = 7;
+z = 10;
+if (x > 2)
+{
+  x = z + y;
+}
+else
+{
+  x = 1;
+}
+int i;
+for(i = 0;i<1000;i = i + 1){
+  x = x + 10;
+}
+while(z>0&&true&&z>-1||z>-2){
+  z = z - 1;
+}
+System.out.println("haha string you nub");
+System.out.println(2.3);
+System.out.println(5);
+System.out.println(z);
+System.out.println(x);
