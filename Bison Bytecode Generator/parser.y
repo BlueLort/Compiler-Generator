@@ -69,6 +69,7 @@
     extern FILE *yyin;
 
 
+    bool   codeHasError = false;
     extern int32_t lineNum; // Stores the line number from FLEX
     int32_t varID = VARID_START; // Start counting variable ids from 3 
     int32_t labelCounter = 0;	// Help generate labels
@@ -525,7 +526,9 @@ int main (int argv, char * argc[])
 	}
 	yyin = fileDesc;
 	yyparse();
+    if (codeHasError == false) {
 	outBytecode();
+    }
     return 0;
 }
 
@@ -536,6 +539,7 @@ int main (int argv, char * argc[])
 
 void yyerror(const char * errorString)
 {
+    codeHasError = true;
 	printf("Error at Line %d: %s\n", lineNum, errorString);
 }
 
