@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.y": "cpp",
+        "stack": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "xhash": "cpp",
+        "xutility": "cpp"
+    }
+}

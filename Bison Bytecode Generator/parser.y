@@ -15,6 +15,7 @@
     #include <fstream>
     #include <cstring>
     #include <unordered_set>
+    #include <stack>
 
     /*
      * Definitions of the input and output files
@@ -42,7 +43,8 @@
 
     #define LABEL_OPTIONAL_PREFIX std::string("LABEL")
     #define LABEL(n) (LABEL_OPTIONAL_PREFIX + std::to_string(n))
-
+    /* separator to remove all symbols until this symbol reached with each body block */
+    #define SYMBOL_SEPARATOR "$"
     /*
      * Type of the declared variable
      * 3 allowed types: Integer, Float, and Boolean
@@ -99,16 +101,17 @@
         {"&", "and"},
         
         /* Relational operations */
-        {"==",  "\tif_icmpeq"},
-        {"<=",  "\tif_icmple"},
-        {">=",  "\tif_icmpge"},
-        {"!=",  "\tif_icmpne"},
-        {">",   "\tif_icmpgt"},
-        {"<",   "\tif_icmplt"}
+        {"==",  "\t\tif_icmpeq"},
+        {"<=",  "\t\tif_icmple"},
+        {">=",  "\t\tif_icmpge"},
+        {"!=",  "\t\tif_icmpne"},
+        {">",   "\t\tif_icmpgt"},
+        {"<",   "\t\tif_icmplt"}
     };
 
     std::unordered_set<int32_t> prefixedLabels;
     std::unordered_map<std::string, std::pair<int32_t,VARTYPE> > symbolTable;
+    std::stack<std::string> scopeSymbols;
     /*
      * Used with multiple declarations to temporarily hold variable names until flush
      */
@@ -120,8 +123,11 @@
     void addInstruction(const instruction&);
     std::string getOp(const std::string&);
     void addVariable(const std::string&, VARTYPE);
+    void removeVariable(const std::string&);
     void addVarName(const std::string&);
     void flushVarNames(VARTYPE);
+    void startSymbScope();
+    void endSymbScope();
     bool checkVariableExists(const std::string&);
     std::string generateLabel();
     std::string getLabelString(int32_t n);
@@ -218,13 +224,13 @@ m:
 /* goto to be used with control structures */
 goto_operation:
     /* Empty*/
-    {$$ = instructions.size(); addInstruction({"\tgoto ",INSTTYPE::INST_GOTO});} /* goto will be resolved later by backpatching */
+    {$$ = instructions.size(); addInstruction({"\t\tgoto ",INSTTYPE::INST_GOTO});} /* goto will be resolved later by backpatching */
     ;
 
 method_body:
-    {addHeader();} /* It's the start symbol so we will add the bytecode header first */
+    {addHeader();startSymbScope();} /* It's the start symbol so we will add the bytecode header first */
     statement_list m
-    {backpatch($2.nextList, $3); addFooter();} /* Code will end here so add the footer */
+    {backpatch($2.nextList, $3); addFooter();endSymbScope();} /* Code will end here so add the footer */
     ;
 
 statement_list: 
@@ -290,14 +296,18 @@ primitive_type:
 
 /* System.out.println non-terminal*/
 print_func:
-    PRINTLN_TOK LEFT_BRACKET STRING RIGHT_BRACKET SEMI_COLON
+    PRINTLN_TOK LEFT_BRACKET
+    { startSymbScope(); }
+     STRING RIGHT_BRACKET
+    { endSymbScope(); }
+      SEMI_COLON
     {
         /* push System.out onto the stack */
-        addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;",INSTTYPE::INST_FUNC});
+        addInstruction({"\t\tgetstatic java/lang/System/out Ljava/io/PrintStream;",INSTTYPE::INST_FUNC});
         /* push a string onto the stack */
-        addInstruction({"\tldc " + std::string($3), INSTTYPE::INST_NORMAL});
+        addInstruction({"\t\tldc " + std::string($4), INSTTYPE::INST_NORMAL});
         /* call the PrintStream.println() method. */
-        addInstruction({"\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V",INSTTYPE::INST_FUNC});
+        addInstruction({"\t\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V",INSTTYPE::INST_FUNC});
     }
     |
  	PRINTLN_TOK LEFT_BRACKET expression RIGHT_BRACKET SEMI_COLON
@@ -308,65 +318,73 @@ print_func:
          */
         if ($3 == VARTYPE::TYINTEGER) {
             std::string tempVarName = std::to_string(SYSO_INT_VARID);
-            addInstruction({"\tistore " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_FUNC});
-            addInstruction({"\tiload " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tinvokevirtual java/io/PrintStream/println(I)V", INSTTYPE::INST_FUNC});
+            addInstruction({"\t\tistore " + tempVarName, INSTTYPE::INST_NORMAL});
+            addInstruction({"\t\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_FUNC});
+            addInstruction({"\t\tiload " + tempVarName, INSTTYPE::INST_NORMAL});
+            addInstruction({"\t\tinvokevirtual java/io/PrintStream/println(I)V", INSTTYPE::INST_FUNC});
         } else if ($3 == VARTYPE::TYFLOAT) {
             std::string tempVarName = std::to_string(SYSO_FLOAT_VARID);
-            addInstruction({"\tfstore " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_FUNC});
-            addInstruction({"\tfload " + tempVarName, INSTTYPE::INST_NORMAL});
-            addInstruction({"\tinvokevirtual java/io/PrintStream/println(F)V", INSTTYPE::INST_FUNC});
+            addInstruction({"\t\tfstore " + tempVarName, INSTTYPE::INST_NORMAL});
+            addInstruction({"\t\tgetstatic java/lang/System/out Ljava/io/PrintStream;", INSTTYPE::INST_FUNC});
+            addInstruction({"\t\tfload " + tempVarName, INSTTYPE::INST_NORMAL});
+            addInstruction({"\t\tinvokevirtual java/io/PrintStream/println(F)V", INSTTYPE::INST_FUNC});
         }
  	}
    
  	;
 
 if:
-    IF_TOK LEFT_BRACKET boolean_expression RIGHT_BRACKET LEFT_CURLY_BRACKET m
-    statement_list goto_operation
+    IF_TOK LEFT_BRACKET boolean_expression RIGHT_BRACKET LEFT_CURLY_BRACKET
+    { startSymbScope(); }
+    m statement_list goto_operation
     RIGHT_CURLY_BRACKET
-    ELSE_TOK LEFT_CURLY_BRACKET m
-    statement_list
+    { endSymbScope(); }
+    ELSE_TOK LEFT_CURLY_BRACKET
+    { startSymbScope(); }
+    m statement_list
     RIGHT_CURLY_BRACKET
     {
+        endSymbScope();
         /* Fix the 2 goto for location markers by backpatching */
-        backpatch($3.trueList, $6);
-		backpatch($3.falseList, $12);
+        backpatch($3.trueList, $7);
+		backpatch($3.falseList, $15);
         /* Fix the next lists for this if */
-		$$.nextList = mergeLists($7.nextList, $13.nextList);
-		$$.nextList->push_back($8);
+		$$.nextList = mergeLists($8.nextList, $16.nextList);
+		$$.nextList->push_back($9);
     }
     ;
 
 while:
     WHILE_TOK m LEFT_BRACKET boolean_expression RIGHT_BRACKET m LEFT_CURLY_BRACKET 
+    { startSymbScope(); }
     statement_list
     RIGHT_CURLY_BRACKET
     {
-        backpatch($8.nextList,$2);
+        endSymbScope();
+        backpatch($9.nextList,$2);
         backpatch($4.trueList,$6);
         $$.nextList = $4.falseList;
-        addInstruction({"\tgoto " + getLabelString($2), INSTTYPE::INST_GOTO});
+        addInstruction({"\t\tgoto " + getLabelString($2), INSTTYPE::INST_GOTO});
     }
     ;
 
 for:
     FOR_TOK LEFT_BRACKET for_assignment SEMI_COLON m boolean_expression SEMI_COLON
     m for_assignment goto_operation
-    RIGHT_BRACKET LEFT_CURLY_BRACKET m
-	statement_list goto_operation
+    RIGHT_BRACKET LEFT_CURLY_BRACKET
+    { startSymbScope(); }
+    m statement_list goto_operation
 	RIGHT_CURLY_BRACKET
     {
-        backpatch($6.trueList, $13);
+        endSymbScope(); 
+        backpatch($6.trueList, $14);
 		std::vector<int32_t> * newList = new std::vector<int32_t>();
 		newList->push_back($10);
 		backpatch(newList,$5);
 		newList = new std::vector<int32_t>();
-		newList->push_back($15);
+		newList->push_back($16);
 		backpatch(newList,$8);
-		backpatch($14.nextList,$8);
+		backpatch($15.nextList,$8);
 		$$.nextList = $6.falseList;
     }
     ;
@@ -381,9 +399,9 @@ for_assignment:
 			if ($3 == symbolTable[varName].second) {
                 std::string varID = std::to_string(symbolTable[varName].first);
 				if ($3 == VARTYPE::TYINTEGER) {
-					addInstruction({"\tistore " + varID, INSTTYPE::INST_NORMAL});
+					addInstruction({"\t\tistore " + varID, INSTTYPE::INST_NORMAL});
 				} else if ($3 == VARTYPE::TYFLOAT) {
-					addInstruction({"\tfstore " + varID, INSTTYPE::INST_NORMAL});
+					addInstruction({"\t\tfstore " + varID, INSTTYPE::INST_NORMAL});
 				}
 			}
 			else {
@@ -403,9 +421,9 @@ assignment:
 			if ($3 == symbolTable[varName].second) {
                 std::string varID = std::to_string(symbolTable[varName].first);
 				if($3 == VARTYPE::TYINTEGER) {
-					addInstruction({"\tistore " + varID, INSTTYPE::INST_NORMAL});
+					addInstruction({"\t\tistore " + varID, INSTTYPE::INST_NORMAL});
 				} else if ($3 == VARTYPE::TYFLOAT) {
-					addInstruction({"\tfstore " + varID, INSTTYPE::INST_NORMAL});
+					addInstruction({"\t\tfstore " + varID, INSTTYPE::INST_NORMAL});
 				}
 			}
 			else {
@@ -417,10 +435,10 @@ assignment:
 
 expression:
     INTEGER_NUMBER
-    {$$ = VARTYPE::TYINTEGER;  addInstruction({"\tldc "+ std::to_string($1), INSTTYPE::INST_NORMAL});} 
+    {$$ = VARTYPE::TYINTEGER;  addInstruction({"\t\tldc "+ std::to_string($1), INSTTYPE::INST_NORMAL});} 
     |
     FLOAT_NUMBER
-    {$$ = VARTYPE::TYFLOAT;  addInstruction({"\tldc "+ std::to_string($1), INSTTYPE::INST_NORMAL});} 
+    {$$ = VARTYPE::TYFLOAT;  addInstruction({"\t\tldc "+ std::to_string($1), INSTTYPE::INST_NORMAL});} 
     |
     expression OPERATION expression
     {operationCast(std::string($2), $1, $3);}
@@ -434,9 +452,9 @@ expression:
             std::string varID = std::to_string(symbolTable[varName].first);
 
 			if (symbolTable[varName].second == VARTYPE::TYINTEGER) {
-				addInstruction({"\tiload " + varID, INSTTYPE::INST_NORMAL});
+				addInstruction({"\t\tiload " + varID, INSTTYPE::INST_NORMAL});
 			} else if (symbolTable[varName].second == VARTYPE::TYFLOAT) {
-				addInstruction({"\tfload " + varID, INSTTYPE::INST_NORMAL});
+				addInstruction({"\t\tfload " + varID, INSTTYPE::INST_NORMAL});
 			}
 
 		} else {
@@ -459,7 +477,7 @@ boolean_expression:
 		else 
             $$.falseList->push_back(instructions.size());
 
-        addInstruction({"\tgoto ", INSTTYPE::INST_GOTO});
+        addInstruction({"\t\tgoto ", INSTTYPE::INST_GOTO});
     }
     |
     expression RELOP expression
@@ -470,7 +488,7 @@ boolean_expression:
 		$$.falseList = new std::vector<int32_t>();
 		$$.falseList->push_back(instructions.size() + 1);
 		addInstruction({getOp(operation)+ " ", INSTTYPE::INST_NORMAL});
-		addInstruction({"\tgoto ", INSTTYPE::INST_GOTO});
+		addInstruction({"\t\tgoto ", INSTTYPE::INST_GOTO});
 	}
 	|
     boolean_expression BOOLOP m boolean_expression
@@ -556,20 +574,7 @@ void addFooter()
  */
 void addInstruction(const instruction& instr)
 {
-    // if top is label so i can add code at that label
-    // if(instructions.empty() == false && instructions.back().type == INSTTYPE::INST_LABEL){ 
-    //     if(instr.type != INSTTYPE::INST_LABEL){
-    //         instructions.back().code = instructions.back().code + instr.code;
-    //         instructions.back().type = INSTTYPE::INST_NONE;
-    //     }else{
-    //         prefixedLabels.insert(atoi(instructions.back().code.c_str()));
-    //         instructions.back().code = LABEL_OPTIONAL_PREFIX + instructions.back().code + instr.code;
-    //         instructions.back().type = INSTTYPE::INST_NONE;
-    //     }
-    // }else{
     instructions.push_back(instr);
-    //}
-	
 }
 
 /*------------------------------------------------------------------------
@@ -598,18 +603,28 @@ void addVariable(const std::string& name,VARTYPE type)
 	} else {
         std::string currVariableID = std::to_string(varID); // get new id
 		if (type == VARTYPE::TYINTEGER) {
-			addInstruction({"\ticonst_0", INSTTYPE::INST_NORMAL});
-            addInstruction({"\tistore " + currVariableID, INSTTYPE::INST_NORMAL});
+			addInstruction({"\t\ticonst_0", INSTTYPE::INST_NORMAL});
+            addInstruction({"\t\tistore " + currVariableID, INSTTYPE::INST_NORMAL});
 		}
 		else if ( type == VARTYPE::TYFLOAT) {
-			addInstruction({"\tfconst_0", INSTTYPE::INST_NORMAL});
-            addInstruction({"\tfstore " + currVariableID, INSTTYPE::INST_NORMAL});
+			addInstruction({"\t\tfconst_0", INSTTYPE::INST_NORMAL});
+            addInstruction({"\t\tfstore " + currVariableID, INSTTYPE::INST_NORMAL});
 		}
 		symbolTable[name] = std::make_pair(varID, type);
         varID++;
+        
+        scopeSymbols.push(name);
 	}
 }
-
+/*------------------------------------------------------------------------
+ * removeVariable  - Removes a variable from the symbol table
+ *------------------------------------------------------------------------
+ */
+void removeVariable(const std::string& name){
+    if (symbolTable.find(name) != symbolTable.end()) {
+            symbolTable.erase(name);
+    }
+}
 /*------------------------------------------------------------------------
  * checkVariableExists  - Check if variable exists and print error if not
  *------------------------------------------------------------------------
@@ -619,7 +634,7 @@ void addVariable(const std::string& name,VARTYPE type)
     if (symbolTable.find(varName) != symbolTable.end())
         return true;
     else {
-        std::string error = varName + " wasn't declared.";
+        std::string error = varName + " wasn't declared in this scope.";
         yyerror(error.c_str());
         return false;
     }
@@ -665,16 +680,6 @@ std::vector<int32_t> *mergeLists(std::vector<int32_t> *list1, std::vector<int32_
 	}
 	return new std::vector<int32_t>();
 }
-
-/*------------------------------------------------------------------------
- * typeCast  -  Performs type casting
- *------------------------------------------------------------------------
- */
-/* void typeCast(std::string id, int32_t newType) 
-{
-    yyerror("casting not implemented yet"); //TODO
-} */
-
  /*------------------------------------------------------------------------
  * operationCast  -  Check if 2 variables are equal type otherwise not handled ?
  *------------------------------------------------------------------------
@@ -683,9 +688,9 @@ void operationCast(const std::string& operation,int32_t varType1, int32_t varTyp
 {
     if (varType1 == varType2) {
 		if (varType1 == VARTYPE::TYINTEGER) {
-			addInstruction({"\ti" + getOp(operation), INSTTYPE::INST_NORMAL});
+			addInstruction({"\t\ti" + getOp(operation), INSTTYPE::INST_NORMAL});
 		} else if (varType1 == VARTYPE::TYFLOAT) {
-			addInstruction({"\tf" + getOp(operation), INSTTYPE::INST_NORMAL});
+			addInstruction({"\t\tf" + getOp(operation), INSTTYPE::INST_NORMAL});
 		}
 	}
 	else {
@@ -713,6 +718,27 @@ void flushVarNames(VARTYPE type)
     }
     temporaryVarNames.clear();
 }
+/*------------------------------------------------------------------------
+ * startSymbScope  -  adds a separator to the stack so i can easily 
+ *------------------------------------------------------------------------
+ */
+void startSymbScope(){
+    scopeSymbols.push(SYMBOL_SEPARATOR);
+}
+/*------------------------------------------------------------------------
+ * endSymbScope  -  removes all symbols added in the symbol table in the last scope
+ *------------------------------------------------------------------------
+ */
+void endSymbScope(){
+    if(scopeSymbols.empty() == false){
+        while(scopeSymbols.top() != SYMBOL_SEPARATOR){
+            removeVariable(scopeSymbols.top());
+            scopeSymbols.pop();
+        }
+        scopeSymbols.pop();
+    }
+
+}
 
 /*------------------------------------------------------------------------
  * getLabelString  -  Check if label needs a prefix and return label accordingly
@@ -720,11 +746,9 @@ void flushVarNames(VARTYPE type)
  */
 std::string getLabelString(int32_t n) 
 {
-    // if(prefixedLabels.find(n) != prefixedLabels.end()) {
-    //     return LABEL_OPTIONAL_PREFIX + LABEL(n);
-    // }
     return LABEL(n);
 }
+
 
 /*------------------------------------------------------------------------
  * outBytecode  -  Writes the output bytecode to a file
