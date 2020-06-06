@@ -17,7 +17,7 @@ for(i = 0;i<1000;i = i + 1){
 while(z>0&&true&&z>-1||z>-2){
   z = z - 1;
 }
-System.out.println("haha string you nub");
+System.out.println("strings are working");
 System.out.println(2.3);
 System.out.println(5);
 System.out.println(z);
