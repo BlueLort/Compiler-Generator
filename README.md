@@ -32,7 +32,7 @@ The table is used to derive a predictive top-down parser. If the input grammar i
 If an error is encountered, a panic-mode error recovery routine is to be called to print an error message and to resume parsing. <br>
 
 ### Java bytecode generation
-The java bytecode generator must follows bytecode instructions defined in the ![Java virtual machine specifications](https://docs.oracle.com/javase/specs/)
+The java bytecode generator must follows bytecode instructions defined in the [Java virtual machine specifications](https://docs.oracle.com/javase/specs/)
 <br>
 Grammar covers the following:
   * Primitive types (int, float) with operations on them (+, -, *, /)
