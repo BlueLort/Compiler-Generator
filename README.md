@@ -7,6 +7,7 @@ A compiler translates and/or compiles a program written in a suitable source lan
 - [About](#about)
 - [Project flow](#project_flow)
 - [Prerequisites](#prerequisites)
+- [Features](#features)
 - [Sample runs](#sample_runs)
 
 ---
@@ -58,12 +59,26 @@ Grammar covers the following:
 - GNU Bison
 - GNU Flex
 
+## Features <a name = "features"></a>
+  * Code imporing/exporting + editable area in the GUI.
+  * Left Factoring Enabled.
+  * Left Recursion Elimination (both direct & indirect).
+  * Ability to view:
+    - NFA , DFA (for debugging).
+    - Tranisition table.
+    - Lexemes table.
+    - First & Follow Sets.
+    - Parsing table.
+    - Parse tree ( for debugging).
+  * Third phase is implemented by using GNU Bison.
+
 ## Sample Runs <a name = "sample_runs"></a>
   * Simple editor to lay rules/code in and a simple code analyzer UI to check:
     - Tokens (Lexemes)
     - Transition table
     - First and follow sets
     
+
 <p align="center"> 
 <img src="https://user-images.githubusercontent.com/48100957/85892081-92bb3d80-b7f0-11ea-9c57-83993b690eb0.png">
 <img src="https://user-images.githubusercontent.com/48100957/85892150-b2eafc80-b7f0-11ea-8fa3-d21027b01933.png">
