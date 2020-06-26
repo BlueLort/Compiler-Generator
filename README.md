@@ -65,7 +65,8 @@ Grammar covers the following:
     - First and follow sets
     
 <p align="center"> 
-<img src="https://user-images.githubusercontent.com/48100957/85889297-7c5eb300-b7eb-11ea-8aa0-f28095fd0f88.png">
-<img src="https://user-images.githubusercontent.com/48100957/85889338-913b4680-b7eb-11ea-82b7-c9b69e85ae03.png">
-<img src="https://user-images.githubusercontent.com/48100957/85889390-a87a3400-b7eb-11ea-8599-aca5ff62dfae.png">
+<img src="https://user-images.githubusercontent.com/48100957/85892081-92bb3d80-b7f0-11ea-9c57-83993b690eb0.png">
+<img src="https://user-images.githubusercontent.com/48100957/85892150-b2eafc80-b7f0-11ea-8fa3-d21027b01933.png">
+<img src="https://user-images.githubusercontent.com/48100957/85892186-c302dc00-b7f0-11ea-989a-1cb3f44fcd90.png">
+<img src="https://user-images.githubusercontent.com/48100957/85892233-d746d900-b7f0-11ea-90b8-7522845051a6.png">
 </p>
